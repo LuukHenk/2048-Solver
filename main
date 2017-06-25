@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 import os
 import json
 import pprint
@@ -30,7 +30,6 @@ for generation in range(start, start + end):
         logs.append(info)
 
     p1 = 'generation: ' + str(generation)
-    #hier move percentage gaan gebruiken in plaats van de beste gam
     best_game = organiser.sort_scores(logs)[0]
     p2 = 'left: ' + str(round(best_game['left'])) + ' right: ' + str(round(best_game['right'])) + ' up: ' + str(round(best_game['up'])) + ' down: ' + str(round(best_game['down']))
     p3 = 'highscore: ' + str(round(best_game['score']))
