@@ -1,0 +1,4 @@
+run main with python to let our algorithm play 2048:
+
+$ cd to 2048solver
+$ python main
