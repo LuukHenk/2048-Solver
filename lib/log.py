@@ -8,24 +8,23 @@ from os.path import isfile, join
 class Logger:
     def __init__(self):
         self.entries = []
-        self.saving_path = '/mnt/c/Users/luukp/Desktop/Programmeren/Python/ai/logcache'
+        self.savingPath = os.getcwd()+'/logcache'
 
     def reset(self):
-        [os.remove('/'.join([self.saving_path, f])) for f in os.listdir(self.saving_path)]
+        [os.remove('/'.join([self.savingPath, f])) for f in os.listdir(self.savingPath)]
 
     def add(self, data):
         self.entries.append(data)
 
-    def load_logs(self):
-        file_names = [f for f in os.listdir(self.saving_path)]
-        data       = [json.load(open('/'.join([self.saving_path, f]))) for f in file_names]
-        return list(map(lambda json: json[0], data))
+    def openFile(self, gen):
+        return json.load(open('/'.join([self.savingPath, gen])))
 
-    def save_and_reset(self, file_name):
-        self.save(file_name)
+    def saveAndReset(self, fileName):
+        self.reset()
+        self.save(fileName)
         self.entries = []
 
-    def save(self, file_name):
-        file_ = open(os.path.join(self.saving_path, file_name), 'w')
+    def save(self, fileName):
+        file_ = open(os.path.join(self.savingPath, fileName), 'w')
         file_.write(json.dumps(self.entries))
         file_.close()

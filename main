@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.6
 import time
-from lib.ai     import Ai
-from lib.render import Render
-from lib.log    import Logger
+from lib.network import Ai
+from lib.render  import Render
+from lib.log     import Logger
 ai     = Ai()
 render = Render()
 logger = Logger()
 
-renderGame = True
+renderGame = False
 totalGames = 200
 sleepTime  = 1
 
@@ -17,15 +17,21 @@ for games in range(totalGames):
     game   = Game()
 
     possibleDirections = ai.possibleDirections(game.board.board)
-    if renderGame == True: render.board(game.board.board)
+    if renderGame == True: render.board(game.board.board, game.score)
     
     #single game
     while game.gameOver(possibleDirections) == False:
         move = ai.randomMovement(possibleDirections)
-        if renderGame == True: 
-            time.sleep(sleepTime)
-            render.move(move)
+        time.sleep(sleepTime)
+            
+        if renderGame == True: render.move(move)
+       
+        boardCopy = game.board.board
         game.setMovement(move)
-        if renderGame == True: render.board(game.board.board)
+        ai.determineMovementSucces(boardCopy, game.board.board, move, game.score)
+            
+        if renderGame == True: render.board(game.board.board, game.score)
+        
         possibleDirections = ai.possibleDirections(game.board.board)
+        
     print(games)
