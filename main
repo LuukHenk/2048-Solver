@@ -47,22 +47,22 @@ def manual_game():
         movement = read_single_keypress()
 
         # Movements
-        if movement in keys["left"] and game.left_possible():
+        if movement in keys["left"] and game.movement_possible("left"):
             moves += 1
             game.left_move()
             draw_board(game.board.board)
 
-        if movement in keys["right"] and game.right_possible():
+        if movement in keys["right"] and game.movement_possible("right"):
             moves += 1
             game.right_move()
             draw_board(game.board.board)
 
-        if movement in keys["down"] and game.down_possible():
+        if movement in keys["down"] and game.movement_possible("down"):
             moves += 1
             game.down_move()
             draw_board(game.board.board)
 
-        if movement in keys["up"] and game.up_possible():
+        if movement in keys["up"] and game.movement_possible("up"):
             moves += 1
             game.up_move()
             draw_board(game.board.board)

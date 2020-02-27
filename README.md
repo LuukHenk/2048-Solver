@@ -1,42 +1,38 @@
-# Dotfiles
+# Twenty-Forty-Eight **Remake**
 
 ## Authors:
 - Luuk Perdaems
-- [Sidney Liebrand](https://github.com/SidOfc)
 
 ## Status
-Version: 0.1.0
+Version: 0.0.1
 
 ## Installing:
-Clone repository using git and run the main script to install:
+Clone repository using git and run the main script to play the game:
 ```
-$ mkdir ~/desktop-setup:q
-$ git clone https://github.com/LuukHenk/desktop-setup.git ~/desktop-setup
-$ python3 bin/setup
+$ git clone https://github.com/LuukHenk/2048-Solver.git
+$ cd 2048-Solver
+$ chmod +x main
+$ ./main
 ```
+Follow the instructions from the main file
 
-
-
-## The setup:
-### .bashrc
-- Added tab completion
-- Changed terminal coloring
-- Added some aliases
-
-### .config/nvim/init.vim
-- Added plugins
-- Changed some keybinds
-- Changed the colors used in neovim
-
+## Possibilities:
+- The game can be played manually in the terminal using manual mode (run ./main)
+- ~~The game can be played automatically using a build-in AI~~
+- ~~The game can be played on an extern graphical screen~~
 
 
 ## Changelog:
-### Version 0.0.1 (17 December 2018)
-- basic setup
-
-
+### Version 0.0.1 (27 februari 2020)
+- Remade the main file
+- Finished the manual game, which is playable in the terminal
+- Reorganised some code in lib/game.py
+- Made a new README.md
 
 ## To do:
-- Automatically gice casp the same function as escape
-- Make a programm installer
+- Organise code of files in the lib folder
+- Rebuild the AI that solved the game
+- Build a extern graphical screen to play the game
 
+## References
+Lots of thanks for [Sidney Liebrand](https://github.com/SidOfc) by helping me building this game and AI.

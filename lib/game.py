@@ -26,113 +26,91 @@ class Game:
         # Set the value to the random position on the board
         return self.board.set(value, position['y'], position['x'])
 
-    def left_possible(self):
+    def movement_possible(self, direction):
         """
-        Check if a movement to the left is possible by duplicating the board,
-        perfoming a movement to the left, and checking if the board has changed after the movement.
-        """
+        Check if a movement is possible by duplicating the board,
+        perfoming a movement in the desired direction using the duplicated board,
+        and checking if the duplicated board differences from the original board
 
+        Returns true if the board is different, false if it is the same
+        """
         # Make a duplication of the original board
         duplicate_board = self.board.duplicate()
 
-        # Perform a movement to the left
+        if direction in ("down", "up"):
+            duplicate_board.rotate()
+
+        # Perform a movement in the desired direction with the duplicated board
         new_board = []
-        for row in duplicate_board.board:
-            new_board.append(self.comparing(row, False))
+
+        if direction in ("left", "up"):
+            for row in duplicate_board.board:
+                new_board.append(self.comparing(row, False))
+                duplicate_board.replace(new_board)
+
+        elif direction in ("right", "down"):
+            for row in duplicate_board.board:
+                new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
+                duplicate_board.replace(new_board)
+
         duplicate_board.replace(new_board)
+
+        if direction in ("down", "up"):
+            duplicate_board.rotate()
 
         # Compare the moved board with the original board
         return not duplicate_board.board == self.board.board
-
-    def right_possible(self):
-        """
-        Check if a movement to the right is possible by duplicating the board,
-        perfoming a movement to the right, and checking if the board has changed after the movement.
-        """
-
-        # Make a duplication of the original board
-        duplicate_board = self.board.duplicate()
-
-        # Perform a movement to the right
-        new_board = []
-        for row in duplicate_board.board:
-            new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
-        duplicate_board.replace(new_board)
-
-        # Compare the moved board with the original board
-        return not duplicate_board.board == self.board.board
-
-    def down_possible(self):
-        """
-        Check if a downward movement is possible by duplicating the board,
-        perfoming a downward movement, and checking if the board has changed after the movement.
-        """
-
-        # Make a duplication of the original board
-        duplicate_board = self.board.duplicate()
-
-        # Perform a downward movement
-        duplicate_board.rotate()
-        new_board = []
-        for row in duplicate_board.board:
-            new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
-        duplicate_board.replace(new_board)
-        duplicate_board.rotate()
-
-        # Compare the duplicated board with the original
-        return not duplicate_board.board == self.board.board
-
-    def up_possible(self):
-        """
-        Check if an upward movement is possible by duplicating the board,
-        perfoming an upward movement, and checking if the board has changed after the movement.
-        """
-
-        # Make a duplication of the original board
-        duplicate_board = self.board.duplicate()
-
-        # Perform a movement to the left
-        duplicate_board.rotate()
-        new_board = []
-        for row in duplicate_board.board:
-            new_board.append(self.comparing(row, False))
-        duplicate_board.replace(new_board)
-        duplicate_board.rotate()
-
-        # Compare the moved board with the original board
-        return not duplicate_board.board == self.board.board
-
-    def move_possible(self):
-        move_possible = True
-        left = self.left_possible()
-        right = self.right_possible()
-        down = self.down_possible()
-        up = self.up_possible()
-        if (left == False and right == False and down == False and up == False):
-            move_possible = False
-        return move_possible
 
     def game_over(self):
+        """
+        Checks if there are still empty tiles on the gameboard
+        If not, and there are no movements possible, the game is over.
+
+        Returns game over boolean
+        """
         game_over = False
-        if (self.board.full(self.board.board) == True and self.move_possible() == False):
-            game_over = True
+
+        # If there are no empty tiles on the board
+        if self.board.full(self.board.board):
+
+            # And of no movements are possible
+            for direction in ("left", "right", "down", "up"):
+                if not self.movement_possible(direction):
+                    # Game is over :(
+                    game_over = True
+
         return game_over
 
     def left_move(self):
+        """
+        Performs a movement to the left and inserts a new random number to the board
+        """
         self.board.replace([self.comparing(row) for row in self.board.board])
         self.insert_number()
 
     def right_move(self):
-        m = [list(reversed(self.comparing(list(reversed(row))))) for row in self.board.board]
-        self.board.replace(m)
+        """
+        Performs a movement to the right and inserts a new random number to the board
+        """
+        new_board = []
+        for row in self.board.board:
+            new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
+
+        self.board.replace(new_board)
         self.insert_number()
 
     def down_move(self):
+        """
+        Performs a downwards movement and inserts a new random number to the board
+        """
         self.board.rotate()
         self.right_move()
         self.board.rotate()
 
     def up_move(self):
+        """
+        Performs a upwards movement and inserts a new random number to the board
+        """
         self.board.rotate()
         self.left_move()
         self.board.rotate()
