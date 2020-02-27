@@ -1,21 +1,22 @@
 import copy
 
 class Board:
-    def __init__(self, size = 4, defaultValue = 0):
+    def __init__(self, size = 4, default_value = 0):
         self.size = size
-        self.defaultValue = defaultValue
+        self.default_value = default_value
         self.board = self.generate()
 
     def generate(self):
         s = range(self.size)
-        return [[self.defaultValue for __ in s] for _ in s]
-
-    def set(self, value, y, x):
-        self.board[y][x] = value
+        return [[self.default_value for __ in s] for _ in s]
 
     def render(self):
         for row in self.board:
-            print('|'.join(list(map(lambda n: str(' ' if n == 0 else n).center(2, ' '), row))))
+            #gekke complexe print statement :D
+            print('|'.join(list(map(lambda n: str(' ' if n == 0 else n).center(10, ' '), row))))
+
+    def set(self, value, y, x):
+        self.board[y][x] = value
 
     def replace(self, board):
         self.board = board
@@ -27,18 +28,19 @@ class Board:
                 out[x][y] = value
         self.board = out
 
-    def emptyTiles(self):
-        emptyTiles = []
-        for y, row in enumerate(self.board):
+    def empty_tiles(self, board):
+        empty_tiles = []
+        for y, row in enumerate(board):
             for x, value in enumerate(row):
                 if (value == 0):
-                    emptyTiles.append({'y': y, 'x': x})
-        return emptyTiles
+                    empty_tiles.append({'y': y, 'x': x})
+        return empty_tiles
 
     def full(self, board):
-        if len(self.emptyTiles()) == 0:
-            return True
-        return False
+        full = False
+        if len(self.empty_tiles(board)) == 0:
+            full = True
+        return full
 
     def duplicate(self):
         return copy.deepcopy(self)
