@@ -31,6 +31,11 @@ Follow the instructions from the main file
 - Added comments to all code
 - Made a new README.md
 
+### Version 0.0.2 (...)
+- Replaced the possible directions function which is now also used as the game_over function
+- Simplified the perform_perform movement function in lib/game.py
+- Connected 2048 algorithm (not really productive yet)
+
 ## To do:
 - ~~Organise code of files in the lib folder~~
 - Rebuild the AI that solved the game

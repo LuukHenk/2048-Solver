@@ -42,35 +42,52 @@ class Game:
         # Set the value to the random position on the board
         return self.board.set(value, position['y'], position['x'])
 
-    def movement_possible(self, direction):
-        """
-        Check if a movement is possible by duplicating the board,
-        perfoming a movement in the desired direction using the duplicated board,
-        and checking if the duplicated board differences from the original board
+    def possible_directions(self, board):
+        """ Determines which moves are possible by performing the movement """
+        return [move for move in ["left", "right", "down", "up"] if self.mergeable(board, move)]
 
-        Returns true if the board is different, false if it is the same
-        """
-        if direction in ("left", "down", "right", "up"):
-            # Make a duplication of the original board
-            duplicate_board = self.board.duplicate()
+    def mergeable(self, board, move):
+        """ Tries to perform a movement and returns if that movement is possible """
 
-            # Rotate board if up or down, because then you make a left/right movement
-            if direction in ("down", "up"):
-                duplicate_board.rotate()
+        if move == 'left':
+            return any([self.move_possible(row) for row in board])
 
-            # Perform a movement in the desired direction with the duplicated board
-            # And add the result into new_board
-            new_board = []
-            if direction in ("left", "up"):
-                for row in duplicate_board.board:
-                    new_board.append(self.comparing(row, False))
-            elif direction in ("right", "up"):
-                for row in duplicate_board.board:
-                    new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
+        if move == 'right':
+            return any([self.move_possible(list(reversed(row))) for row in board])
 
-            # Compare the moved board with the original board
-            return duplicate_board.board != new_board
+        board = self.rotate(board)
+        if move == 'down':
+            return any([self.move_possible(list(reversed(row))) for row in board])
+
+        if move == 'up':
+            return any([self.move_possible(row) for row in board])
+
+        return None
+
+    def move_possible(self, row):
+        """ Determines if a left movement is possible """
+
+        if row[0] == 0:
+            return True
+
+        row = list(filter(lambda value: value != 0, row))
+        for i in range(1, len(row)):
+            if row[i-1] == row[i]:
+                return True
+
         return False
+
+    def rotate(self, board):
+        """ Rotates the board by switching the x and y positions"""
+
+        board_range = range(len(board))
+        out = [[0 for _ in board_range] for _ in board_range]
+
+        for y_pos, row in enumerate(board):
+            for x_pos, value in enumerate(row):
+                out[x_pos][y_pos] = value
+
+        return out
 
     def game_over(self):
         """
@@ -80,14 +97,11 @@ class Game:
         Returns if game_over is true or false
         """
 
-        # If there are no empty tiles on the board
+        # If board is full and of no movements are possible
         if self.board.full(self.board.board):
-
-            # And of no movements are possible
-            for direction in ("left", "right", "down", "up"):
-                if not self.movement_possible(direction):
-                    # Game is over :(
-                    return True
+            if len(self.possible_directions(self.board.board)) == 0:
+                # Game is over :(
+                return True
 
         return False
 
@@ -124,23 +138,20 @@ class Game:
         If possible, it performs the movement and inserts a new random number on the board
         """
 
-        movement_performed = False
+        if direction == "left":
+            self.left_move()
 
-        if self.movement_possible(direction):
-            movement_performed = True
-            if direction == "left":
-                self.left_move()
-            elif direction == "right":
-                self.right_move()
-            elif direction == "up":
-                self.up_move()
-            elif direction == "down":
-                self.down_move()
+        elif direction == "right":
+            self.right_move()
 
-            self.moves += 1
-            self.insert_number()
+        elif direction == "up":
+            self.up_move()
 
-        return movement_performed
+        elif direction == "down":
+            self.down_move()
+
+        self.moves += 1
+        self.insert_number()
 
     def comparing(self, sample, write_score=True):
         """
