@@ -1,6 +1,6 @@
 # Twenty-Forty-Eight **Remake**
 
-## Authors:
+## Author:
 - Luuk Perdaems
 
 ## Status
@@ -25,14 +25,16 @@ Follow the instructions from the main file
 ## Changelog:
 ### Version 0.0.1 (27 februari 2020)
 - Remade the main file
+- Reorganised the game class
+- Removed some small bugs in the game class
 - Finished the manual game, which is playable in the terminal
-- Reorganised some code in lib/game.py
+- Added comments to all code
 - Made a new README.md
 
 ## To do:
-- Organise code of files in the lib folder
+- ~~Organise code of files in the lib folder~~
 - Rebuild the AI that solved the game
-- Build a extern graphical screen to play the game
+- Build a extern graphical screen to play the game or watch the game being played
 
 ## References
 Lots of thanks for [Sidney Liebrand](https://github.com/SidOfc) by helping me building this game and AI.

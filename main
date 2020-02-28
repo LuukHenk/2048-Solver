@@ -1,36 +1,28 @@
 #!/usr/bin/env python3.6
+
+""" 2048 in python 3
+    Game can be played manually or automatic """
+
 import sys
+import os
 from lib.game import Game
 
-def main():
-
-    # Determine if it is a manual or automatic game
-    game_type = "m"
-    while game_type not in ["m", "a"]:
-        game_type = input('(M)anual game or (A)utoplay?\n').lower()
-
-    # If game is manual played
-    if game_type == "m":
-        manual_game()
-    elif game_type == "a":
-        print("Still in progress...")
-
 def manual_game():
-    """
-    Play the 2048 manually
-    """
+    """ Play the 2048 manually """
 
     # Load an empty game
     game = Game()
 
     # Set keybinds
     keys = {
-        "left": ["a"],
-        "right": ["d"],
-        "down": ["s"],
-        "up": ["w"],
-        "quit": ["q"]
+        "left": "a",
+        "right": "d",
+        "down": "s",
+        "up": "w",
+        "quit": "q"
     }
+
+    reversed_keys = {v: k for k, v in keys.items()}
 
     print("Press {} to move left.".format(keys["left"]))
     print("Press {} to move right.".format(keys["right"]))
@@ -39,42 +31,28 @@ def manual_game():
     print("Press {} to quit the game.\n".format(keys["quit"]))
     print("Enjoy!\n___________________\n")
 
-    moves = 0
-    draw_board(game.board.board)
+    fancy_render(game.board.board, game.score, None)
     while not game.game_over():
 
         # Keyboard input
-        movement = read_single_keypress()
+        direction = reversed_keys[read_single_keypress()]
 
-        # Movements
-        if movement in keys["left"] and game.movement_possible("left"):
-            moves += 1
-            game.left_move()
-            draw_board(game.board.board)
-
-        if movement in keys["right"] and game.movement_possible("right"):
-            moves += 1
-            game.right_move()
-            draw_board(game.board.board)
-
-        if movement in keys["down"] and game.movement_possible("down"):
-            moves += 1
-            game.down_move()
-            draw_board(game.board.board)
-
-        if movement in keys["up"] and game.movement_possible("up"):
-            moves += 1
-            game.up_move()
-            draw_board(game.board.board)
-
-        # Quit game
-        if movement in keys["quit"]:
+        if direction == "quit":
             sys.exit()
 
-def draw_board(board):
-    """
-    Draws 2048 board in the terminal
-    """
+        elif game.perform_movement(direction):
+            fancy_render(game.board.board, game.score, direction)
+
+def automatic_game():
+    """ Play the 2048 automatically using the ai script """
+    total_games = 1
+
+    for game_i in range(total_games):
+        game = Game()
+    print("Test")
+
+def fancy_render(board, score, direction):
+    """ A more advanced version of the render function """
 
     # Set the width of the board
     board_spacing = 10
@@ -101,7 +79,7 @@ def draw_board(board):
             total_board = "\n".join([total_board, midline, tile_spacing, line, tile_spacing])
 
     # Print the board on the screen
-    print("\n\n\n\n\n\n\n\n\n\n\n{}".format(total_board))
+    print("\n\n\n\n\n\n\n\n\nMovement: {}\n\n{}\n\nScore: {}".format(direction, total_board, score))
 
 def read_single_keypress():
     """Waits for a single keypress on stdin.
@@ -117,17 +95,17 @@ def read_single_keypress():
     Function obtained from:
     https://stackoverflow.com/questions/983354/how-do-i-make-python-wait-for-a-pressed-key
     """
-    import termios, fcntl, sys, os
-    fd = sys.stdin.fileno()
+
+    f_d = sys.stdin.fileno()
     # save old state
-    flags_save = fcntl.fcntl(fd, fcntl.F_GETFL)
-    attrs_save = termios.tcgetattr(fd)
+    flags_save = fcntl.fcntl(f_d, fcntl.F_GETFL)
+    attrs_save = termios.tcgetattr(f_d)
     # make raw - the way to do this comes from the termios(3) man page.
     attrs = list(attrs_save) # copy the stored version to update
     # iflag
     attrs[0] &= ~(termios.IGNBRK | termios.BRKINT | termios.PARMRK
                   | termios.ISTRIP | termios.INLCR | termios. IGNCR
-                  | termios.ICRNL | termios.IXON )
+                  | termios.ICRNL | termios.IXON)
     # oflag
     attrs[1] &= ~termios.OPOST
     # cflag
@@ -136,9 +114,9 @@ def read_single_keypress():
     # lflag
     attrs[3] &= ~(termios.ECHONL | termios.ECHO | termios.ICANON
                   | termios.ISIG | termios.IEXTEN)
-    termios.tcsetattr(fd, termios.TCSANOW, attrs)
+    termios.tcsetattr(f_d, termios.TCSANOW, attrs)
     # turn off non-blocking
-    fcntl.fcntl(fd, fcntl.F_SETFL, flags_save & ~os.O_NONBLOCK)
+    fcntl.fcntl(f_d, fcntl.F_SETFL, flags_save & ~os.O_NONBLOCK)
     # read a single keystroke
     try:
         ret = sys.stdin.read(1) # returns a single character
@@ -146,9 +124,32 @@ def read_single_keypress():
         ret = 0
     finally:
         # restore old state
-        termios.tcsetattr(fd, termios.TCSAFLUSH, attrs_save)
-        fcntl.fcntl(fd, fcntl.F_SETFL, flags_save)
+        termios.tcsetattr(f_d, termios.TCSAFLUSH, attrs_save)
+        fcntl.fcntl(f_d, fcntl.F_SETFL, flags_save)
     return ret
 
-if __name__ == "__main__":
-    main()
+def get_game_type():
+    """
+    let the player choose between game types using input
+    'm' = manual game in the terminal
+    'a' = automatic game in the terminal
+    """
+    game_type = ""
+    # Determine if it is a manual or automatic game
+    while game_type not in ["m", "a"]:
+        game_type = input('(M)anual game or (A)utoplay?\n').lower()
+
+    return game_type
+
+# Determine if it is a manual or automatic game
+GAME_TYPE = get_game_type()
+
+if GAME_TYPE == "m":
+    import termios
+    import fcntl
+
+    manual_game()
+
+elif GAME_TYPE == "a":
+    automatic_game()
+    print("Still in progress...")
