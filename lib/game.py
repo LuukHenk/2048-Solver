@@ -4,6 +4,7 @@ Also imports the board file for the 2048 board and the functions needed for the 
 """
 
 import random
+import copy
 from .board import Board
 
 class Game:
@@ -19,6 +20,7 @@ class Game:
     def __init__(self):
         self.score = 0 # Set score to 0
         self.moves = 0
+        self.game_over = False
         self.board = Board() # Get an empty board
         self.insert_number() # Add a number to the board (2x)
         self.insert_number()
@@ -29,7 +31,7 @@ class Game:
         """
 
         value = 0
-        if not self.game_over():
+        if not self.game_over:
             value = 2
 
             # Find an empty position on the board
@@ -44,38 +46,48 @@ class Game:
 
     def possible_directions(self, board):
         """ Determines which moves are possible by performing the movement """
-        return [move for move in ["left", "right", "down", "up"] if self.mergeable(board, move)]
+
+        out = []
+        for move in ["left", "right", "down", "up"]:
+
+            duplicated_board = copy.deepcopy(board)
+            if self.mergeable(duplicated_board, move):
+                out.append(move)
+
+        return out
 
     def mergeable(self, board, move):
         """ Tries to perform a movement and returns if that movement is possible """
 
+        mergeable = False
         if move == 'left':
-            return any([self.move_possible(row) for row in board])
+            mergeable = any([self.move_possible(row) for row in board])
 
         if move == 'right':
-            return any([self.move_possible(list(reversed(row))) for row in board])
+            mergeable = any([self.move_possible(list(reversed(row))) for row in board])
 
-        board = self.rotate(board)
         if move == 'down':
-            return any([self.move_possible(list(reversed(row))) for row in board])
+            board = self.rotate(board)
+            mergeable = any([self.move_possible(list(reversed(row))) for row in board])
 
         if move == 'up':
-            return any([self.move_possible(row) for row in board])
+            board = self.rotate(board)
+            mergeable = any([self.move_possible(row) for row in board])
 
-        return None
+        return mergeable
 
     def move_possible(self, row):
         """ Determines if a left movement is possible """
+        possible = False
 
-        if row[0] == 0:
-            return True
+        previous = row.pop(0)
+        for value in row:
+            if value != 0:
+                if previous in (value, 0):
+                    possible = True
+            previous = value
 
-        row = list(filter(lambda value: value != 0, row))
-        for i in range(1, len(row)):
-            if row[i-1] == row[i]:
-                return True
-
-        return False
+        return possible
 
     def rotate(self, board):
         """ Rotates the board by switching the x and y positions"""
@@ -89,22 +101,6 @@ class Game:
 
         return out
 
-    def game_over(self):
-        """
-        Checks if there are still empty tiles on the gameboard
-        If not, and there are no movements possible, the game is over.
-
-        Returns if game_over is true or false
-        """
-
-        # If board is full and of no movements are possible
-        if self.board.full(self.board.board):
-            if len(self.possible_directions(self.board.board)) == 0:
-                # Game is over :(
-                return True
-
-        return False
-
     def left_move(self):
         """ Performs a movement to the left and inserts a new random number to the board """
 
@@ -115,7 +111,7 @@ class Game:
 
         new_board = []
         for row in self.board.board:
-            new_board.append(list(reversed(self.comparing(list(reversed(row)), False))))
+            new_board.append(list(reversed(self.comparing(list(reversed(row))))))
         self.board.replace(new_board)
 
     def down_move(self):
@@ -169,16 +165,16 @@ class Game:
         #while the row isn't empty yet, pick the first two items.
         while len(inp) > 0:
             first_value = inp.pop(0)
-            if len(inp) >= 1:
+            if len(inp) > 0:
                 second_value = inp.pop(0)
             else:
                 second_value = None
 
-            # If the first two items are the same, combine them and add them back to the input
+            # If the first two items are the same, combine them and add them to the output
             # at the most left position (e.g. 2 and 2 -> [4])
             if first_value == second_value:
                 new_value = first_value + second_value
-                inp.insert(0, new_value)
+                out.append(new_value)
                 if write_score:
                     self.score += new_value
 

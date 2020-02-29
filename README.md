@@ -1,7 +1,8 @@
 # Twenty-Forty-Eight **Remake**
 
-## Author:
+## Authors:
 - Luuk Perdaems
+- [Sidney Liebrand](https://github.com/SidOfc)
 
 ## Status
 Version: 0.0.1
@@ -14,11 +15,11 @@ $ cd 2048-Solver
 $ chmod +x main
 $ ./main
 ```
-Follow the instructions from the main file
+Follow the instructions in the main file from here
 
 ## Possibilities:
 - The game can be played manually in the terminal using manual mode (run ./main)
-- ~~The game can be played automatically using a build-in AI~~
+- The game can be played automatically using a build-in algorithm (Not doing much at the moment)
 - ~~The game can be played on an extern graphical screen~~
 
 
@@ -33,13 +34,16 @@ Follow the instructions from the main file
 
 ### Version 0.0.2 (...)
 - Replaced the possible directions function which is now also used as the game_over function
-- Simplified the perform_perform movement function in lib/game.py
+- Simplified the perform_movement function in lib/game.py
 - Connected 2048 algorithm (not really productive yet)
+- Bugfix in the lib/game.py comparing funcion
 
 ## To do:
 - ~~Organise code of files in the lib folder~~
 - Rebuild the AI that solved the game
-- Build a extern graphical screen to play the game or watch the game being played
+    - Use the amount of empty tiles after movement as reference
+    - Use the score change after movement as reference
+    - The more higher numbers in a single corner, or at least at one side, the better
 
-## References
-Lots of thanks for [Sidney Liebrand](https://github.com/SidOfc) by helping me building this game and AI.
+- Build a extern graphical screen to play the game or watch the game being played
+- Add highscore

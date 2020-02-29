@@ -5,6 +5,7 @@
 
 import sys
 import os
+import time
 from lib.game import Game
 
 def manual_game():
@@ -32,52 +33,79 @@ def manual_game():
     print("Enjoy!\n___________________\n")
 
     possible_directions = game.possible_directions(game.board.board)
-    fancy_render(game.board.board, game.score, None)
+    game.game_over = len(possible_directions) == 0
+    fancy_render(game.board.board, game.score, None, game.moves)
 
-    while len(possible_directions) != 0:
-
-        # Keyboard input
-        direction = reversed_keys[read_single_keypress()]
+    while not game.game_over:
+        # Keyboard input (press and release is not working, so we use time.sleep)
+        key = read_single_keypress()
+        if key in reversed_keys:
+            direction = reversed_keys[key]
 
         if direction == "quit":
             sys.exit()
 
-        duplicated_board = game.board.duplicate()
-        possible_directions = game.possible_directions(duplicated_board.board)
-
+        # Perform a movement
         if direction in possible_directions:
             game.perform_movement(direction)
-            fancy_render(game.board.board, game.score, direction)
+            fancy_render(game.board.board, game.score, direction, game.moves)
+
+        # Check if the game has been won
+        for row in game.board.board:
+            if 2048 in row:
+                print("\nYou have won the game!!! \n")
+                break
+
+        # Duplicate the board to determine the possible directions
+        duplicated_board = game.board.duplicate()
+        possible_directions = game.possible_directions(duplicated_board.board)
+        game.game_over = len(possible_directions) == 0
+
+
+
+    print("\n\n\nGame over!\nFinal score: {}".format(game.score))
 
 def automatic_game(render_game=True):
     """ Play the 2048 automatically using the ai script """
 
     algo = TfeAlgorithm()
-    total_games = 1
-    sleeping_time = 1
+    total_games = 10
+    sleeping_time = 0.00001
 
+    game_scores = {}
     for game_i in range(total_games):
         game = Game()
 
-        print("Current game: {}".format(game_i))
+        print("Current game: {}".format(game_i+1))
         if render_game:
-            fancy_render(game.board.board, game.score, None)
+            fancy_render(game.board.board, game.score, None, game.moves)
 
-        while not game.game_over():
-            # Get direction from the AI
+        possible_directions = game.possible_directions(game.board.board)
+        game.game_over = len(possible_directions) == 0
+        while not game.game_over:
+            direction = random.choice(possible_directions)
 
-            #TODO remake this as it is made in the manual game, using possible movements
-            #TODO also rebuild this in the network script
-            direction = random.choice(algo.possible_directions(game.board.board))
+            # Perform a movement
             game.perform_movement(direction)
+
             if render_game:
-                fancy_render(game.board.board, game.score, direction)
-                print("Current game: {}".format(game_i))
+                fancy_render(game.board.board, game.score, direction, game.moves)
+            print("Current game: {}".format(game_i+1))
+
+            # Check if the game has been won
+            # Duplicate the board to determine the possible directions
+            duplicated_board = game.board.duplicate()
+            possible_directions = game.possible_directions(duplicated_board.board)
+            game.game_over = len(possible_directions) == 0
 
             time.sleep(sleeping_time)
-    print("Test")
 
-def fancy_render(board, score, direction):
+        game_scores[game_i+1] = game.score
+
+    if total_games < 100:
+        print("\nScores per game: \n{}".format(game_scores))
+
+def fancy_render(board, score, direction, moves):
     """ A more advanced version of the render function """
 
     # Set the width of the board
@@ -105,7 +133,11 @@ def fancy_render(board, score, direction):
             total_board = "\n".join([total_board, midline, tile_spacing, line, tile_spacing])
 
     # Print the board on the screen
-    print("\n\n\n\n\n\n\n\n\nMovement: {}\n\n{}\n\nScore: {}".format(direction, total_board, score))
+    print(
+        """
+        \n\n\n\n\n\n\n\n\n{}\nMovement: {}\nScore: {}\nMoves: {}
+        """.format(total_board, direction, score, moves)
+    )
 
 def read_single_keypress():
     """Waits for a single keypress on stdin.
@@ -163,9 +195,17 @@ def get_game_type():
     game_type = ""
     # Determine if it is a manual or automatic game
     while game_type not in ["m", "a"]:
-        game_type = input('(M)anual game or (A)utoplay?\n').lower()
+        game_type = input("(M)anual game or (A)utoplay?\n").lower()
 
     return game_type
+
+def determine_retry():
+    """ Let the player choose to retry playing the game """
+    retry = input("Do you want a retry? (Y)es/(N)o?").lower()
+    while retry not in ("y", "n"):
+        retry = input("Do you want a retry? (Y)es/(N)o?").lower()
+
+    return retry
 
 # Determine if it is a manual or automatic game
 GAME_TYPE = get_game_type()
@@ -174,10 +214,17 @@ if GAME_TYPE == "m":
     import termios
     import fcntl
 
-    manual_game()
+    PLAYING = True
+    while PLAYING:
+        manual_game()
+
+        if determine_retry() == "n":
+            print("Thanks for playing!")
+            break
+
+
 
 elif GAME_TYPE == "a":
-    import time
     import random
     from lib.network import TfeAlgorithm
 
