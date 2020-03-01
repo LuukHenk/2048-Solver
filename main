@@ -65,32 +65,35 @@ def manual_game():
 
     print("\n\n\nGame over!\nFinal score: {}".format(game.score))
 
-def automatic_game(render_game=True):
+def automatic_game(render_game=False):
     """ Play the 2048 automatically using the ai script """
 
-    algo = TfeAlgorithm()
     total_games = 10
-    sleeping_time = 0.00001
+    sleeping_time = 0
 
     game_scores = {}
     for game_i in range(total_games):
         game = Game()
+        games_won = 0
 
         print("Current game: {}".format(game_i+1))
         if render_game:
             fancy_render(game.board.board, game.score, None, game.moves)
 
-        possible_directions = game.possible_directions(game.board.board)
+        duplicated_board = game.board.duplicate()
+        possible_directions = game.possible_directions(duplicated_board.board)
         game.game_over = len(possible_directions) == 0
+
         while not game.game_over:
-            direction = random.choice(possible_directions)
+
+            direction = algo.determine_best_movement(duplicated_board.board, possible_directions)
 
             # Perform a movement
             game.perform_movement(direction)
 
             if render_game:
                 fancy_render(game.board.board, game.score, direction, game.moves)
-            print("Current game: {}".format(game_i+1))
+                print("Current game: {}".format(game_i+1))
 
             # Check if the game has been won
             # Duplicate the board to determine the possible directions
@@ -100,10 +103,18 @@ def automatic_game(render_game=True):
 
             time.sleep(sleeping_time)
 
+            if game.game_over:
+                for row in game.board.board:
+                    for value in row:
+                        if value >= 2048:
+                            games_won += 1
+
+
         game_scores[game_i+1] = game.score
 
     if total_games < 100:
         print("\nScores per game: \n{}".format(game_scores))
+        print("The algo has beaten {} games".format(games_won))
 
 def fancy_render(board, score, direction, moves):
     """ A more advanced version of the render function """
@@ -225,8 +236,7 @@ if GAME_TYPE == "m":
 
 
 elif GAME_TYPE == "a":
-    import random
-    from lib.network import TfeAlgorithm
+    import lib.network as algo
 
     automatic_game()
     print("Still in progress...")

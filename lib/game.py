@@ -60,17 +60,17 @@ class Game:
         """ Tries to perform a movement and returns if that movement is possible """
 
         mergeable = False
-        if move == 'left':
+        if move == "left":
             mergeable = any([self.move_possible(row) for row in board])
 
-        if move == 'right':
+        if move == "right":
             mergeable = any([self.move_possible(list(reversed(row))) for row in board])
 
-        if move == 'down':
+        if move == "down":
             board = self.rotate(board)
             mergeable = any([self.move_possible(list(reversed(row))) for row in board])
 
-        if move == 'up':
+        if move == "up":
             board = self.rotate(board)
             mergeable = any([self.move_possible(row) for row in board])
 

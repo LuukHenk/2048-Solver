@@ -35,14 +35,15 @@ Follow the instructions in the main file from here
 ### Version 0.0.2 (...)
 - Replaced the possible directions function which is now also used as the game_over function
 - Simplified the perform_movement function in lib/game.py
-- Connected 2048 algorithm (not really productive yet)
+- Connected 2048 algorithm
+    - Use the score change for the next movement as reference by making a movement
 - Bugfix in the lib/game.py comparing funcion
 
 ## To do:
 - ~~Organise code of files in the lib folder~~
 - Rebuild the AI that solved the game
     - Use the amount of empty tiles after movement as reference
-    - Use the score change after movement as reference
+    - ~~Use the score change after movement as reference~~
     - The more higher numbers in a single corner, or at least at one side, the better
 
 - Build a extern graphical screen to play the game or watch the game being played
