@@ -1,21 +1,128 @@
 """ File contains a algorithms that can solve the 2048 game """
 import random
+from .game import Game
 
 def determine_best_movement(board, possible_movements):
     """
     Determine the best move with the given board and the possible directions
-    using the score ................
+    using the score, the position of the highest value
 
     """
-    scores_per_movement = determine_scores(board, possible_movements)
-    highest_score_move = max(scores_per_movement, key=scores_per_movement.get)
 
-    if scores_per_movement[highest_score_move] == 0:
+    game = Game()
+    weights = {"left": [0], "right": [0], "down": [0], "up": [0]}
+    combined_weights = {"left": 0, "right": 0, "down": 0, "up": 0}
+
+    if len(possible_movements) > 1 and "up" in possible_movements:
+        possible_movements.remove("up")
+    # Determine best score
+    scores_per_movement = determine_scores(board, possible_movements)
+
+    # Add scores to weights
+    for move in scores_per_movement:
+        if scores_per_movement[move] > 0:
+            weights[move][0] = round(scores_per_movement[move]/4)
+
+    # TODO Keep the highest value in the corner
+
+    # Find the highest value on the board
+
+    highest_value_coordinates = get_highest_value_coordinates(board)
+    highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
+
+    highest_in_corner = False
+    if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
+        highest_in_corner = True
+
+    for move in possible_movements:
+
+        if move in ("left", "right"):
+            highest_row = board[highest_value_coordinates[1]]
+
+            if move == "left":
+                new_row = game.comparing(highest_row)
+            elif move == "right":
+                new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
+
+            new_highest_in_corner = False
+            for i, val in enumerate(new_row):
+                if val == highest_value and highest_value_coordinates[0] in (0, 3) and i in (0, 3):
+                    new_highest_in_corner = True
+
+        elif move in ("up", "down"):
+            pass
+            # TODO add comparison for up and down
+            # rotated_board = rotate(board)
+            # highest_row = rotated_board[highest_value_coordinates[0]]
+
+            # print("\n")
+            # print(move)
+            # for row in board:
+            #     print(row)
+            # print(highest_row, highest_in_corner)
+            # if move == "up":
+            #     new_row = game.comparing(highest_row)
+            # elif move == "down":
+            #     new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
+
+            # new_highest_in_corner = False
+            # for i, val in enumerate(new_row):
+            #     if val == highest_value and highest_value_coordinates[1] in (0, 3) and i in (0, 3):
+            #         new_highest_in_corner = True
+
+            # print(new_row, new_highest_in_corner)
+            # print("\n{}\n{}\n{}\nbefore: {} - after: {}".format(move, board, highest_value_coordinates, highest_in_corner, new_highest_in_corner))
+
+
+
+
+            # TODO
+            # give positive weight if new_highest_in_corner and NOT highest_in_corner
+            # give no weight if new_highest_in_corner and highest_in_corner
+            # give negative weight if NOT new_highest_in_corner and highest_in_corner
+            # give no weight if both are False
+
+
+        # if move == "up":
+        #     board = rotate(board)
+        #     print(board)
+
+
+    # Determine combined weights
+    for move in weights:
+        combined_weights[move] = sum(weights[move])
+
+    # Determine the hightest weights
+    highest_weight_move = max(combined_weights, key=combined_weights.get)
+    highest_weight = combined_weights[highest_weight_move]
+
+    # Make a random choice if there is no weight
+    if highest_weight == 0:
         best_movement = random.choice(possible_movements)
+    # Else choose a move with the highest weight
     else:
-        best_movement = highest_score_move
+        best_movements = []
+        for move in combined_weights:
+            if combined_weights[move] == highest_weight:
+                best_movements.append(move)
+        best_movement = random.choice(best_movements)
 
     return best_movement
+
+def get_highest_value_coordinates(board):
+    """
+    Returns the location [x, y] of the highest value on the board
+    Returns [0, 0] if all the values are 0
+    """
+
+    highest_value = -1
+    for i, row in enumerate(board):
+        for j, value in enumerate(row):
+            if value > highest_value:
+                highest_value = value
+                highest_value_coordinates = [j, i]
+
+    return highest_value_coordinates
 
 
 
@@ -63,7 +170,6 @@ def determine_score(sample):
     """ Determine the score for a left movement on the board"""
 
     score = 0
-
     inp = list(filter(lambda value: value != 0, sample))
 
     while len(inp) > 1:
