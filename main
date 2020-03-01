@@ -68,8 +68,8 @@ def manual_game():
 def automatic_game(render_game=False):
     """ Play the 2048 automatically using the ai script """
 
-    total_games = 1
-    sleeping_time = 0.5
+    total_games = 100
+    sleeping_time = 0
 
     game_scores = {}
     for game_i in range(total_games):

@@ -27,30 +27,30 @@ def determine_best_movement(board, possible_movements):
 
     # Find the highest value on the board
 
-    highest_value_coordinates = get_highest_value_coordinates(board)
-    highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
+    # highest_value_coordinates = get_highest_value_coordinates(board)
+    # highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
 
-    highest_in_corner = False
-    if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
-        highest_in_corner = True
+    # highest_in_corner = False
+    # if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
+    #     highest_in_corner = True
 
-    for move in possible_movements:
+    # for move in possible_movements:
 
-        if move in ("left", "right"):
-            highest_row = board[highest_value_coordinates[1]]
+    #     if move in ("left", "right"):
+    #         highest_row = board[highest_value_coordinates[1]]
 
-            if move == "left":
-                new_row = game.comparing(highest_row)
-            elif move == "right":
-                new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
+    #         if move == "left":
+    #             new_row = game.comparing(highest_row)
+    #         elif move == "right":
+    #             new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
 
-            new_highest_in_corner = False
-            for i, val in enumerate(new_row):
-                if val == highest_value and highest_value_coordinates[0] in (0, 3) and i in (0, 3):
-                    new_highest_in_corner = True
+    #         new_highest_in_corner = False
+    #         for i, val in enumerate(new_row):
+    #             if val == highest_value and highest_value_coordinates[0] in (0, 3) and i in (0, 3):
+    #                 new_highest_in_corner = True
 
-        elif move in ("up", "down"):
-            pass
+    #     elif move in ("up", "down"):
+    #         pass
             # TODO add comparison for up and down
             # rotated_board = rotate(board)
             # highest_row = rotated_board[highest_value_coordinates[0]]
