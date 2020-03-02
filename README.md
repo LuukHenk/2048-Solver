@@ -44,5 +44,6 @@ Follow the instructions in the main file from here
     - Use the amount of empty tiles after movement as reference
     - ~~Use the score change after movement as reference~~
     - The more higher numbers in a single corner, or at least at one side, the better
+        - also add that the highest value is better on the side than in the middle
 - Build a extern graphical screen to play the game or watch the game being played
 - Add highscore

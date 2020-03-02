@@ -8,7 +8,7 @@ def determine_best_movement(board, possible_movements):
     using the score, the position of the highest value
 
     """
-
+    print("\nmove performed")
     game = Game()
     weights = {"left": [0], "right": [0], "down": [0], "up": [0]}
     combined_weights = {"left": 0, "right": 0, "down": 0, "up": 0}
@@ -27,54 +27,40 @@ def determine_best_movement(board, possible_movements):
 
     # Find the highest value on the board
 
-    # highest_value_coordinates = get_highest_value_coordinates(board)
-    # highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
+    highest_value_coordinates = get_highest_value_coordinates(board)
+    highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
 
-    # highest_in_corner = False
-    # if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
-    #     highest_in_corner = True
+    highest_in_corner = False
+    if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
+        highest_in_corner = True
 
-    # for move in possible_movements:
+    for move in possible_movements:
+        new_highest_in_corner = False
 
-    #     if move in ("left", "right"):
-    #         highest_row = board[highest_value_coordinates[1]]
+        if move in ("left", "right") and highest_value_coordinates[1] in (0, 3):
+            highest_row = board[highest_value_coordinates[1]]
 
-    #         if move == "left":
-    #             new_row = game.comparing(highest_row)
-    #         elif move == "right":
-    #             new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
+            if move == "left":
+                new_row = game.comparing(highest_row, False)
+            elif move == "right":
+                new_row = game.comparing(list(reversed(highest_row)), False)
 
-    #         new_highest_in_corner = False
-    #         for i, val in enumerate(new_row):
-    #             if val == highest_value and highest_value_coordinates[0] in (0, 3) and i in (0, 3):
-    #                 new_highest_in_corner = True
+            new_highest_in_corner = new_row[0] >= highest_value
 
-    #     elif move in ("up", "down"):
-    #         pass
-            # TODO add comparison for up and down
-            # rotated_board = rotate(board)
-            # highest_row = rotated_board[highest_value_coordinates[0]]
+        elif move in ("up", "down") and highest_value_coordinates[0] in (0, 3):
+            rotated_board = rotate(board)
+            highest_row = rotated_board[highest_value_coordinates[0]]
 
-            # print("\n")
-            # print(move)
-            # for row in board:
-            #     print(row)
-            # print(highest_row, highest_in_corner)
-            # if move == "up":
-            #     new_row = game.comparing(highest_row)
-            # elif move == "down":
-            #     new_row = list(reversed(game.comparing(list(reversed(highest_row)))))
+            if move == "up":
+                new_row = game.comparing(highest_row, False)
+            elif move == "down":
+                new_row = game.comparing(list(reversed(highest_row)), False)
 
-            # new_highest_in_corner = False
-            # for i, val in enumerate(new_row):
-            #     if val == highest_value and highest_value_coordinates[1] in (0, 3) and i in (0, 3):
-            #         new_highest_in_corner = True
+            new_highest_in_corner = new_row[0] >= highest_value
 
-            # print(new_row, new_highest_in_corner)
-            # print("\n{}\n{}\n{}\nbefore: {} - after: {}".format(move, board, highest_value_coordinates, highest_in_corner, new_highest_in_corner))
-
-
-
+        print("{}\n{}\n{}\nbefore: {} - after: {}".format(
+            move, board, highest_value_coordinates, highest_in_corner, new_highest_in_corner
+            ))
 
             # TODO
             # give positive weight if new_highest_in_corner and NOT highest_in_corner
