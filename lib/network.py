@@ -8,9 +8,10 @@ def determine_best_movement(board, possible_movements):
     using the score, the position of the highest value
 
     """
-    print("\nmove performed")
+
+    #TODO keep track of the size of the board (atm  you can only play 4x4)
     game = Game()
-    weights = {"left": [0], "right": [0], "down": [0], "up": [0]}
+    weights = {"left": [0, 0], "right": [0, 0], "down": [0, 0], "up": [0, 0]}
     combined_weights = {"left": 0, "right": 0, "down": 0, "up": 0}
 
     if len(possible_movements) > 1 and "up" in possible_movements:
@@ -25,73 +26,68 @@ def determine_best_movement(board, possible_movements):
 
     # TODO Keep the highest value in the corner
 
-    # Find the highest value on the board
-
+    # Find the highest value and its coordinateson the board
     highest_value_coordinates = get_highest_value_coordinates(board)
     highest_value = board[highest_value_coordinates[1]][highest_value_coordinates[0]]
 
-    highest_in_corner = False
-    if highest_value_coordinates[0] in (0, 3) and highest_value_coordinates[1] in (0, 3):
-        highest_in_corner = True
+    # Determine if the higest value is in the corner of the board
+    highest_in_corner = (highest_value_coordinates[0] in (0, 3)
+                         and highest_value_coordinates[1] in (0, 3))
 
     for move in possible_movements:
         new_highest_in_corner = False
 
+        highest_row_on_side = False
         if move in ("left", "right") and highest_value_coordinates[1] in (0, 3):
             highest_row = board[highest_value_coordinates[1]]
-
-            if move == "left":
-                new_row = game.comparing(highest_row, False)
-            elif move == "right":
-                new_row = game.comparing(list(reversed(highest_row)), False)
-
-            new_highest_in_corner = new_row[0] >= highest_value
-
+            highest_row_on_side = True
         elif move in ("up", "down") and highest_value_coordinates[0] in (0, 3):
             rotated_board = rotate(board)
             highest_row = rotated_board[highest_value_coordinates[0]]
+            highest_row_on_side = True
 
-            if move == "up":
-                new_row = game.comparing(highest_row, False)
-            elif move == "down":
-                new_row = game.comparing(list(reversed(highest_row)), False)
+        if move in ("left", "up") and highest_row_on_side:
+            new_row = game.comparing(highest_row, False)
+        elif move in ("right", "down") and highest_row_on_side:
+            new_row = game.comparing(list(reversed(highest_row)), False)
 
+        if highest_row_on_side:
             new_highest_in_corner = new_row[0] >= highest_value
 
-        print("{}\n{}\n{}\nbefore: {} - after: {}".format(
-            move, board, highest_value_coordinates, highest_in_corner, new_highest_in_corner
-            ))
+        ## print board and if the higest is in the corner
+        # print("{}\n{}\n{}\nbefore: {} - after: {}".format(
+            # move, board, highest_value_coordinates, highest_in_corner, new_highest_in_corner
+            # ))
 
-            # TODO
-            # give positive weight if new_highest_in_corner and NOT highest_in_corner
-            # give no weight if new_highest_in_corner and highest_in_corner
-            # give negative weight if NOT new_highest_in_corner and highest_in_corner
-            # give no weight if both are False
-
-
-        # if move == "up":
-        #     board = rotate(board)
-        #     print(board)
-
+        # give positive weight if new_highest_in_corner and NOT highest_in_corner
+        if new_highest_in_corner and not highest_in_corner:
+            weights[move][1] = highest_value
+        # give negative weight if NOT new_highest_in_corner and highest_in_corner
+        elif highest_in_corner and not new_highest_in_corner:
+            weights[move][1] = -highest_value
+        # give no weight if new_highest_in_corner and highest_in_corner
+        # give no weight if both are False
 
     # Determine combined weights
     for move in weights:
         combined_weights[move] = sum(weights[move])
 
+    print("Weights: {}\nCombined weights: {}".format(weights, combined_weights))
     # Determine the hightest weights
     highest_weight_move = max(combined_weights, key=combined_weights.get)
     highest_weight = combined_weights[highest_weight_move]
+    print(highest_weight)
 
     # Make a random choice if there is no weight
-    if highest_weight == 0:
-        best_movement = random.choice(possible_movements)
+    #FIXME also keep track of the negative weights
+    # if highest_weight == 0:
+    #     best_movement = random.choice(possible_movements)
     # Else choose a move with the highest weight
-    else:
-        best_movements = []
-        for move in combined_weights:
-            if combined_weights[move] == highest_weight:
-                best_movements.append(move)
-        best_movement = random.choice(best_movements)
+    best_movements = []
+    for move in combined_weights:
+        if combined_weights[move] == highest_weight:
+            best_movements.append(move)
+    best_movement = random.choice(best_movements)
 
     return best_movement
 

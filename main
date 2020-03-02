@@ -68,37 +68,46 @@ def manual_game():
 def automatic_game(render_game=False):
     """ Play the 2048 automatically using the ai script """
 
-    total_games = 1
-    sleeping_time = 0.1
+    render_game = True
+    total_games = 1 if render_game else 100
+    games_won = 0
+    sleeping_time = 0.5 if render_game else 0
 
+    # play x games
     game_scores = {}
     for game_i in range(total_games):
         game = Game()
-        games_won = 0
 
+        # Render board if render_game is True
         if render_game:
             fancy_render(game.board.board, game.score, None, game.moves)
 
+        # Duplicate the board to determine the possible directions
         duplicated_board = game.board.duplicate()
         possible_directions = game.possible_directions(duplicated_board.board)
+
+        # Determine if the game is over
         game.game_over = len(possible_directions) == 0
 
         print("{}/{}".format(game_i, total_games), end="\r")
         while not game.game_over:
 
+            # Let the algorithm choose the best direction to perform
             direction = algo.determine_best_movement(duplicated_board.board, possible_directions)
 
             # Perform a movement
             game.perform_movement(direction)
 
+            # Render board if render_game is True
             if render_game:
                 fancy_render(game.board.board, game.score, direction, game.moves)
                 print("Current game: {}".format(game_i+1))
 
-            # Check if the game has been won
             # Duplicate the board to determine the possible directions
             duplicated_board = game.board.duplicate()
             possible_directions = game.possible_directions(duplicated_board.board)
+
+            # Determine if the game is over
             game.game_over = len(possible_directions) == 0
 
             time.sleep(sleeping_time)
@@ -233,8 +242,6 @@ if GAME_TYPE == "m":
         if determine_retry() == "n":
             print("Thanks for playing!")
             break
-
-
 
 elif GAME_TYPE == "a":
     import lib.network as algo

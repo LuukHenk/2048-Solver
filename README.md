@@ -21,6 +21,7 @@ Follow the instructions in the main file from here
 - The game can be played manually in the terminal using manual mode (run ./main)
 - The game can be played automatically using a build-in algorithm
     - Predicts score of the possible movements and adds weight to the movement with the highest score
+    - Finds the the highest value on the board, determines if it is in a corner, and determines with which movement it gets in/out of the corner
 - ~~The game can be played on an extern graphical screen~~
 
 ## Changelog:
@@ -36,6 +37,7 @@ Follow the instructions in the main file from here
 - Rebuild and simplification of the function "possible_directions" in lib/game.py
 - Connected 2048 algorithm
     - Predicts score of the possible movements and adds weight to the movement with the highest score
+    - Finds the the highest value on the board, determines if it is in a corner, and determines with which movement it gets in/out of the corner
 - Bugfix in the lib/game.py comparing funcion
 - Other small bugfixes
 
@@ -43,7 +45,11 @@ Follow the instructions in the main file from here
 - Rebuild the AI that solved the game
     - Use the amount of empty tiles after movement as reference
     - ~~Use the score change after movement as reference~~
-    - The more higher numbers in a single corner, or at least at one side, the better
+    - Find the the highest value on the board, determines if it is in a corner, and determines with which movement it gets in/out of the corner
         - also add that the highest value is better on the side than in the middle
 - Build a extern graphical screen to play the game or watch the game being played
 - Add highscore
+
+- Bugs:
+    1. Script crashes in manual gamemode if a non-supported key is pressed
+    2. highest number in corner makes mistakes ( See images/bug_2 )
