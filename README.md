@@ -1,7 +1,7 @@
 # Twenty-Forty-Eight **Remake**
 
 ## Authors:
-- Luuk Perdaems
+- [Luuk Perdaems](https://github.com/LuukHenk)
 - [Sidney Liebrand](https://github.com/SidOfc)
 
 ## Status
@@ -52,4 +52,4 @@ Follow the instructions in the main file from here
 
 - Bugs:
     1. Script crashes in manual gamemode if a non-supported key is pressed
-    2. highest number in corner makes mistakes ( See images/bug_2 )
+    2. When trying to determine if the highest value is in a corner and stays in a corner after movement, the function returns false weights (images/bug_2)
