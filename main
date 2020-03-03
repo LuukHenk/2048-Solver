@@ -38,9 +38,9 @@ def manual_game():
 
     while not game.game_over:
         # Keyboard input (press and release is not working, so we use time.sleep)
-        key = read_single_keypress()
-        if key in reversed_keys:
-            direction = reversed_keys[key]
+        key = read_single_keypress().lower()
+        print(key)
+        direction = reversed_keys[key] if key in reversed_keys else None
 
         if direction == "quit":
             sys.exit()
@@ -71,7 +71,7 @@ def automatic_game(render_game=False):
     render_game = True
     total_games = 1 if render_game else 100
     games_won = 0
-    sleeping_time = 0.5 if render_game else 0
+    sleeping_time = 0.1 if render_game else 0
 
     # play x games
     game_scores = {}

@@ -39,6 +39,7 @@ Follow the instructions in the main file from here
     - Predicts score of the possible movements and adds weight to the movement with the highest score
     - Finds the the highest value on the board, determines if it is in a corner, and determines with which movement it gets in/out of the corner
 - Bugfix in the lib/game.py comparing funcion
+- Bug fixed where the script crashes in manual gamemode if a non-supported key was pressed
 - Other small bugfixes
 
 ## To do:
@@ -51,5 +52,4 @@ Follow the instructions in the main file from here
 - Add highscore
 
 - Bugs:
-    1. Script crashes in manual gamemode if a non-supported key is pressed
-    2. When trying to determine if the highest value is in a corner and stays in a corner after movement, the function returns false weights (images/bug_2)
+    1. When trying to determine if the highest value is in a corner and stays in a corner after movement, the function returns false weights (images/bug_2 and images/bug_2_2) --> only found with move to the left ???
