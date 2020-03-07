@@ -29,20 +29,17 @@ class Game:
         """
         Inserts a 2 or a 4 on a random location on the board
         """
-
-        value = 0
         if not self.game_over:
-            value = 2
+            # 1/10 chance to get a 4 instead of a 2 on the board
+            value = 4 if random.randint(1, 10) == 1 else 2
 
             # Find an empty position on the board
             position = random.choice(self.board.empty_tiles(self.board.board))
 
-            # 1/10 chance to get a 4 instead of a 2 on the board
-            if random.randint(1, 10) == 10:
-                value = 4
+            # Set the value to the random position on the board
+            return self.board.set(value, position['y'], position['x'])
 
-        # Set the value to the random position on the board
-        return self.board.set(value, position['y'], position['x'])
+        return None
 
     def possible_directions(self, board):
         """ Determines which moves are possible by performing the movement """

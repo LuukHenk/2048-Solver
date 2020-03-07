@@ -68,29 +68,32 @@ def manual_game():
 def automatic_game(render_game=False):
     """ Play the 2048 automatically using the ai script """
 
-    render_game = True
-    total_games = 1 if render_game else 100
-    games_won = 0
-    sleeping_time = 0.1 if render_game else 0
+    render_game = False
+    total_games = 1 if render_game else 1000
+    sleeping_time = 0.0000000001
 
     # play x games
     game_scores = {}
-    for game_i in range(total_games):
+    games_won = 0
+    for game_index in range(1, total_games+1):
         game = Game()
 
         # Render board if render_game is True
         if render_game:
             fancy_render(game.board.board, game.score, None, game.moves)
+            print(f"Current game: {game_index}")
+            time.sleep(sleeping_time)
+        else:
+            print(f"{game_index}/{total_games}", end="\r")
 
-        # Duplicate the board to determine the possible directions
-        duplicated_board = game.board.duplicate()
-        possible_directions = game.possible_directions(duplicated_board.board)
-
-        # Determine if the game is over
-        game.game_over = len(possible_directions) == 0
-
-        print("{}/{}".format(game_i, total_games), end="\r")
         while not game.game_over:
+            # Duplicate the board to determine the possible directions
+            duplicated_board = game.board.duplicate()
+            possible_directions = game.possible_directions(duplicated_board.board)
+
+            if len(possible_directions) == 0:
+                game.game_over = True
+                break
 
             # Let the algorithm choose the best direction to perform
             direction = algo.determine_best_movement(duplicated_board.board, possible_directions)
@@ -101,16 +104,8 @@ def automatic_game(render_game=False):
             # Render board if render_game is True
             if render_game:
                 fancy_render(game.board.board, game.score, direction, game.moves)
-                print("Current game: {}".format(game_i+1))
-
-            # Duplicate the board to determine the possible directions
-            duplicated_board = game.board.duplicate()
-            possible_directions = game.possible_directions(duplicated_board.board)
-
-            # Determine if the game is over
-            game.game_over = len(possible_directions) == 0
-
-            time.sleep(sleeping_time)
+                print(f"Current game: {game_index}")
+                time.sleep(sleeping_time)
 
         # Determine if the game has been won
         for row in game.board.board:
@@ -119,8 +114,9 @@ def automatic_game(render_game=False):
                     games_won += 1
 
         # Save the score of the game
-        game_scores[game_i+1] = game.score
+        game_scores[game_index] = game.score
 
+    # Print game information
     print("Games played: {}".format(total_games))
     print("Average score: {}".format(sum(game_scores.values())/total_games))
     print("Highest score: {}".format(game_scores[max(game_scores, key=game_scores.get)]))
@@ -229,7 +225,9 @@ def determine_retry():
     return retry
 
 # Determine if it is a manual or automatic game
-GAME_TYPE = get_game_type()
+print("GAME_TYPE in main is a")
+GAME_TYPE = "a"
+# GAME_TYPE = get_game_type()
 
 if GAME_TYPE == "m":
     import termios
