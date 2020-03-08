@@ -68,9 +68,9 @@ def manual_game():
 def automatic_game(render_game=False):
     """ Play the 2048 automatically using the ai script """
 
-    render_game = False
-    total_games = 1 if render_game else 1000
-    sleeping_time = 0.0000000001
+    # render_game = True
+    total_games = 1 if render_game else 10000
+    sleeping_time = 0.5
 
     # play x games
     game_scores = {}
@@ -86,6 +86,7 @@ def automatic_game(render_game=False):
         else:
             print(f"{game_index}/{total_games}", end="\r")
 
+        #Play a single game
         while not game.game_over:
             # Duplicate the board to determine the possible directions
             duplicated_board = game.board.duplicate()
@@ -225,9 +226,12 @@ def determine_retry():
     return retry
 
 # Determine if it is a manual or automatic game
-print("GAME_TYPE in main is a")
-GAME_TYPE = "a"
-# GAME_TYPE = get_game_type()
+GAME_TYPE = get_game_type()
+
+if GAME_TYPE == "m":
+    print("GAME_TYPE in main is manual\n")
+if GAME_TYPE == "a":
+    print("GAME_TYPE in main is automatic\n")
 
 if GAME_TYPE == "m":
     import termios

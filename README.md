@@ -25,6 +25,8 @@ Follow the instructions in the main file from here
 - ~~The game can be played on an extern graphical screen~~
 
 ## Changelog:
+    - Reorganised the determine_best_movement function in the lib/network.py file and added printing of the weights
+
 ## To do:
 - Rebuild the AI that solved the game
     - Use the amount of empty tiles after movement as reference
@@ -33,6 +35,12 @@ Follow the instructions in the main file from here
         - ~~determines if the highest value is in a corner, and determines with which movement the highest value gets in/out of the corner~~
         - determines if the highest value is on the side, and determines with which movement the highest value gets to or from the side
 - Build a extern graphical screen to play the game or watch the game being played
+- Add timer
 - Add highscore
+    - Add log file
+    - Add highscores.json
+- Add the usage of user arguments
+- Add multithreading
+- Rewrite code in rust? ^^
 
 
