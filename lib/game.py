@@ -18,9 +18,8 @@ class Game:
     """
 
     def __init__(self):
-        self.score = 0 # Set score to 0
-        self.moves = 0
-        self.game_over = False
+        self.score = 0 # Reset score
+        self.moves = 0 # Reset moves
         self.board = Board() # Get an empty board
         self.insert_number() # Add a number to the board (2x)
         self.insert_number()
@@ -29,17 +28,14 @@ class Game:
         """
         Inserts a 2 or a 4 on a random location on the board
         """
-        if not self.game_over:
-            # 1/10 chance to get a 4 instead of a 2 on the board
-            value = 4 if random.randint(1, 10) == 1 else 2
+        # 1/10 chance to get a 4 instead of a 2 on the board
+        value = 4 if random.randint(1, 10) == 1 else 2
 
-            # Find an empty position on the board
-            position = random.choice(self.board.empty_tiles(self.board.board))
+        # Find an empty position on the board
+        position = random.choice(self.board.empty_tiles(self.board.board))
 
-            # Set the value to the random position on the board
-            return self.board.set(value, position['y'], position['x'])
-
-        return None
+        # Set the value to the random position on the board
+        return self.board.set(value, position['y'], position['x'])
 
     def possible_directions(self, board):
         """ Determines which moves are possible by performing the movement """

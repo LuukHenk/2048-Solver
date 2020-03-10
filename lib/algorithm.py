@@ -1,7 +1,7 @@
 """ File contains a algorithms that can solve the 2048 game """
 import random
 from .game import Game
-game = Game()
+GAME = Game()
 
 def determine_best_movement(board, possible_movements, print_weights=False):
     """
@@ -44,7 +44,6 @@ def determine_value_position_weights(board, weights, factor=1):
     and translates this to a weight
     """
 
-    #TODO add weights when on the side
     # Determine the coordinates of the highest value on the board
     highest_value = board[0][0]
     highest_value_coordinates = [0, 0]
@@ -79,9 +78,9 @@ def determine_value_position_weights(board, weights, factor=1):
 
             # If the highest value is on the side, perform a movement with this row/column
             if move in ("left", "up"):
-                new_row = game.comparing(highest_row, False)
+                new_row = GAME.comparing(highest_row, False)
             elif move in ("right", "down"):
-                new_row = game.comparing(list(reversed(highest_row)), False)
+                new_row = GAME.comparing(list(reversed(highest_row)), False)
 
             # Check if the highest value is in a corner after the performed movement
             # give positive weight if the highest value was not in a corner but is now
@@ -141,4 +140,3 @@ def rotate(board):
             out[x_pos][y_pos] = value
 
     return out
-
