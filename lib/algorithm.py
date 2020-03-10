@@ -25,9 +25,10 @@ def determine_best_movement(board, possible_movements, print_weights=False):
         value_position_weights = determine_value_position_weights(board, empty_weights)
         print(
             f"""
-            \rScore weights: {score_weights}
-            \rValue position weights: {value_position_weights}
-            \rTotal weights: {weights}
+            \rWeights for score increasements:\n{score_weights}\n
+            \rWeights for moving the highest value to or from a corner:\n{value_position_weights}\n
+            \rTotal weights:\n{weights}\n
+            \r------------------------------------------------
             """
         )
 

@@ -1,4 +1,14 @@
-### Version 0.0.2 (Release: 7 March 2020)
+### Version 0.1.0 - 10 March 2020
+- Rename of lib/network.py to lib/algorithm.py
+    - Organisation of lib/algorgitm.py which mainly involved the determine_best_movement function
+    - Added the possibility to print weights in the determine_best_movement function
+    - Fixed game over and game won code
+    - Moved rendering of the game to lib/rendering.py
+    - Added input arguments
+    - Reorganised and updated README
+
+
+### Version 0.0.2 - 7 March 2020
 Made a automated gameplay using a algorithm that uses the score and highest value on the board to determine the best movement
 
 - Rebuild and simplification of the function "possible_directions" in lib/game.py
@@ -13,7 +23,7 @@ Made a automated gameplay using a algorithm that uses the score and highest valu
     - Other small bugfixes
     - game.possible_directions returns invalid directions which cause game.game_over to stay False
 
-### Version 0.0.1 (28 Februari 2020)
+### Version 0.0.1 - 28 Februari 2020
 Made a playable 2048 game
 
 - Remade the main file

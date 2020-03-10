@@ -6,20 +6,20 @@ def render_automatic_in_terminal(board, score, direction, total_moves, index):
 
     print(
         f"""
-\n\n\n\n\n\n\n\n\n
-{total_board}
-Current game: {index}
-Movement: {direction}
-Score: {score}
-Moves: {total_moves}
-    """
+        \r\n\n\n\n\n\n\n\n\n
+        \r{total_board}
+        \n
+        \r------------------------------------------------\n
+        \rCurrent game: {index}
+        \rMovement: {direction}
+        \rScore: {score}
+        \rMoves: {total_moves}"""
     )
 
 def render_manual_in_terminal(keys, board, score, direction, total_moves):
     """ Rendering of the manual game in the terminal """
 
     total_board = build_fancy_board(board)
-
     # Print the board on the screen
     print(
         f"""

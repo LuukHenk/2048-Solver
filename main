@@ -52,10 +52,9 @@ def manual_game():
             if direction in possible_directions:
                 game.perform_movement(direction)
                 # hint = algo.determine_best_movement(game.board.board, possible_directions)
-                if ARGS.render:
-                    rendering.render_manual_in_terminal(
-                        keys, game.board.board, game.score, direction, game.moves
-                    )
+                rendering.render_manual_in_terminal(
+                    keys, game.board.board, game.score, direction, game.moves
+                )
 
             # Check if the game has been won
             for row in game.board.board:
@@ -128,7 +127,10 @@ def read_single_keypress():
 
 def automatic_game():
     """ Play the 2048 automatically using the ai script """
+    # Set time.sleep between frames
     sleeping_time = 0.2
+
+    # Set total games
     total_games = abs(ARGS.total_games)
 
     # play x games
