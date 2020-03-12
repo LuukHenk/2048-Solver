@@ -4,7 +4,7 @@ import copy
 
 class Board:
     """ Generates and controls a 2048 board """
-    def __init__(self, size=6, default_value=0):
+    def __init__(self, size=4, default_value=0):
         self.size = size
         self.default_value = default_value
         self.board = self.generate()

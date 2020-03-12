@@ -28,12 +28,22 @@ def manual_game():
     }
     reversed_keys = {v: k for k, v in keys.items()}
 
+    render_gui = True
+    if render_gui:
+        from lib.gui_rendering import Render
+        render = Render()
+
     # While playing games
     while True:
 
         # Load an empty game and render it
         game = Game()
-        rendering.render_manual_in_terminal(keys, game.board.board, game.score, None, game.moves)
+
+        if render_gui:
+            render.draw_gui_board(game.board.board)
+        else:
+            rendering.render_manual_in_terminal(keys, game.board.board, game.score, None, game.moves)
+
         # While not game over
         while True:
             possible_directions = game.possible_directions(game.board.board)
@@ -52,15 +62,19 @@ def manual_game():
             if direction in possible_directions:
                 game.perform_movement(direction)
                 # hint = algo.determine_best_movement(game.board.board, possible_directions)
-                rendering.render_manual_in_terminal(
-                    keys, game.board.board, game.score, direction, game.moves
-                )
+                if render_gui:
+                    render.draw_gui_board(game.board.board)
+                else:
+                    rendering.render_manual_in_terminal(
+                        keys, game.board.board, game.score, direction, game.moves
+                    )
 
             # Check if the game has been won
             for row in game.board.board:
                 if 2048 in row:
                     #TODO make a fancier print
                     print("\nYou have won the game!!! \n")
+
 
         # Game is over, rematch???
         print("\n\n\nGame over!\nFinal score: {}".format(game.score))
@@ -72,6 +86,9 @@ def manual_game():
         if rematch == "q":
             print("Thanks for playing!")
             break
+
+    if render_gui:
+        render.root.mainloop()
 
 def read_single_keypress():
     """Waits for a single keypress on stdin.
@@ -136,6 +153,12 @@ def automatic_game():
     # play x games
     game_scores = {}
     games_won = 0
+
+    render_gui = True
+    if render_gui:
+        from lib.gui_rendering import Render
+        render = Render()
+
     for game_index in range(1, total_games+1):
         game = Game()
 
@@ -147,6 +170,9 @@ def automatic_game():
             time.sleep(sleeping_time)
         else:
             print(f"Games played: {game_index}/{total_games}", end="\r")
+
+        if render_gui:
+            render.draw_gui_board(game.board.board)
 
         #Play a single game
         while True:
@@ -163,6 +189,8 @@ def automatic_game():
             # Perform a movement
             game.perform_movement(direction)
 
+            if render_gui:
+                render.draw_gui_board(game.board.board)
             # Render board if render_game is True
             if ARGS.render:
                 rendering.render_automatic_in_terminal(
@@ -179,6 +207,9 @@ def automatic_game():
 
         # Save the score of the game
         game_scores[game_index] = game.score
+
+    if render_gui:
+        render.root.mainloop()
 
     # Print game output information
     print("\rGames played: {}".format(total_games))
@@ -223,6 +254,7 @@ def argument_handler():
 
 # Load arguments
 ARGS = argument_handler()
+BOARD_SIZE = 4
 
 if ARGS.game_mode == "manual":
     import os

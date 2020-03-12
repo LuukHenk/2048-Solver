@@ -10,6 +10,8 @@ def determine_best_movement(board, possible_movements, print_weights=False):
 
     """
 
+    if "up" in possible_movements and len(possible_movements) > 1:
+        possible_movements.remove("up")
     # Generate weight per possible movement which will determine the final score
     weights = {move:0 for move in possible_movements}
 
@@ -33,13 +35,8 @@ def determine_best_movement(board, possible_movements, print_weights=False):
     # Determine the highest weight (int)
     highest_weight = weights[max(weights, key=weights.get)]
 
-    #TODO clean this code
-    best_moves = [move for move in weights if weights[move] == highest_weight]
-
-    if "up" in best_moves and len(best_moves) > 1:
-        best_moves.remove("up")
-
-    return random.choice(best_moves)
+    # Return a random move from weights with the highest weight
+    return random.choice([move for move in weights if weights[move] == highest_weight])
 
 def determine_value_position_weights(board, weights, factor=1):
     """

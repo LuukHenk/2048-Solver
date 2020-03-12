@@ -40,14 +40,6 @@ COLORSET_2 = {
     65536: "#000000"
 }
 
-COLORSET_3 = {0: "#f0f0f0"}
-colorset_3_base_color = "#901e40"
-color_int = int(colorset_3_base_color[1:], 16)
-for i in range(1, 17):
-    hex_number = format(color_int, "x")
-    COLORSET_3[2**i] = "#"+hex_number
-
-    color_int -= 100
 
 class Render:
     def __init__(self):
@@ -57,13 +49,13 @@ class Render:
         self.gameframe = tk.Frame(self.root)
         self.gameframe.pack()
         # Set the colorset (int: "hex")
-        self.colorset = COLORSET_3
+        self.colorset = COLORSET_1
         # Set size of the tiles on the board
         self.tile_size = 10
         # Build a gui board using tk
         self.gui_board = self.generate_tk_board()
 
-    def generate_tk_board(self, board_size=6, board=None):
+    def generate_tk_board(self, board_size=4, board=None):
         "Generate an empty tk grid in the size of the game board"
         # Generate an empty board of board_size if there is no input board given.
         # Otherwise use the board from the input

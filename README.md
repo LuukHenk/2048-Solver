@@ -35,20 +35,20 @@ The game can be played manually or by the build in algorighm.
 
 
 ## Changelog:
-    - Rename of lib/network.py to lib/algorithm.py
-    - Organisation of lib/algorgitm.py which mainly involved the determine_best_movement function
-    - Added the possibility to print weights in the determine_best_movement function
-    - Fixed game over and game won code
-    - Moved rendering of the game to lib/rendering.py
-    - Added input arguments
-    - Reorganised and updated README
+    - Added gui for manual
+
 
     - For older changelogs see CHANGELOG.md
 
 
 ## To do:
-- Add a gui
+- Add a gui for automatic
+- Integrate keypress with tk gui
+
 - Improve algorithm that solves the game
+    - Add that the highest values must be in the same row on the bottom.
+    - Add movement preferrences
+
     - Current winning chance of the algorithm is ~1/1000. A timer will be added later.
 - Add highscore
 - Add multithreading
