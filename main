@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 """######################################
 ##########                    ###########
 ########## Twenty-forty-eight ###########
@@ -28,7 +28,7 @@ def manual_game():
     }
     reversed_keys = {v: k for k, v in keys.items()}
 
-    render_gui = True
+    render_gui = False
     if render_gui:
         from lib.gui_rendering import Render
         render = Render()
@@ -37,12 +37,16 @@ def manual_game():
     while True:
 
         # Load an empty game and render it
-        game = Game()
+        game = Game(BOARD_SIZE)
 
         if render_gui:
             render.draw_gui_board(game.board.board)
         else:
-            rendering.render_manual_in_terminal(keys, game.board.board, game.score, None, game.moves)
+            rendering.render_manual_in_terminal(keys, None, game)
+            # rendering.render_manual_in_terminal(
+                # keys, game.board.board, game.score, None, game.moves, board.size
+
+            # )
 
         # While not game over
         while True:
@@ -138,14 +142,14 @@ def read_single_keypress():
     return ret
 
 
-"""#####################
+########################
 #### Automatic game ####
-#####################"""
+########################
 
 def automatic_game():
     """ Play the 2048 automatically using the ai script """
     # Set time.sleep between frames
-    sleeping_time = 0.2
+    sleeping_time = 0.0
 
     # Set total games
     total_games = abs(ARGS.total_games)
@@ -160,7 +164,7 @@ def automatic_game():
         render = Render()
 
     for game_index in range(1, total_games+1):
-        game = Game()
+        game = Game(BOARD_SIZE)
 
         # Render board if render_game is True
         if ARGS.render:
@@ -254,7 +258,7 @@ def argument_handler():
 
 # Load arguments
 ARGS = argument_handler()
-BOARD_SIZE = 4
+BOARD_SIZE = 6
 
 if ARGS.game_mode == "manual":
     import os

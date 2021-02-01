@@ -35,8 +35,7 @@ The game can be played manually or by the build in algorighm.
 
 
 ## Changelog:
-    - Added gui for manual
-
+    - Added gui for manual and automatic mode
 
     - For older changelogs see CHANGELOG.md
 

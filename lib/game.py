@@ -17,10 +17,10 @@ class Game:
     and a function to move and combine the numbers on the board
     """
 
-    def __init__(self):
+    def __init__(self, board_size=4):
         self.score = 0 # Reset score
         self.moves = 0 # Reset moves
-        self.board = Board() # Get an empty board
+        self.board = Board(size=board_size) # Get an empty board
         self.insert_number() # Add a number to the board (2x)
         self.insert_number()
 

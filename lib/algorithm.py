@@ -1,7 +1,5 @@
 """ File contains a algorithms that can solve the 2048 game """
 import random
-from .game import Game
-GAME = Game()
 
 def determine_best_movement(board, possible_movements, print_weights=False):
     """
@@ -40,6 +38,50 @@ def determine_best_movement(board, possible_movements, print_weights=False):
         best_moves.remove("up")
 
     return random.choice(best_moves)
+
+def comparing(sample):
+    """
+    Performs a 'left movement' on a row in the 2048 board.
+    First all the 0's are removed.
+    Then we sum adjecent values if they are the same (from left to right).
+    If not, we just add them in the same oder at the most left side of the row.
+    When we have combined all values, we add back all the 0's left next to the other values
+    """
+
+    # Remove all 0's from the input row (e.g. [0, 2, 0, 2] -> [2, 2])
+    inp = list(filter(lambda value: value != 0, sample))
+    out = []
+
+    #while the row isn't empty yet, pick the first two items.
+    while len(inp) > 0:
+        first_value = inp.pop(0)
+        if len(inp) > 0:
+            second_value = inp.pop(0)
+        else:
+            second_value = None
+
+        # If the first two items are the same, combine them and add them to the output
+        # at the most left position (e.g. 2 and 2 -> [4])
+        if first_value == second_value:
+            new_value = first_value + second_value
+            out.append(new_value)
+
+        # If they are not the same, add the first item to the output and
+        # If there was a second item, add it back into the input (position 0)
+        # If there is no second item, break the while loop and start adding zeros
+        else:
+            out.append(first_value)
+            if second_value is None:
+                break
+            inp.insert(0, second_value)
+
+    # Add the remaining 0's on the right of the numbers in the output
+    zeros_to_add = len(sample) - len(out)
+    while zeros_to_add > 0:
+        zeros_to_add -= 1
+        out.append(0)
+
+    return out
 
 def determine_value_position_weights(board, weights, factor=1):
     """
@@ -82,9 +124,9 @@ def determine_value_position_weights(board, weights, factor=1):
 
             # If the highest value is on the side, perform a movement with this row/column
             if move in ("left", "up"):
-                new_row = GAME.comparing(highest_row, False)
+                new_row = comparing(highest_row)
             elif move in ("right", "down"):
-                new_row = GAME.comparing(list(reversed(highest_row)), False)
+                new_row = comparing(list(reversed(highest_row)))
 
             # Check if the highest value is in a corner after the performed movement
             # give positive weight if the highest value was not in a corner but is now
@@ -144,3 +186,5 @@ def rotate(board):
             out[x_pos][y_pos] = value
 
     return out
+
+

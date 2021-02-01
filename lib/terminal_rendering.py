@@ -2,7 +2,7 @@
 
 def render_automatic_in_terminal(board, score, direction, total_moves, index):
     """ Rendering of the automatic game in the terminal """
-    total_board = build_fancy_board(board)
+    total_board = build_fancy_board(board, 5)
 
     print(
         f"""
@@ -16,43 +16,50 @@ def render_automatic_in_terminal(board, score, direction, total_moves, index):
         \rMoves: {total_moves}"""
     )
 
-def render_manual_in_terminal(keys, board, score, direction, total_moves):
+def render_manual_in_terminal(keys, direction, game):
     """ Rendering of the manual game in the terminal """
+    total_board = build_fancy_board(game.board.board, game.board.size)
+    print(total_board)
 
-    total_board = build_fancy_board(board)
-    # Print the board on the screen
-    print(
-        f"""
-\n\n\n\n\n\n\n\n\n\n\n\n\n
-____________________________________________
+# def render_manual_in_terminal(keys, board, score, direction, total_moves):
+#     """ Rendering of the manual game in the terminal """
 
-- Press {keys['left']} to move left
-- Press {keys['right']} to move right
-- Press {keys['down']} to move down
-- Press {keys['up']} to move up
-- Press {keys['quit']} to quit the game
+#     total_board = build_fancy_board(board)
+#     # Print the board on the screen
+#     print(
+#         f"""
+# \n\n\n\n\n\n\n\n\n\n\n\n\n
+# ____________________________________________
 
-____________________________________________
-\n\n\n\n\n\n\n\n\n
-{total_board}
-Movement: {direction}
-Score: {score}
-Moves: {total_moves}
-        """
-    )
+# - Press {keys['left']} to move left
+# - Press {keys['right']} to move right
+# - Press {keys['down']} to move down
+# - Press {keys['up']} to move up
+# - Press {keys['quit']} to quit the game
 
-def build_fancy_board(board):
+# ____________________________________________
+# \n\n\n\n\n\n\n\n\n
+# {total_board}
+# Movement: {direction}
+# Score: {score}
+# Moves: {total_moves}
+#         """
+#     )
+
+def build_fancy_board(board, board_size):
     """ Build a fancy terminal board of the board list"""
     # Set the width of the board
-    board_spacing = 10
 
+
+
+    board_spacing = 10
     # Build tile spacing
     tile_spacing = "".join([" " for _ in range(board_spacing)])
-    tile_spacing = "||".join([tile_spacing, tile_spacing, tile_spacing, tile_spacing])
+    tile_spacing = "||".join([tile_spacing for _ in range(board_size)])
 
     # Build midline
     midline = "".join(["_" for _ in range(board_spacing)])
-    midline = "00".join([midline, midline, midline, midline])
+    midline = "00".join([midline for _ in range(board_size)])
 
     # Build the board
     total_board = ""
