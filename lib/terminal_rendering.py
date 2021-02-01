@@ -1,9 +1,9 @@
 """ Rendering of the board """
 
-def render_automatic_in_terminal(board, score, direction, total_moves, index):
-    """ Rendering of the automatic game in the terminal """
-    total_board = build_fancy_board(board, 5)
-
+def render_automatic_in_terminal(direction, game, index):
+# def render_automatic_in_terminal(board, score, direction, total_moves, index):
+#     """ Rendering of the automatic game in the terminal """
+    total_board = build_fancy_board(game.board.board, game.board.size)
     print(
         f"""
         \r\n\n\n\n\n\n\n\n\n
@@ -12,39 +12,32 @@ def render_automatic_in_terminal(board, score, direction, total_moves, index):
         \r------------------------------------------------\n
         \rCurrent game: {index}
         \rMovement: {direction}
-        \rScore: {score}
-        \rMoves: {total_moves}"""
+        \rScore: {game.score}
+        \rMoves: {game.moves}"""
     )
 
 def render_manual_in_terminal(keys, direction, game):
     """ Rendering of the manual game in the terminal """
     total_board = build_fancy_board(game.board.board, game.board.size)
-    print(total_board)
+        # Print the board on the screen
+    print(
+        f"""
+    \n\n\n\n\n\n\n\n\n\n\n\n\n
+    ____________________________________________
 
-# def render_manual_in_terminal(keys, board, score, direction, total_moves):
-#     """ Rendering of the manual game in the terminal """
+    - Press {keys['left']} to move left
+    - Press {keys['right']} to move right
+    - Press {keys['down']} to move down
+    - Press {keys['up']} to move up
+    - Press {keys['quit']} to quit the game
 
-#     total_board = build_fancy_board(board)
-#     # Print the board on the screen
-#     print(
-#         f"""
-# \n\n\n\n\n\n\n\n\n\n\n\n\n
-# ____________________________________________
-
-# - Press {keys['left']} to move left
-# - Press {keys['right']} to move right
-# - Press {keys['down']} to move down
-# - Press {keys['up']} to move up
-# - Press {keys['quit']} to quit the game
-
-# ____________________________________________
-# \n\n\n\n\n\n\n\n\n
-# {total_board}
-# Movement: {direction}
-# Score: {score}
-# Moves: {total_moves}
-#         """
-#     )
+    ____________________________________________
+    \n\n\n\n\n\n\n\n\n{total_board}
+    Movement: {direction}
+    Score: {game.score}
+    Moves: {game.moves}
+            """
+    )
 
 def build_fancy_board(board, board_size):
     """ Build a fancy terminal board of the board list"""

@@ -28,19 +28,14 @@ def manual_game():
     }
     reversed_keys = {v: k for k, v in keys.items()}
 
-    render_gui = False
-    if render_gui:
-        from lib.gui_rendering import Render
-        render = Render()
-
     # While playing games
     while True:
 
         # Load an empty game and render it
         game = Game(BOARD_SIZE)
 
-        if render_gui:
-            render.draw_gui_board(game.board.board)
+        if RENDER_TYPE == "gui":
+            RENDER.draw_gui_board(game.board.board)
         else:
             rendering.render_manual_in_terminal(keys, None, game)
             # rendering.render_manual_in_terminal(
@@ -66,12 +61,10 @@ def manual_game():
             if direction in possible_directions:
                 game.perform_movement(direction)
                 # hint = algo.determine_best_movement(game.board.board, possible_directions)
-                if render_gui:
-                    render.draw_gui_board(game.board.board)
+                if RENDER_TYPE == "gui":
+                    RENDER.draw_gui_board(game.board.board)
                 else:
-                    rendering.render_manual_in_terminal(
-                        keys, game.board.board, game.score, direction, game.moves
-                    )
+                    rendering.render_manual_in_terminal(keys, direction, game)
 
             # Check if the game has been won
             for row in game.board.board:
@@ -91,8 +84,8 @@ def manual_game():
             print("Thanks for playing!")
             break
 
-    if render_gui:
-        render.root.mainloop()
+    if RENDER_TYPE == "gui":
+        RENDER.root.mainloop()
 
 def read_single_keypress():
     """Waits for a single keypress on stdin.
@@ -151,32 +144,24 @@ def automatic_game():
     # Set time.sleep between frames
     sleeping_time = 0.0
 
-    # Set total games
-    total_games = abs(ARGS.total_games)
-
     # play x games
     game_scores = {}
     games_won = 0
 
-    render_gui = True
-    if render_gui:
-        from lib.gui_rendering import Render
-        render = Render()
-
-    for game_index in range(1, total_games+1):
+    for game_index in range(1, TOTAL_GAMES+1):
         game = Game(BOARD_SIZE)
 
         # Render board if render_game is True
-        if ARGS.render:
-            rendering.render_automatic_in_terminal(
-                game.board.board, game.score, None, game.moves, game_index
-            )
+        if RENDER_TYPE == "terminal":
+            rendering.render_automatic_in_terminal(None, game, game_index)
+                # game.board.board, game.score, None, game.moves, game_index
+            # )
             time.sleep(sleeping_time)
         else:
-            print(f"Games played: {game_index}/{total_games}", end="\r")
+            print(f"Games played: {game_index}/{TOTAL_GAMES}", end="\r")
 
-        if render_gui:
-            render.draw_gui_board(game.board.board)
+        if RENDER_TYPE == "gui":
+            RENDER.draw_gui_board(game.board.board)
 
         #Play a single game
         while True:
@@ -193,13 +178,11 @@ def automatic_game():
             # Perform a movement
             game.perform_movement(direction)
 
-            if render_gui:
-                render.draw_gui_board(game.board.board)
+            if RENDER_TYPE == "gui":
+                RENDER.draw_gui_board(game.board.board)
             # Render board if render_game is True
-            if ARGS.render:
-                rendering.render_automatic_in_terminal(
-                    game.board.board, game.score, direction, game.moves, game_index
-                )
+            elif RENDER_TYPE == "terminal":
+                rendering.render_automatic_in_terminal(direction, game, game_index)
                 algo.determine_best_movement(game.board.board, possible_directions, True)
                 time.sleep(sleeping_time)
 
@@ -212,22 +195,22 @@ def automatic_game():
         # Save the score of the game
         game_scores[game_index] = game.score
 
-    if render_gui:
-        render.root.mainloop()
+    if RENDER_TYPE == "gui":
+        RENDER.root.mainloop()
 
     # Print game output information
-    print("\rGames played: {}".format(total_games))
-    print("Average score: {}".format(sum(game_scores.values())/total_games))
+    print("\rGames played: {}".format(TOTAL_GAMES))
+    print("Average score: {}".format(sum(game_scores.values())/TOTAL_GAMES))
     print("Highest score: {}".format(game_scores[max(game_scores, key=game_scores.get)]))
     print("The algo has beaten {} games".format(games_won))
-    if total_games == 1 and not ARGS.render:
+    if TOTAL_GAMES == 1 and RENDER_TYPE not in ("gui", "terminal"):
         print("\nTry playing more games using '$ ./main --total_games <any_number_of_games>'")
         print("or see the algorithm play a game using '$ ./main --render True'")
 
 
-"""############
+###############
 #### Input ####
-############"""
+###############
 
 def argument_handler():
     """ handles input arguments """
@@ -242,23 +225,35 @@ def argument_handler():
 
     parser.add_argument(
         "--render",
-        type=bool,
-        choices=[True, False],
-        default=False,
-        help="Render game in the terminal when running the automatic game (default: False)"
+        type=str,
+        choices=["none", "terminal", "gui"],
+        default="terminal",
+        help="The type of game rendering (default: terminal)"
     )
 
     parser.add_argument(
         "--total_games",
         type=int,
         default=1,
-        help="int - The total games that will be played (default: 1)"
+        help="int - The total games that will be played when running the automatic game (default: 1)"
+    )
+    parser.add_argument(
+        "--board_size",
+        type=int,
+        default=4,
+        help="int = The grid size of the board (default: 4)"
     )
     return parser.parse_args()
 
 # Load arguments
 ARGS = argument_handler()
-BOARD_SIZE = 6
+TOTAL_GAMES = abs(ARGS.total_games)
+BOARD_SIZE = abs(ARGS.board_size)
+RENDER_TYPE = ARGS.render.lower()
+
+if RENDER_TYPE == "gui":
+    from lib.gui_rendering import Render
+    RENDER = Render()
 
 if ARGS.game_mode == "manual":
     import os
