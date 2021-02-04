@@ -64,6 +64,7 @@ def play_manual_game(game, keys, reversed_keys):
         print("Rendering is turned off, good luck :')\nPress 'q' to quit the game")
 
     # play the game
+    won = False
     while True:
         possible_directions = game.possible_directions(game.board.board)
         # Game over if no possible directions
@@ -88,10 +89,11 @@ def play_manual_game(game, keys, reversed_keys):
                 rendering.render_manual_in_terminal(keys, direction, game)
 
         # Check if the game has been won
-        for row in game.board.board:
-            if 2048 in row:
-                print("\nYou have won the game!!! \n")
-
+        if not won:
+            for row in game.board.board:
+                if 128 in row:
+                    print("\nYou have won the game!!! \n")
+                    won = True
     return game
 
 
