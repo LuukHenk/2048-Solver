@@ -1,12 +1,20 @@
-### Version 0.1.0 - 10 March 2020
-- Rename of lib/network.py to lib/algorithm.py
-    - Organisation of lib/algorgitm.py which mainly involved the determine_best_movement function
-    - Added the possibility to print weights in the determine_best_movement function
-    - Fixed game over and game won code
-    - Moved rendering of the game to lib/rendering.py
-    - Added input arguments
-    - Reorganised and updated README
+### Version 0.2.0 - 4 Februari 2021
+- Added gui for automatic mode (lib/gui_rendering)
+	- Gui build using tkinter
+- Updated the terminal rendering
+	- Renamed lib/rendering.py to lib/terminal_rendering.py
+	- Rewrite of code in terminal rendering file
+- Made it possible to resize the board with the "board_size" input argument
+- Reorganized input arguments in general
 
+### Version 0.1.0 - 4 March 2020
+- Rename of lib/network.py to lib/algorithm.py
+    - Reorganisation of lib/algorithm.py, with focus on the movement determination function
+		- Added the possibility to print weights in the determine_best_movement function
+- Fixed "game over" and "game won" code
+- Moved rendering of the game to lib/rendering.py
+- Added input arguments
+- Reorganised and updated README
 
 ### Version 0.0.2 - 7 March 2020
 Made a automated gameplay using a algorithm that uses the score and highest value on the board to determine the best movement

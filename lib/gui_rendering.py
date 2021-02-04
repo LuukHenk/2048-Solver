@@ -50,7 +50,7 @@ for i in range(1, 17):
     color_int -= 100
 
 class Render:
-    def __init__(self):
+    def __init__(self, board_size):
         # Load tk.Tk()
         self.root = tk.Tk()
         #TODO why do we use gameframe
@@ -61,9 +61,9 @@ class Render:
         # Set size of the tiles on the board
         self.tile_size = 10
         # Build a gui board using tk
-        self.gui_board = self.generate_tk_board()
+        self.gui_board = self.generate_tk_board(board_size)
 
-    def generate_tk_board(self, board_size=6, board=None):
+    def generate_tk_board(self, board_size=4, board=None):
         "Generate an empty tk grid in the size of the game board"
         # Generate an empty board of board_size if there is no input board given.
         # Otherwise use the board from the input

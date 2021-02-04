@@ -42,10 +42,8 @@ def render_manual_in_terminal(keys, direction, game):
 def build_fancy_board(board, board_size):
     """ Build a fancy terminal board of the board list"""
     # Set the width of the board
-
-
-
     board_spacing = 10
+
     # Build tile spacing
     tile_spacing = "".join([" " for _ in range(board_spacing)])
     tile_spacing = "||".join([tile_spacing for _ in range(board_size)])

@@ -12,9 +12,9 @@ from lib.game import Game
 import lib.algorithm as algo
 
 
-"""##################
+#####################
 #### Manual game ####
-##################"""
+#####################
 
 def manual_game():
     """ Play the 2048 manually """
@@ -28,56 +28,21 @@ def manual_game():
     }
     reversed_keys = {v: k for k, v in keys.items()}
 
+
     # While playing games
     while True:
 
         # Load an empty game and render it
         game = Game(BOARD_SIZE)
 
-        if RENDER_TYPE == "gui":
-            RENDER.draw_gui_board(game.board.board)
-        else:
-            rendering.render_manual_in_terminal(keys, None, game)
-            # rendering.render_manual_in_terminal(
-                # keys, game.board.board, game.score, None, game.moves, board.size
 
-            # )
-
-        # While not game over
-        while True:
-            possible_directions = game.possible_directions(game.board.board)
-            # Game over if no possible directions
-            if len(possible_directions) == 0:
-                break
-
-            # Keyboard input (press and release is not working, so we use time.sleep)
-            key = read_single_keypress().lower()
-            direction = reversed_keys[key] if key in reversed_keys else None
-
-            if direction == "quit":
-                sys.exit()
-
-            # Perform a movement
-            if direction in possible_directions:
-                game.perform_movement(direction)
-                # hint = algo.determine_best_movement(game.board.board, possible_directions)
-                if RENDER_TYPE == "gui":
-                    RENDER.draw_gui_board(game.board.board)
-                else:
-                    rendering.render_manual_in_terminal(keys, direction, game)
-
-            # Check if the game has been won
-            for row in game.board.board:
-                if 2048 in row:
-                    #TODO make a fancier print
-                    print("\nYou have won the game!!! \n")
-
+        game = play_manual_game(game, keys, reversed_keys)
 
         # Game is over, rematch???
         print("\n\n\nGame over!\nFinal score: {}".format(game.score))
         rematch = "."
         while rematch not in ("", "q"):
-            rematch = input("Continue (enter) or quit ('q' and enter)?\n")
+            rematch = input("Continue (enter) or quit ('q' and enter / ctrl-c)?\n")
             rematch = rematch.lower()
 
         if rematch == "q":
@@ -86,6 +51,49 @@ def manual_game():
 
     if RENDER_TYPE == "gui":
         RENDER.root.mainloop()
+
+def play_manual_game(game, keys, reversed_keys):
+    " Play a single manual game"
+
+    # Render before the game starts
+    if RENDER_TYPE == "gui":
+        RENDER.draw_gui_board(game.board.board)
+    elif RENDER_TYPE == "terminal":
+        rendering.render_manual_in_terminal(keys, None, game)
+    else:
+        print("Rendering is turned off, good luck :')\nPress 'q' to quit the game")
+
+    # play the game
+    while True:
+        possible_directions = game.possible_directions(game.board.board)
+        # Game over if no possible directions
+        if len(possible_directions) == 0:
+            break
+
+        # Keyboard input (press and release is not working, so we use time.sleep)
+        key = read_single_keypress().lower()
+        direction = reversed_keys[key] if key in reversed_keys else None
+
+        # quit the game
+        if direction == "quit":
+            print("Thanks for playing!")
+            sys.exit()
+        # Perform a movement
+        elif direction in possible_directions:
+            game.perform_movement(direction)
+            # hint = algo.determine_best_movement(game.board.board, possible_directions)
+            if RENDER_TYPE == "gui":
+                RENDER.draw_gui_board(game.board.board)
+            elif RENDER_TYPE == "terminal":
+                rendering.render_manual_in_terminal(keys, direction, game)
+
+        # Check if the game has been won
+        for row in game.board.board:
+            if 2048 in row:
+                print("\nYou have won the game!!! \n")
+
+    return game
+
 
 def read_single_keypress():
     """Waits for a single keypress on stdin.
@@ -157,10 +165,7 @@ def automatic_game():
                 # game.board.board, game.score, None, game.moves, game_index
             # )
             time.sleep(sleeping_time)
-        else:
-            print(f"Games played: {game_index}/{TOTAL_GAMES}", end="\r")
-
-        if RENDER_TYPE == "gui":
+        elif RENDER_TYPE == "gui":
             RENDER.draw_gui_board(game.board.board)
 
         #Play a single game
@@ -194,6 +199,7 @@ def automatic_game():
 
         # Save the score of the game
         game_scores[game_index] = game.score
+        print(f"Games played: {game_index}/{TOTAL_GAMES}", end="\r")
 
     if RENDER_TYPE == "gui":
         RENDER.root.mainloop()
@@ -203,10 +209,6 @@ def automatic_game():
     print("Average score: {}".format(sum(game_scores.values())/TOTAL_GAMES))
     print("Highest score: {}".format(game_scores[max(game_scores, key=game_scores.get)]))
     print("The algo has beaten {} games".format(games_won))
-    if TOTAL_GAMES == 1 and RENDER_TYPE not in ("gui", "terminal"):
-        print("\nTry playing more games using '$ ./main --total_games <any_number_of_games>'")
-        print("or see the algorithm play a game using '$ ./main --render True'")
-
 
 ###############
 #### Input ####
@@ -235,7 +237,8 @@ def argument_handler():
         "--total_games",
         type=int,
         default=1,
-        help="int - The total games that will be played when running the automatic game (default: 1)"
+        help="""int - The total games that will be played when running the automatic game
+            (default: 1)"""
     )
     parser.add_argument(
         "--board_size",
@@ -252,21 +255,29 @@ BOARD_SIZE = abs(ARGS.board_size)
 RENDER_TYPE = ARGS.render.lower()
 
 if RENDER_TYPE == "gui":
-    from lib.gui_rendering import Render
-    RENDER = Render()
+    if ARGS.game_mode == "manual":
+        print("""
+            GUI rendering is not working properly yet...\n
+            Switching back to terminal rendering...
+        """)
+        RENDER_TYPE = "terminal"
+        import lib.terminal_rendering as rendering
+
+    else:
+        from lib.gui_rendering import Render
+        RENDER = Render(BOARD_SIZE)
+
+elif RENDER_TYPE == "terminal":
+    import lib.terminal_rendering as rendering
 
 if ARGS.game_mode == "manual":
     import os
     import termios
     import fcntl
-    import lib.terminal_rendering as rendering
+
 
     # Run manual game
     manual_game()
 
 elif ARGS.game_mode == "automatic":
-    if ARGS.render:
-        import lib.terminal_rendering as rendering
-
-    # Run automatic game
     automatic_game()
