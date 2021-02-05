@@ -14,20 +14,20 @@ $ cd 2048-Solver
 $ chmod +x main
 ```
 
-## Usage:
+## Usage
 The game can be played manually or by the build in algorighm.
 * Run `$ ./main manual` to manually play 2048 in the terminal.
-* Run `$ ./main automatic` to let the build in (or your own) algorithm play 2048.
+* Run `$ ./main automatic` to let the build-in (or your own) algorithm play 2048.
 
 * Run `$ ./main --help` to open the help menu.
 
-### Options:
+### Options
 `./main` also supports some options.
 * `--total_games`: int - Determine the total **automatic** games that will be played (default: 1).
 * `--render`: bool - The type of game rendering {None, terminal, gui} (default: terminal).
 * `--board_size`: int - The grid size of the board (default: 4)
 
 
-## Changelog:
+## Changelog
     - Added gui to the automatic game mode
     - For older changelogs see CHANGELOG.md
