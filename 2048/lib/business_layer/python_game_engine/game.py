@@ -12,10 +12,11 @@ from board import Board
 
 @dataclass
 class Directions():
+    """ ENUM for movements"""
     left: str = "left"
     right: str = "right"
     down: str = "down"
-    up: str = "up"
+    up: str = "up" # pylint: disable=C0103
 
 class Game:
     """
@@ -38,6 +39,11 @@ class Game:
         """returns the game board as a 2D list"""
         return deepcopy(self.__board.board)
 
+    @board.setter
+    def board(self, new_board: List[List[int]]) -> None:
+        """set a new board"""
+        self.__board.board = new_board
+
     @property
     def current_score(self) -> int:
         """Returns the current game score as an integer"""
@@ -55,7 +61,7 @@ class Game:
         """
         return [direction.name for direction in fields(self.__directions)]
 
-    def perform_movement(self, direction: Directions) -> None:
+    def perform_movement(self, direction: Directions, insert_number=True) -> None:
         """
         Performs a move if possible
         Args:
@@ -70,7 +76,8 @@ class Game:
         elif direction == self.__directions.up:
             self.__up_move()
         self.__moves += 1
-        self.__insert_number()
+        if insert_number:
+            self.__insert_number()
 
     def possible_movements(self) -> List[str]:
         """
@@ -89,19 +96,19 @@ class Game:
     def __insert_number(self) -> None:
         """ Inserts a 2 or a 4 on a random location on the board """
         value = 4 if random.randint(1, 10) == 1 else 2
-        position = random.choice(self.__board.empty_tiles(self.__board.board))
-        self.__board.set(value, position['y'], position['x'])
+        position = random.choice(self.__board.empty_tile_positions())
+        self.__board.set_value(value, position['y'], position['x'])
 
     def __left_move(self):
         """ Performs a movement to the left and inserts a new random number to the board """
-        self.__board.replace([self.__merge_values(row) for row in self.__board.board])
+        self.__board.board = [self.__merge_values(row) for row in self.__board.board]
 
     def __right_move(self):
         """ Performs a movement to the right and inserts a new random number to the board """
         new_board = []
         for row in self.__board.board:
             new_board.append(list(reversed(self.__merge_values(list(reversed(row))))))
-        self.__board.replace(new_board)
+        self.__board.board = new_board
 
     def __down_move(self):
         """ Performs a downwards movement and inserts a new random number to the board """
@@ -115,7 +122,8 @@ class Game:
         self.__left_move()
         self.__board.rotate()
 
-    def __rotate(self, board: List[List[int]]) -> List[List[int]]:
+    @staticmethod
+    def __rotate(board: List[List[int]]) -> List[List[int]]:
         """
         Rotates the board by switching the x and y positions
         Args:
@@ -150,7 +158,8 @@ class Game:
             mergeable = any([self.__left_move_possible(row) for row in board])
         return mergeable
 
-    def __left_move_possible(self, row: List[int]) -> bool:
+    @staticmethod
+    def __left_move_possible(row: List[int]) -> bool:
         """
         Determines if a left movement is possible
         Args:
@@ -209,17 +218,6 @@ class Game:
     @staticmethod
     def __fill_list_up_to_size(lst: list, size: int, value: any = 0) -> List[any]:
         """ Fill a list with value until it reaches the expected size"""
-        while len(lst) < size: lst.append(value)
+        while len(lst) < size:
+            lst.append(value)
         return lst
-
-
-# Run locally for testing purposes
-if __name__ == "__main__":
-    GAME = Game()
-    for move in GAME.directions:
-        GAME.perform_movement(move)
-        GAME.possible_movements(GAME.board)
-        GAME.board
-        GAME.total_moves_performed
-        GAME.current_score
-        GAME.directions

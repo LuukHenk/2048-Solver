@@ -1,6 +1,6 @@
 """ This file contains board data and functions for the 2048 game """
 from typing import List, Dict
-from copy import deepcopy
+#from copy import deepcopy
 
 class Board:
     """ Keeps track of the board data for the 2048 game """
@@ -35,6 +35,18 @@ class Board:
     def board(self) -> List[List[int]]:
         """ Returns the current 2D 2048 board"""
         return self.__board
+
+    @board.setter
+    def board(self, new_board: List[List[int]]) -> None:
+        """ Set a new board
+        Args:
+            new_board (List[List[int]]): A new 2048 board. Must be of the same
+                size as the size of the current board.
+        """
+        invalid_rows = any([len(row) != self.__size for row in new_board])
+        if len(new_board) != self.__size or invalid_rows:
+            raise IndexError(f"The board size must be {self.__size} by {self.__size}")
+        self.__board = new_board
 
     def set_value(self, value: int, x_position: int, y_position: int) -> None:
         """Set a given value on a given position on the board

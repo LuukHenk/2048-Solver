@@ -6,7 +6,7 @@ from .board import Board
 
 # setting path
 sys.path.append('../business_layer')
-from business_layer.game import Game
+from lib.business_layer.game import Game
 
 class GameWidget(QtWidgets.QWidget):
     """The screen of the 2048 game"""

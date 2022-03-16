@@ -45,6 +45,43 @@ class TestBoard(TestCase):
         # Arrange, Act & Assert
         self.assertRaises(ValueError, Board, -1)
 
+    def test_board_setter(self):
+        """Test setting a board"""
+        # Arrange
+        board = Board(4)
+        output = [
+            [1, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 2]
+        ]
+        # Act
+        board.board = output
+        # Assert
+        self.assertEqual(board.board, output)
+
+
+    def test_board_setter_invalid_board(self):
+        """Test setting a board with an invalid board size"""
+        board = Board(4)
+        invalid_board_1 = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        invalid_board_2 = [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0],
+        ]
+        with self.assertRaises(IndexError):
+            board.board = invalid_board_1
+        with self.assertRaises(IndexError):
+            board.board = invalid_board_2
+
     def test_set_value(self):
         """Test setting a value on the board"""
         # Arrange
