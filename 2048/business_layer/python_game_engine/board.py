@@ -1,63 +1,74 @@
-""" This file contains a Board class which manages a 2048 board """
-
+""" This file contains board data and functions for the 2048 game """
+from typing import List, Dict
 from copy import deepcopy
 
 class Board:
-    """ Generates and controls a 2048 board """
-    def __init__(self, size=6, default_value=0):
+    """ Keeps track of the board data for the 2048 game """
+    def __init__(self, size: int = 4) -> None:
+        """
+        Args:
+            size (int). The size of the 2D square board (default = 4)
+        """
+        self.__set_board_size(size)
+        self.__board = self.__generate()
+
+    def __set_board_size(self, size: int) -> None:
+        """Set the size of the board. Board size must be at least one
+        Args:
+            size (int): The size of the board
+        """
+        if size <= 0:
+            raise ValueError("Minimum board size is 1")
         self.__size = size
-        self.default_value = default_value
-        self.board = self.generate()
-    
+
+    def __generate(self) -> List[List[int]]:
+        """ Generates a two dimentional board of a given size """
+        board_size_range = range(self.__size)
+        return [[0 for __ in board_size_range] for _ in board_size_range]
+
     @property
     def size(self) -> int:
-        """The board size"""
-        return deepcopy(self.__size)
-        
-    def generate(self):
-        """ Generates a two dimentional board of a given size """
-        size = range(self.__size)
-        return [[self.default_value for __ in size] for _ in size]
+        """ Returns the size of the current board """
+        return self.__size
 
-    def render(self):
-        """ Draw the board in te terminal """
-        for row in self.board:
-            print('|'.join(list(map(lambda n: str(' ' if n == 0 else n).center(10, ' '), row))))
+    @property
+    def board(self) -> List[List[int]]:
+        """ Returns the current 2D 2048 board"""
+        return self.__board
 
-    def set(self, value, y_pos, x_pos):
-        """ Set a given value on a given position on the board """
-        self.board[y_pos][x_pos] = value
+    def set_value(self, value: int, x_position: int, y_position: int) -> None:
+        """Set a given value on a given position on the board
+        Args:
+            value (int): The value to be set
+            x_position / y_position (int): the position of the board where the
+                value is set
+        """
+        self.__board[y_position][x_position] = value
 
-    def replace(self, board):
-        """ Replace the board with another board """
-        self.board = board
+    def rotate(self) -> None:
+        """ Rotates the board by switching the x and y axis"""
+        rotated_board = self.__generate()
+        for y_position, row in enumerate(self.__board):
+            for x_position, value in enumerate(row):
+                rotated_board[x_position][y_position] = value
+        self.__board = rotated_board
 
-    def rotate(self):
-        """ Rotates the board """
-        # Generate a new board
-        out = self.generate()
-
-        # Fill the new board with the switched x and y from the current board
-        for y_pos, row in enumerate(self.board):
-            for x_pos, value in enumerate(row):
-                out[x_pos][y_pos] = value
-        self.board = out
-
-    def empty_tiles(self, board):
-        """ Returns the position of empty tiles on a board """
+    def empty_tile_positions(self) -> List[Dict[str, int]]:
+        """Returns the x and y coordinates of empty tiles on the current board
+        """
         empty_tiles = []
-
-        #find empty tiles on the board
-        for y_pos, row in enumerate(board):
+        for y_pos, row in enumerate(self.__board):
             for x_pos, value in enumerate(row):
                 if value == 0:
                     empty_tiles.append({'y': y_pos, 'x': x_pos})
         return empty_tiles
 
-    def full(self, board):
-        """ Checks if the board still contains empty tiles """
-        return len(self.empty_tiles(board)) == 0
+    def full(self) -> bool:
+        """ Checks if the board still contains empty tiles
+        returns True if the board is full
+        """
+        return self.__total_empty_tiles() == 0
 
-    def duplicate(self):
-        """ Make a copy of the board"""
-        return deepcopy(self)
+    def __total_empty_tiles(self) -> int:
+        """ Get the amount of empty tiles left """
+        return len([val for row in self.__board for val in row if val == 0])
