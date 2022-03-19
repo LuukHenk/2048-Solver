@@ -6,17 +6,11 @@ Also imports the board file for the 2048 board and the functions needed for the 
 from typing import List
 import random
 from copy import deepcopy
-from dataclasses import dataclass, fields
+from dataclasses import fields
 
 from board import Board
+from game_data_formats import Directions, TfeBoard
 
-@dataclass
-class Directions():
-    """ ENUM for movements"""
-    left: str = "left"
-    right: str = "right"
-    down: str = "down"
-    up: str = "up" # pylint: disable=C0103
 
 class Game:
     """
@@ -35,12 +29,12 @@ class Game:
         self.__insert_number()
 
     @property
-    def board(self) -> List[List[int]]:
+    def board(self) -> TfeBoard:
         """returns the game board as a 2D list"""
         return deepcopy(self.__board.board)
 
     @board.setter
-    def board(self, new_board: List[List[int]]) -> None:
+    def board(self, new_board: TfeBoard) -> None:
         """set a new board"""
         self.__board.board = new_board
 
@@ -94,36 +88,36 @@ class Game:
     ###########################################################################
 
     def __insert_number(self) -> None:
-        """ Inserts a 2 or a 4 on a random location on the board """
+        """Inserts a 2 or a 4 on a random location on the board"""
         value = 4 if random.randint(1, 10) == 1 else 2
         position = random.choice(self.__board.empty_tile_positions())
-        self.__board.set_value(value, position['y'], position['x'])
+        self.__board.set_value(value, position["x"], position["y"])
 
     def __left_move(self):
-        """ Performs a movement to the left and inserts a new random number to the board """
+        """Performs a movement to the left and inserts a new random number to the board"""
         self.__board.board = [self.__merge_values(row) for row in self.__board.board]
 
     def __right_move(self):
-        """ Performs a movement to the right and inserts a new random number to the board """
+        """Performs a movement to the right and inserts a new random number to the board"""
         new_board = []
         for row in self.__board.board:
             new_board.append(list(reversed(self.__merge_values(list(reversed(row))))))
         self.__board.board = new_board
 
     def __down_move(self):
-        """ Performs a downwards movement and inserts a new random number to the board """
+        """Performs a downwards movement and inserts a new random number to the board"""
         self.__board.rotate()
         self.__right_move()
         self.__board.rotate()
 
     def __up_move(self):
-        """ Performs a upwards movement and inserts a new random number to the board """
+        """Performs a upwards movement and inserts a new random number to the board"""
         self.__board.rotate()
         self.__left_move()
         self.__board.rotate()
 
     @staticmethod
-    def __rotate(board: List[List[int]]) -> List[List[int]]:
+    def __rotate(board: TfeBoard) -> TfeBoard:
         """
         Rotates the board by switching the x and y positions
         Args:
@@ -149,10 +143,14 @@ class Game:
         if move == self.__directions.left:
             mergeable = any([self.__left_move_possible(row) for row in board])
         if move == self.__directions.right:
-            mergeable = any([self.__left_move_possible(list(reversed(row))) for row in board])
+            mergeable = any(
+                [self.__left_move_possible(list(reversed(row))) for row in board]
+            )
         if move == self.__directions.down:
             board = self.__rotate(board)
-            mergeable = any([self.__left_move_possible(list(reversed(row))) for row in board])
+            mergeable = any(
+                [self.__left_move_possible(list(reversed(row))) for row in board]
+            )
         if move == self.__directions.up:
             board = self.__rotate(board)
             mergeable = any([self.__left_move_possible(row) for row in board])
@@ -175,14 +173,16 @@ class Game:
             previous = value
         return possible
 
-
-    def __merge_values(self, input_row: List[int], write_score: bool = True) -> List[int]:
+    def __merge_values(
+        self, input_row: List[int], write_score: bool = True
+    ) -> List[int]:
         """
         Performs a 'left movement' on a row in the 2048 board.
         First all the 0's are removed.
         Then we sum adjecent values if they are the same (from left to right).
         If not, we just add them in the same oder at the most left side of the row.
-        When we have combined all values, we add back all the 0's left next to the other values
+        When we have combined all values, we add back all the 0's left next to the other
+        values
         """
 
         row_values = self.__filter_list(input_row)
@@ -217,7 +217,7 @@ class Game:
 
     @staticmethod
     def __fill_list_up_to_size(lst: list, size: int, value: any = 0) -> List[any]:
-        """ Fill a list with value until it reaches the expected size"""
+        """Fill a list with value until it reaches the expected size"""
         while len(lst) < size:
             lst.append(value)
         return lst

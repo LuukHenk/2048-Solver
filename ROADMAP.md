@@ -3,16 +3,16 @@ Current 2048 version: 0.2.0
 
 ## Todo
 ### High priority for next version
-- Connect Python engine with new HMI
 
 ### Low priority for next version
 - Update solving algo
 
 ## In progress
-- Update Python game engine
+- Connect Python engine with new HMI
 
 ## Finished
 - Improve the HMI
+- Update Python game engine
 
 # Ideas
 - Add multithreading

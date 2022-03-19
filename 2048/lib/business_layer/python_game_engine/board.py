@@ -1,9 +1,11 @@
 """ This file contains board data and functions for the 2048 game """
 from typing import List, Dict
-#from copy import deepcopy
+from game_data_formats import TfeBoard
+
 
 class Board:
-    """ Keeps track of the board data for the 2048 game """
+    """Keeps track of the board data for the 2048 game"""
+
     def __init__(self, size: int = 4) -> None:
         """
         Args:
@@ -21,24 +23,24 @@ class Board:
             raise ValueError("Minimum board size is 1")
         self.__size = size
 
-    def __generate(self) -> List[List[int]]:
-        """ Generates a two dimentional board of a given size """
+    def __generate(self) -> TfeBoard:
+        """Generates a two dimentional board of a given size"""
         board_size_range = range(self.__size)
         return [[0 for __ in board_size_range] for _ in board_size_range]
 
     @property
     def size(self) -> int:
-        """ Returns the size of the current board """
+        """Returns the size of the current board"""
         return self.__size
 
     @property
-    def board(self) -> List[List[int]]:
-        """ Returns the current 2D 2048 board"""
+    def board(self) -> TfeBoard:
+        """Returns the current 2D 2048 board"""
         return self.__board
 
     @board.setter
-    def board(self, new_board: List[List[int]]) -> None:
-        """ Set a new board
+    def board(self, new_board: TfeBoard) -> None:
+        """Set a new board
         Args:
             new_board (List[List[int]]): A new 2048 board. Must be of the same
                 size as the size of the current board.
@@ -58,7 +60,7 @@ class Board:
         self.__board[y_position][x_position] = value
 
     def rotate(self) -> None:
-        """ Rotates the board by switching the x and y axis"""
+        """Rotates the board by switching the x and y axis"""
         rotated_board = self.__generate()
         for y_position, row in enumerate(self.__board):
             for x_position, value in enumerate(row):
@@ -66,21 +68,20 @@ class Board:
         self.__board = rotated_board
 
     def empty_tile_positions(self) -> List[Dict[str, int]]:
-        """Returns the x and y coordinates of empty tiles on the current board
-        """
+        """Returns the x and y coordinates of empty tiles on the current board"""
         empty_tiles = []
         for y_pos, row in enumerate(self.__board):
             for x_pos, value in enumerate(row):
                 if value == 0:
-                    empty_tiles.append({'y': y_pos, 'x': x_pos})
+                    empty_tiles.append({"y": y_pos, "x": x_pos})
         return empty_tiles
 
     def full(self) -> bool:
-        """ Checks if the board still contains empty tiles
+        """Checks if the board still contains empty tiles
         returns True if the board is full
         """
         return self.__total_empty_tiles() == 0
 
     def __total_empty_tiles(self) -> int:
-        """ Get the amount of empty tiles left """
+        """Get the amount of empty tiles left"""
         return len([val for row in self.__board for val in row if val == 0])
