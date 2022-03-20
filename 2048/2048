@@ -9,14 +9,15 @@ def main():
     """Main script of the program"""
 
     args = {
-        "total_games": 2,
-        "sleep_time": 1,
+        "use_old_games": True,
+        "total_games": 1000,
+        "sleep_time": 0.00000000000000000000000001,
     }
 
     player = Player()
-    player.play_games(args["total_games"])
+    player.play_games(args["total_games"], args["use_old_games"])
 
-    run_main_window()
+    run_main_window(args["sleep_time"])
 
 
 if __name__ == "__main__":

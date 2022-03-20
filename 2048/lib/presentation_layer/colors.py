@@ -1,3 +1,5 @@
+"""Color for each tile number in a 4x4 board"""
+
 COLORSET_2 = {
     0: "#f0f0f0",
     2: "#ffe7e0",

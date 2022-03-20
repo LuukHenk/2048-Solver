@@ -34,9 +34,10 @@ class Player:
         if use_of_old_games:
             self.__load_played_games()
         remaining_games = games_to_play - len(self.__played_games)
-        self.__play_remaining_games(remaining_games)
-        self.__json_processor.save_dict_as_json(data=self.__played_games)
-        print(f"Saved game data to {SAVING_PATH}")
+        if remaining_games > 0:
+            self.__play_remaining_games(remaining_games)
+            self.__json_processor.save_dict_as_json(data=self.__played_games)
+            print(f"Saved game data to {SAVING_PATH}")
 
     def __load_played_games(self) -> List[GameResult]:
         """Load previous games"""
@@ -45,8 +46,9 @@ class Player:
 
     def __play_remaining_games(self, games_to_play: int) -> None:
         while len(self.__played_games) < games_to_play:
+            percentage = round(len(self.__played_games) / games_to_play * 100)
             print(
-                f"Playing remaining games ({len(self.__played_games) / games_to_play * 100}%)",
+                f"Playing remaining games ({percentage}%)",
                 end="\r",
             )
             self.__play_game()

@@ -10,17 +10,17 @@ from lib.presentation_layer.game import GameWidget
 class MainWindow(QtWidgets.QMainWindow):  # pylint: disable=R0903
     """The main window of the 2048 game"""
 
-    def __init__(self):
+    def __init__(self, sleep_time):
         super().__init__()
         self.thread_manager = QThreadPool()
-        self.setCentralWidget(GameWidget(self.thread_manager))
+        self.setCentralWidget(GameWidget(self.thread_manager, sleep_time))
         self.setStyleSheet("QLabel { background-color : #3C341F;}")
 
 
-def run_main_window():
+def run_main_window(sleep_time):
     """Runs the main window, kills everything that is in the main window when closed"""
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(sleep_time)
     window.show()
 
     sys.exit(app.exec())
