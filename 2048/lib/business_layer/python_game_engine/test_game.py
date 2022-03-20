@@ -1,13 +1,16 @@
 """Test the game class"""
 from unittest import main, TestCase
 from dataclasses import fields
-from game import Game, Directions
+from lib.business_layer.python_game_engine.game import Game, Directions
+
 
 class TestGame(TestCase):
     """Test the game class"""
+
     EXPECTED_DIRECTIONS = ["left", "right", "down", "up"]
+
     def test_directions_dataclass(self):
-        """Test if the expected directions are in the directions dataclass """
+        """Test if the expected directions are in the directions dataclass"""
         # Act
         directions = [direction.name for direction in fields(Directions())]
         # Assert
@@ -21,7 +24,7 @@ class TestGame(TestCase):
         self.assertEqual(game.directions, self.EXPECTED_DIRECTIONS)
 
     def test_default_board_size(self):
-        """ Test the expected default board size """
+        """Test the expected default board size"""
         # Arrange
         game = Game()
         default_size = 4
@@ -31,7 +34,7 @@ class TestGame(TestCase):
             self.assertEqual(len(row), default_size)
 
     def test_alternative_board_size(self):
-        """ Test the altered board size """
+        """Test the altered board size"""
         # Arrange
         altered_size = 6
         # Act
@@ -40,7 +43,6 @@ class TestGame(TestCase):
         self.assertEqual(len(game.board), altered_size)
         for row in game.board:
             self.assertEqual(len(row), altered_size)
-
 
     def test_perform_move_left(self):
         """Test perform movement function"""
@@ -83,7 +85,6 @@ class TestGame(TestCase):
         game.perform_movement("right", insert_number=False)
         # Assert
         self.assertEqual(game.board, expected_output_board)
-
 
     def test_perform_move_up(self):
         """Test perform movement function"""

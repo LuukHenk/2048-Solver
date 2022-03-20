@@ -1,15 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 # pylint: disable=C0103
+"""The executable script"""
+
+from pathlib import Path
+
+from lib.presentation_layer.main_window import run_main_window
+from lib.business_layer.player import Player
+
+DATALAYER_PATH = Path(__file__).parent.absolute() / "lib/data_layer/results.json"
 
 
-import sys
-from PySide6 import QtWidgets
+def main():
+    """Main script of the program"""
+    player = Player(DATALAYER_PATH)
+    player.play_games(2)
 
-from lib.presentation_layer.main_window import MainWindow
+    run_main_window()
+
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec())
-
+    main()

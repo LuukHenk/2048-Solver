@@ -8,8 +8,8 @@ import random
 from copy import deepcopy
 from dataclasses import fields
 
-from board import Board
-from game_data_formats import Directions, TfeBoard
+from lib.business_layer.python_game_engine.board import Board
+from lib.business_layer.python_game_engine.game_data_formats import Directions, TfeBoard
 
 
 class Game:

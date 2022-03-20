@@ -1,6 +1,7 @@
 """ This file contains board data and functions for the 2048 game """
 from typing import List, Dict
-from game_data_formats import TfeBoard
+
+from lib.business_layer.python_game_engine.game_data_formats import TfeBoard
 
 
 class Board:

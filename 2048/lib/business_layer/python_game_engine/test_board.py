@@ -3,15 +3,16 @@
 from unittest import main as unittest_main, TestCase
 from typing import List
 
-from board import Board
+from lib.business_layer.python_game_engine.board import Board
+
 
 class TestBoard(TestCase):
-    """ Tests the 2048 game board"""
+    """Tests the 2048 game board"""
 
     DEFAULT_BOARD_SIZE = 4
 
     def set_values_on_board(self, board: List[List[int]]):
-        """ Fill the 2048 game board with values """
+        """Fill the 2048 game board with values"""
         output_board = Board(self.DEFAULT_BOARD_SIZE)
         for y_position, row in enumerate(board):
             for x_position, value in enumerate(row):
@@ -49,17 +50,11 @@ class TestBoard(TestCase):
         """Test setting a board"""
         # Arrange
         board = Board(4)
-        output = [
-            [1, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 2]
-        ]
+        output = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 2]]
         # Act
         board.board = output
         # Assert
         self.assertEqual(board.board, output)
-
 
     def test_board_setter_invalid_board(self):
         """Test setting a board with an invalid board size"""
@@ -69,7 +64,7 @@ class TestBoard(TestCase):
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0],
-            [0, 0, 0, 0]
+            [0, 0, 0, 0],
         ]
         invalid_board_2 = [
             [0, 0, 0, 0],
@@ -86,12 +81,7 @@ class TestBoard(TestCase):
         """Test setting a value on the board"""
         # Arrange
         board = Board(4)
-        expected_output = [
-            [1, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 2]
-        ]
+        expected_output = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 2]]
         # Act
         board.set_value(1, 0, 0)
         board.set_value(2, 3, 3)
@@ -103,7 +93,7 @@ class TestBoard(TestCase):
         # Arrange
         board_size = self.DEFAULT_BOARD_SIZE
         board = Board(board_size)
-        max_negative = (board_size+1) * -1
+        max_negative = (board_size + 1) * -1
         # Act & Assert
         self.assertRaises(IndexError, board.set_value, 1, max_negative, 0)
         self.assertRaises(IndexError, board.set_value, 1, 0, max_negative)
@@ -113,19 +103,9 @@ class TestBoard(TestCase):
     def test_rotate(self):
         """Test the rotation of the board"""
         # Arrange
-        inp_board = [
-            [0, 1, 2, 3],
-            [4, 5, 6, 7],
-            [8, 9, 0, 1],
-            [2, 3, 4, 5]
-        ]
+        inp_board = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 0, 1], [2, 3, 4, 5]]
         board = self.set_values_on_board(inp_board)
-        expected_output_board = [
-            [0, 4, 8, 2],
-            [1, 5, 9, 3],
-            [2, 6, 0, 4],
-            [3, 7, 1, 5]
-        ]
+        expected_output_board = [[0, 4, 8, 2], [1, 5, 9, 3], [2, 6, 0, 4], [3, 7, 1, 5]]
         # Act
         board.rotate()
         # Assert
@@ -134,26 +114,16 @@ class TestBoard(TestCase):
     def test_empty_tile_positions(self):
         """Test finding the position of empty tiles"""
         # Arrange
-        inp_board = [
-            [0, 1, 2, 3],
-            [4, 5, 6, 7],
-            [8, 9, 0, 1],
-            [2, 3, 4, 5]
-        ]
+        inp_board = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 0, 1], [2, 3, 4, 5]]
         board = self.set_values_on_board(inp_board)
-        expected_output = [{'y': 0, 'x': 0}, {'y': 2, 'x': 2}]
+        expected_output = [{"y": 0, "x": 0}, {"y": 2, "x": 2}]
         # Act & Assert
         self.assertEqual(board.empty_tile_positions(), expected_output)
 
     def test_full_board(self):
         """Tests the full board check"""
         # Arrange
-        inp_board = [
-            [0, 1, 2, 3],
-            [4, 5, 6, 7],
-            [8, 9, 1, 1],
-            [2, 3, 4, 5]
-        ]
+        inp_board = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 1, 1], [2, 3, 4, 5]]
         board = self.set_values_on_board(inp_board)
         # Act
         not_full = board.full()
@@ -163,5 +133,6 @@ class TestBoard(TestCase):
         self.assertEqual(not_full, False)
         self.assertEqual(full, True)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest_main()
