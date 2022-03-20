@@ -1,17 +1,17 @@
 """Widget for displaying game play"""
 
-from PySide6 import QtCore, QtWidgets
-
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton  # pylint: disable=E0611
+from PySide6.QtCore import Signal, Qt  # pylint: disable=E0611
 
 from lib.presentation_layer.board import Board
 from lib.business_layer.game_displayer import GameDisplayer
 from lib.business_layer.python_game_engine.game_data_formats import MoveResult
 
 
-class GameWidget(QtWidgets.QWidget):  # pylint: disable=R0903
+class GameWidget(QWidget):  # pylint: disable=R0903
     """The screen of the 2048 game"""
 
-    update_board = QtCore.Signal(MoveResult)
+    update_board = Signal(MoveResult)
 
     def __init__(self, thread_manager):
         """
@@ -24,7 +24,7 @@ class GameWidget(QtWidgets.QWidget):  # pylint: disable=R0903
         self.__init_ui()
 
     def __init_ui(self):
-        self.game_screen = QtWidgets.QVBoxLayout(self)
+        self.game_screen = QVBoxLayout(self)
         # self.__add_game_information()
         self.__add_game_board()
         self.__add_start_button()
@@ -34,11 +34,11 @@ class GameWidget(QtWidgets.QWidget):  # pylint: disable=R0903
         self.update_board.connect(self.game_board.update_cells)
         self.game_screen.addWidget(
             self.game_board,
-            alignment=QtCore.Qt.AlignCenter,
+            alignment=Qt.AlignCenter,
         )
 
     def __add_start_button(self) -> None:
-        self.start_button = QtWidgets.QPushButton("Start")
+        self.start_button = QPushButton("Start")
         self.start_button.clicked.connect(self.__on_start_safe)
         self.game_screen.addWidget(self.start_button)
 
