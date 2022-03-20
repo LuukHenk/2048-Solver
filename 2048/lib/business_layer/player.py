@@ -1,6 +1,5 @@
 """Player object"""
 
-from pathlib import Path
 from typing import List
 from copy import deepcopy
 from random import choice
@@ -10,17 +9,15 @@ from lib.business_layer.python_game_engine.game_data_formats import (
     MoveResult,
 )
 from lib.business_layer.python_game_engine.game import Game
-from lib.utils.json_file import save_dict_as_json, load_json_to_dict
+from lib.utils.json_file import JsonProcessor, SAVING_PATH
 
 
 class Player:
     """Player that can play games, result path should be a directory"""
 
-    def __init__(self, data_layer: Path):
+    def __init__(self):
         self.__played_games = []
-        self.__results_path = data_layer
-        if not self.__results_path.exists():
-            self.__results_path.touch()
+        self.__json_processor = JsonProcessor()
 
     @property
     def played_games(self):
@@ -38,21 +35,19 @@ class Player:
             self.__load_played_games()
         remaining_games = games_to_play - len(self.__played_games)
         self.__play_remaining_games(remaining_games)
-        save_dict_as_json(path=self.__results_path, data=self.__played_games)
-        print(f"Saved game data to {self.__results_path}")
+        self.__json_processor.save_dict_as_json(data=self.__played_games)
+        print(f"Saved game data to {SAVING_PATH}")
 
     def __load_played_games(self) -> List[GameResult]:
         """Load previous games"""
-        if not self.__results_path.exists():
-            print(f"Could not find {self.__results_path}, skipping game loading")
-            return
-        self.__played_games = load_json_to_dict(self.__results_path)
+        self.__played_games = self.__json_processor.load_json_to_dict()
         print(f"Loaded {len(self.__played_games)} games")
 
     def __play_remaining_games(self, games_to_play: int) -> None:
         while len(self.__played_games) < games_to_play:
             print(
-                f"Playing remaining games ({len(self.__played_games)}/{games_to_play})"
+                f"Playing remaining games ({len(self.__played_games) / games_to_play * 100}%)",
+                end="\r",
             )
             self.__play_game()
 
@@ -75,5 +70,4 @@ class Player:
             )
 
             possible_movements = game.possible_movements()
-        print(f"{game.current_score}, {game.total_moves_performed}")
         self.__played_games.append(game_results)

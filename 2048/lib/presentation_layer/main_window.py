@@ -2,6 +2,7 @@
 
 import sys
 from PySide6 import QtWidgets
+from PySide6.QtCore import QThreadPool  # pylint: disable=E0611
 
 from lib.presentation_layer.game import GameWidget
 
@@ -11,7 +12,8 @@ class MainWindow(QtWidgets.QMainWindow):  # pylint: disable=R0903
 
     def __init__(self):
         super().__init__()
-        self.setCentralWidget(GameWidget())
+        self.thread_manager = QThreadPool()
+        self.setCentralWidget(GameWidget(self.thread_manager))
         self.setStyleSheet("QLabel { background-color : #3C341F;}")
 
 

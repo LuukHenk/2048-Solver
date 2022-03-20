@@ -2,16 +2,26 @@
 from pathlib import Path
 from json import dumps, loads
 
-
-def save_dict_as_json(path: Path, data: dict):
-    """save python dict as json"""
-    json_data = dumps(data)
-    with open(path, "w") as json_file:
-        json_file.write(json_data)
+SAVING_PATH = Path(__file__).parent.absolute() / "../data_layer/results.json"
 
 
-def load_json_to_dict(path: Path) -> dict:
-    """Load python dict from json"""
-    with open(path, "r") as json_file:
-        json_data = json_file.read()
-    return loads(json_data)
+class JsonProcessor:
+    """Process json data in the file system"""
+
+    def __init__(self, saving_path: Path = SAVING_PATH):
+        self.__saving_path = saving_path
+        if not self.__saving_path.exists():
+            self.__saving_path.touch()
+
+    def save_dict_as_json(self, data: dict):
+        """save python dict as json"""
+
+        json_data = dumps(data)
+        with open(self.__saving_path, "w") as json_file:
+            json_file.write(json_data)
+
+    def load_json_to_dict(self) -> dict:
+        """Load python dict from json"""
+        with open(self.__saving_path, "r") as json_file:
+            json_data = json_file.read()
+        return loads(json_data)
