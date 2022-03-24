@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
 from PySide6.QtCore import Signal, Slot, Qt  # pylint: disable=E0611
 
 from lib.utils.json_file import JsonProcessor
-from lib.business_layer.python_game_engine.game_data_formats import (
+from lib.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )

@@ -4,11 +4,11 @@ from typing import List
 from copy import deepcopy
 from random import choice
 
-from lib.business_layer.python_game_engine.game_data_formats import (
+from lib.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )
-from lib.business_layer.python_game_engine.game import Game
+from lib.player.game import Game
 from lib.utils.json_file import JsonProcessor, SAVING_PATH
 
 

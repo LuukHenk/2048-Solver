@@ -1,7 +1,7 @@
 """Test the game class"""
 from unittest import main, TestCase
 from dataclasses import fields
-from lib.business_layer.python_game_engine.game import Game, Directions
+from lib.player.game import Game, Directions
 
 
 class TestGame(TestCase):

@@ -2,7 +2,7 @@
 
 from PySide6 import QtCore, QtWidgets
 
-from lib.business_layer.python_game_engine.game_data_formats import MoveResult
+from lib.data_layer.game_data_formats import MoveResult
 from lib.presentation_layer.colors import COLORSET_2
 
 

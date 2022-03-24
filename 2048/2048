@@ -2,7 +2,7 @@
 """The executable script"""
 
 from lib.presentation_layer.main_window import run_main_window
-from lib.business_layer.player import Player
+from lib.player.player import Player
 
 
 def main():
