@@ -1,12 +1,17 @@
 """The game board displayer"""
 
-from PySide6 import QtCore, QtWidgets
-
+from PySide6.QtWidgets import (  # pylint: disable=E0611
+    QGridLayout,
+    QWidget,
+    QHBoxLayout,
+    QLabel,
+)
+from PySide6.QtCore import Qt, Slot  # pylint: disable=E0611
 from lib.data_layer.game_data_formats import MoveResult
-from lib.presentation_layer.colors import COLORSET_2
+from lib.presentation_layer.colors import COLORSET_2, contrasting_text_color
 
 
-class Board(QtWidgets.QWidget):  # pylint: disable=R0903
+class Board(QWidget):  # pylint: disable=R0903
     """The board widge"""
 
     def __init__(self, board_size: int = 4) -> None:
@@ -18,39 +23,45 @@ class Board(QtWidgets.QWidget):  # pylint: disable=R0903
         Returns (QtWidgets.QWidget) = The game board as qt widget
         """
         super().__init__()
-        self.board = QtWidgets.QGridLayout(self)
-        self.setStyleSheet("QLabel { background-color : #3C341F;}")
-        self.__add_cells(board_size)
+        self.board = QGridLayout(self)
+        self.board_size = 100
+        self._default_bg_color = COLORSET_2[0]
+        self._default_color = "#" + contrasting_text_color(self._default_bg_color[1:])
+        self.__create_cells(board_size)
 
-    def __add_cells(self, board_size):
-        size_range = range(board_size)
-        for y in size_range:  # pylint: disable=invalid-name
-            for x in size_range:  # pylint: disable=invalid-name
-                cell = self.__create_cell("0")
-                self.board.addWidget(cell, y, x, QtCore.Qt.AlignCenter)
-
-    @staticmethod
-    def __create_cell(text: str = "") -> None:
-        cell_text = QtWidgets.QLabel(text)
-        cell_text.setAlignment(QtCore.Qt.AlignCenter)
-        background_color = COLORSET_2[int(text)]
-        cell_text.setStyleSheet(
-            "QLabel { background-color : "
-            + background_color
-            + "; color : #000; font-size: 32px;}"
-        )
-        cell_text.setMargin(50)
-        return cell_text
-
-    @QtCore.Slot(MoveResult)
+    @Slot(MoveResult)
     def update_cells(self, move_result: MoveResult) -> None:
-        for y, row in enumerate(move_result["board"]):
-            for x, value in enumerate(row):
-                cell = self.board.itemAtPosition(y, x).widget()
-                cell.setText(str(value))
-                background_color = COLORSET_2[value]
-                cell.setStyleSheet(
-                    "QLabel { background-color : "
-                    + background_color
-                    + "; color : #000; font-size: 32px;}"
-                )
+        """update the cells with the new board data"""
+        for y_position, row in enumerate(move_result["board"]):
+            for x_position, value in enumerate(row):
+                cell = self.board.itemAtPosition(y_position, x_position).widget()
+                self._update_cell(cell, value)
+
+    def _update_cell(self, cell: QWidget, value: int):
+        cell_label = cell.findChild(QLabel)
+        cell_text = str(value).strip("0")
+        cell_label.setText(cell_text)
+        bg_color = COLORSET_2[value] if value in COLORSET_2 else self._default_bg_color
+        font_color = "#" + contrasting_text_color(bg_color[1:])
+        cell.setStyleSheet(f"background-color:{bg_color}; color:{font_color};")
+
+    def __create_cells(self, board_size: int):
+        size_range = range(board_size)
+        for y_position in size_range:
+            for x_position in size_range:
+                cell = self.__create_cell()
+                self.board.addWidget(cell, y_position, x_position, Qt.AlignCenter)
+
+    def __create_cell(self) -> QWidget:
+        cell_label = QLabel()
+        cell_label.setAlignment(Qt.AlignCenter)
+        cell_label.setStyleSheet("QLabel {font-size: 20px;}")
+        cell_content = QHBoxLayout()
+        cell_content.addWidget(cell_label)
+        cell = QWidget()
+        cell.setLayout(cell_content)
+        cell.setStyleSheet(
+            f"background-color:{self._default_bg_color}; color:{self._default_color};"
+        )
+        cell.setFixedSize(self.board_size, self.board_size)
+        return cell

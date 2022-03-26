@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
     QPushButton,
     QLayout,
 )
-from PySide6.QtCore import Signal, Slot, Qt  # pylint: disable=E0611
+from PySide6.QtCore import Signal, Slot, Qt, QThreadPool  # pylint: disable=E0611
 
 from lib.utils.json_file import JsonProcessor
 from lib.data_layer.game_data_formats import (
@@ -26,18 +26,17 @@ class GameWidget(QWidget):  # pylint: disable=R0903
     update_board = Signal(MoveResult)
     game_finished = Signal()
 
-    def __init__(self, thread_manager, sleep_time):
-        """
-        game (Game): The 2048 game runner
-        """
+    def __init__(self, thread_manager: QThreadPool, fps: int):
+        """ """
         super().__init__()
-        self.thread_manager = thread_manager
-        self.sleep_time = sleep_time
-        self.games_data = self.__load_games()
+        self.__thread_manager = thread_manager
+        self.__sleep_time = 1 / fps
+        self.__games_data = self.__load_games()
 
         self.__init_ui()
 
     def __init_ui(self):
+        """Creates the UI"""
         self.game_screen = QVBoxLayout(self)
         # self.__add_game_information()
         self.__add_game_board()
@@ -67,12 +66,12 @@ class GameWidget(QWidget):  # pylint: disable=R0903
         self.__get_widget_from_layout(self.game_screen, "start_button").setDisabled(
             True
         )
-        self.thread_manager.start(self.__display_game)
+        self.__thread_manager.start(self.__display_game)
 
     def __display_game(self):
-        for move in choice(self.games_data):
+        for move in choice(self.__games_data):
             self.update_board.emit(move)
-            sleep(self.sleep_time)
+            sleep(self.__sleep_time)
         self.game_finished.emit()
 
     @staticmethod
