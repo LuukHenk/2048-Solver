@@ -25,6 +25,7 @@ class Board(QWidget):  # pylint: disable=R0903
         super().__init__()
         self.board = QGridLayout(self)
         self.board_size = 100
+        self._font_size = round(self.board_size / 5)
         self._default_bg_color = COLORSET_2[0]
         self._default_color = "#" + contrasting_text_color(self._default_bg_color[1:])
         self.__create_cells(board_size)
@@ -55,7 +56,7 @@ class Board(QWidget):  # pylint: disable=R0903
     def __create_cell(self) -> QWidget:
         cell_label = QLabel()
         cell_label.setAlignment(Qt.AlignCenter)
-        cell_label.setStyleSheet("QLabel {font-size: 20px;}")
+        cell_label.setStyleSheet("QLabel {font-size: " + str(self._font_size) + "px;}")
         cell_content = QHBoxLayout()
         cell_content.addWidget(cell_label)
         cell = QWidget()
