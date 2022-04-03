@@ -14,7 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):  # pylint: disable=R0903
         super().__init__()
         self.thread_manager = QThreadPool()
         self.setCentralWidget(GameWidget(self.thread_manager, sleep_time))
-        self.setStyleSheet("QLabel { background-color : #3C341F;}")
+        # self.setStyleSheet("QLabel { background-color : #3C341F;}")
 
 
 def run_main_window(sleep_time):

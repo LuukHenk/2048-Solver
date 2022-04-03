@@ -7,21 +7,22 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
     QWidget,
     QVBoxLayout,
     QPushButton,
-    QLayout,
 )
 from PySide6.QtCore import Signal, Slot, Qt, QThreadPool  # pylint: disable=E0611
 
 from lib.utils.json_file import JsonProcessor
+from lib.utils.qt_tools import get_widget_from_layout
 from lib.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )
 
 from lib.presentation_layer.board import Board
+from lib.presentation_layer.game_info import GameInfo
 
 
 class GameWidget(QWidget):  # pylint: disable=R0903
-    """The screen of the 2048 game"""
+    """The Game displayer for tthe 2048 game"""
 
     update_board = Signal(MoveResult)
     game_finished = Signal()
@@ -38,10 +39,15 @@ class GameWidget(QWidget):  # pylint: disable=R0903
     def __init_ui(self):
         """Creates the UI"""
         self.game_screen = QVBoxLayout(self)
-        # self.__add_game_information()
+        self.__add_game_information()
         self.__add_game_board()
         self.__add_start_button()
         self.game_finished.connect(self.__on_finished_game)
+
+    def __add_game_information(self) -> None:
+        game_info = GameInfo()
+        self.update_board.connect(game_info.update_info)
+        self.game_screen.addWidget(game_info)
 
     def __add_game_board(self) -> None:
         game_board = Board()
@@ -59,13 +65,11 @@ class GameWidget(QWidget):  # pylint: disable=R0903
 
     @Slot()
     def __on_finished_game(self):
-        self.__get_widget_from_layout(self.game_screen, "start_button").setEnabled(True)
+        get_widget_from_layout(self.game_screen, "start_button").setEnabled(True)
 
     @Slot()
     def __on_start_safe(self):
-        self.__get_widget_from_layout(self.game_screen, "start_button").setDisabled(
-            True
-        )
+        get_widget_from_layout(self.game_screen, "start_button").setDisabled(True)
         self.__thread_manager.start(self.__display_game)
 
     def __display_game(self):
@@ -78,11 +82,3 @@ class GameWidget(QWidget):  # pylint: disable=R0903
     def __load_games() -> GameResult:
         json_processor = JsonProcessor()
         return json_processor.load_json_to_dict()
-
-    @staticmethod
-    def __get_widget_from_layout(layout: QLayout, name: str) -> QWidget:
-        for i in range(layout.count()):
-            widget = layout.itemAt(i).widget()
-            if widget.objectName() == name:
-                return widget
-        return None

@@ -2,18 +2,18 @@
 
 from typing import List
 from copy import deepcopy
-from random import choice
 
 from lib.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )
 from lib.player.game import Game
+from lib.player.algorithm import determine_best_movement
 from lib.utils.json_file import JsonProcessor, SAVING_PATH
 
 
 class Player:
-    """Player that can play games, result path should be a directory"""
+    """Player that can play 2048 games"""
 
     def __init__(self):
         self.__played_games = []
@@ -26,7 +26,7 @@ class Player:
 
     def play_games(self, games_to_play: int, use_of_old_games: bool = False) -> None:
         """Plays a the amount of games as requested.
-        Makes use of already played games, if requested
+        Makes use of already played games, if requested.
         Args:
             games_to_play (int): the amount of games to be played
             use_of_old_games (bool): If it is accepted to load older games
@@ -55,15 +55,14 @@ class Player:
 
     def __play_game(self) -> None:
         game = Game()
-        game_results = []
-        game_results.append(
+        game_results = [
             MoveResult(
                 board=game.board, performed_move=None, score=game.current_score
             ).__dict__
-        )
+        ]
         possible_movements = game.possible_movements()
         while len(possible_movements) > 0:
-            move = choice(possible_movements)
+            move = determine_best_movement(game.board, possible_movements)
             game.perform_movement(move)
             game_results.append(
                 MoveResult(
