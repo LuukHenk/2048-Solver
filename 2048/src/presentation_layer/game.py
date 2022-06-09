@@ -10,15 +10,15 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
 )
 from PySide6.QtCore import Signal, Slot, Qt, QThreadPool  # pylint: disable=E0611
 
-from lib.utils.json_file import JsonProcessor
-from lib.utils.qt_tools import get_widget_from_layout
-from lib.data_layer.game_data_formats import (
+from src.utils.json_file import JsonProcessor
+from src.utils.qt_tools import get_widget_from_layout
+from src.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )
 
-from lib.presentation_layer.board import Board
-from lib.presentation_layer.game_info import GameInfo
+from src.presentation_layer.board import Board
+from src.presentation_layer.game_info import GameInfo
 
 
 class GameWidget(QWidget):  # pylint: disable=R0903

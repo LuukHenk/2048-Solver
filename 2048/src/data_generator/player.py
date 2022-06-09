@@ -3,13 +3,13 @@
 from typing import List
 from copy import deepcopy
 
-from lib.data_layer.game_data_formats import (
+from src.data_layer.game_data_formats import (
     GameResult,
     MoveResult,
 )
-from lib.player.game import Game
-from lib.player.algorithm import determine_best_movement
-from lib.utils.json_file import JsonProcessor, SAVING_PATH
+from src.game_engine.game import Game
+from src.data_generator.algorithm import determine_best_movement
+from src.utils.json_file import JsonProcessor, SAVING_PATH
 
 
 class Player:

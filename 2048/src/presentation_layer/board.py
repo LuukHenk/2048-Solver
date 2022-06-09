@@ -7,8 +7,8 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
     QLabel,
 )
 from PySide6.QtCore import Qt, Slot  # pylint: disable=E0611
-from lib.data_layer.game_data_formats import MoveResult
-from lib.presentation_layer.colors import COLORSET_2, contrasting_text_color
+from src.data_layer.game_data_formats import MoveResult
+from src.presentation_layer.colors import COLORSET_2, contrasting_text_color
 
 
 class Board(QWidget):  # pylint: disable=R0903

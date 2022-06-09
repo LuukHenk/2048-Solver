@@ -7,8 +7,8 @@ from PySide6.QtWidgets import (  # pylint: disable=E0611
 )
 from PySide6.QtCore import Slot  # pylint: disable=E0611
 
-from lib.data_layer.game_data_formats import MoveResult
-from lib.utils.qt_tools import get_widget_from_layout
+from src.data_layer.game_data_formats import MoveResult
+from src.utils.qt_tools import get_widget_from_layout
 
 
 class GameInfo(QWidget):  # pylint: disable=R0903

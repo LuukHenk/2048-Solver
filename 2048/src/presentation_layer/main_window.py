@@ -4,7 +4,7 @@ import sys
 from PySide6 import QtWidgets
 from PySide6.QtCore import QThreadPool  # pylint: disable=no-name-in-module
 
-from lib.presentation_layer.game import GameWidget
+from src.presentation_layer.game import GameWidget
 
 
 class MainWindow(QtWidgets.QMainWindow):  # pylint: disable=R0903

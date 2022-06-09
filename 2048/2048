@@ -1,8 +1,8 @@
 #!/usr/bin/env python3 # pylint: disable=C0103
 """The executable script"""
 
-from lib.presentation_layer.main_window import run_main_window
-from lib.player.player import Player
+from src.presentation_layer.main_window import run_main_window
+from src.data_generator.player import Player
 
 
 def main():

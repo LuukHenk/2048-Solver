@@ -3,7 +3,7 @@
 from unittest import main as unittest_main, TestCase
 from typing import List
 
-from lib.player.board import Board
+from src.game_engine.board import Board
 
 
 class TestBoard(TestCase):
