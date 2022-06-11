@@ -1,3 +1,9 @@
+### Version 0.3.0 - 11 Juni 2022
+- Write a new design for the game
+- Refactored the Python game engine
+- Improve the HMI
+	- Started using Qt widgets for the HMI
+
 ### Version 0.2.0 - 4 Februari 2021
 - Added gui for automatic mode (lib/gui_rendering)
 	- Gui build using tkinter

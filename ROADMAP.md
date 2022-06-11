@@ -1,13 +1,10 @@
 # My project board (kanban style)
-Current 2048 version: 0.2.0
+Current 2048 version: 0.3.0
 
 ## Todo
 ### High priority for next version
-- Write tests for the player
-- Write tests for the datalayer
-- Write tests for the presentation layer
-- Write tests for the utils
-- Rewrite the solving algorithm / Write an AI that can solve the game
+- Rewrite the board so that it only uses one list
+- Able to feed the neural network some trainingsdata
 
 ### Low priority for next version
 - Add more game info labels
@@ -18,13 +15,8 @@ Current 2048 version: 0.2.0
 	- Editable FPS
 
 ## In progress
-- Writing tests
 
 ## Finished
-- Write a new design for the game
-- Refactored the Python game engine
-- Improve the HMI
-	- Started using Qt widgets for the HMI
 
 # Ideas
 - Add multithreading
