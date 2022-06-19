@@ -1,78 +1,84 @@
 fn main() {
-
-    // 0x == hexadecimal
-    // 1 hexadecimal can be saved in 4 bits
-    // a board with 16 tiles can be saved in 1 64 bit int (4x16)
-    let mut board: u64 = 0x0004_0003_0000_1111_u64;
-
-
-    // let mut horMask1: u64 = 0xffff_0000_0000_0000_u64;
-
-    // operatie om alleen horizontale rij 1 te bewaren is: board <bitwise and> horMask1
-    // println!("{:016x}", board);
-    // board |= horMask1;
-    // board &= horMask1;
-    // println!("{:016x}", board);
-
-    // Count empty positions on the board
-    // for i in  0 .. 16 {
-    //     if board
-    //     println!("{}", i)
-
-    // Choose a random position from the empty positions (idx)
-    // Add tile to position 'idx'
-    let mut idx = 0;
-    let mut tmp_board = board; // Use tmp_board to find the location of 0's
-    let mut tile: u64 = 0x1_u64; // Tile that is added to the board
-    loop {
-        // Check if first value (0xF) is not 0. if so, shift to next tile
-        while (tmp_board & 0xF) != 0 {
-            tmp_board >>= 4;
-            tile <<= 4;
-        }
-
-        // If the first value was 0, remove 1 from the index before shifting to next tile
-        if idx == 0 { break } else {idx -=1}
-        tile <<= 4;
-        tmp_board >>= 4;
-    }
-
-    board |= tile;
-
-
-
-    // Generated 64 bit string
-    // println!("{:016x}", board);
-
-    // Convert string to 2D board and print the real numbers
-    //
-    let mut board_cp = board;
-    let mut idx = 15;
-    let mut board_string = String::new();
-
-    loop {
-        let tile = board_cp & 0xF;
-        let mut tile_int: u32 = tile.to_string().parse().unwrap();
-
-        if tile_int != 0 {
-            tile_int = 2u32.pow(tile_int);
-        }
-
-        let tile_str = &tile_int.to_string();
-
-        if idx % 4 == 0 {
-            board_string = board_string + tile_str + "\n";
-        } else {
-
-            board_string = board_string + tile_str + " - ";
-        }
-
-        if idx == 0 { break } else { idx -= 1 }
-        // TODO what does this stand for?
-        board_cp >>= 4;
-    }
-
-    println!("{}", board_string)
-
+    let mut row: u16 = 0x1112;
+    row = merge_row_to_the_right(row);
+    println!("{:#02X}", row);
 }
 
+fn merge_row_to_the_right(row: u16) -> u16 {
+    let mut tmp_row: u16 = row;
+    let mut new_row: u16 = 0x0000;
+    let mut tile_to_add: u16;
+    let mut current_position_on_new_row: u8 = 0;
+    let mut first_tile: u16 = 0x000F & tmp_row;
+    let mut second_tile: u16 = 0x0000;
+    tmp_row >>= 4;
+    
+    for _ in 0..3 {
+        second_tile = 0x000F & tmp_row;
+        tmp_row >>= 4;
+        if first_tile == 0 {
+            first_tile = second_tile;
+        } else if second_tile != 0{
+            if first_tile == second_tile {
+                tile_to_add = first_tile + 1;
+                first_tile = 0x0000;
+                second_tile = 0x0000;
+            } else {
+                tile_to_add = first_tile;
+                first_tile = second_tile;
+            }
+            new_row += tile_to_add << current_position_on_new_row;
+            current_position_on_new_row += 4;
+        }
+
+    }
+    if second_tile != 0 {
+        new_row += second_tile << current_position_on_new_row;
+    }
+
+    return new_row
+}
+
+
+
+
+
+
+
+
+
+// fn right_move(row: u16) {
+//     let mut tmp_row: u16 = row;
+//     let mut new_row: u16 = 0x0000;
+//     let mut first_tile: u16 = 0x0000;
+//     let mut second_tile: u16;
+//     let mut new_row_idx: u8 = 0;
+//     for _i in 0..4 {
+//         println!("{}", _i);
+//         second_tile = 0xF000 & tmp_row;   
+//         if second_tile != 0 {
+//             if second_tile == first_tile {first_tile = first_tile * 2;}
+//             if first_tile != 0 {
+//                 first_tile >>= 4 * new_row_idx;
+//             }
+//             new_row += first_tile;
+//             new_row_idx += 1;
+//             first_tile = 0x0000;
+//         } else {
+//             first_tile >>= 4 * new_row_idx;
+//             new_row += first_tile;
+//             first_tile = second_tile;
+//         }
+        
+//         tmp_row <<= 4;
+//         // measure here
+//     }
+//     println!("{}", new_row);
+//     // TODO add second tile to board
+// }
+
+// i: 0 f: 1000 s: 1000 row: 2110 out: 0000
+// i: 1 f: 2000 s: 2000 row: 2110 out: 1200
+
+// i: 2 f: 1000 s: 1000 row: 1100 out: 1220
+// i: 3 f: 1000 s: 1000 row: 1000 out: 1220
