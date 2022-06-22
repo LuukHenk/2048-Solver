@@ -4,7 +4,7 @@ fn main() {
     Game::play()
 }
 
-pub static EMPTY_ROW: u64 = 0x0000;
+pub static EMPTY_BOARD: u64 = 0x0;
 pub static ROW_MASK: u64 = 0x0000_0000_0000_FFFF;
 
 pub struct Game{pub board: u64}
@@ -20,12 +20,16 @@ impl Game {
         let mut board = game.board;
         board = Self::add_number_to_empty_position(board);
         board = Self::add_number_to_empty_position(board);
-        println!("{:#02X}", board);
+        println!("{:#02X} - new board", board);
 
         // play loop
-        board = Self::right_move(board);
+        board = Self::left_move(board);
         board = Self::add_number_to_empty_position(board);
-        println!("{:#02X}", board);
+        println!("{:#02X} - left move", board);
+        //
+        board = Self::right_move(board);
+        board = Self::add_number_to_empty_position(board);        
+        println!("{:#02X} - right move", board);
     }
 
     fn add_number_to_empty_position(board: u64) -> u64 {
@@ -49,21 +53,36 @@ impl Game {
     }
     
     fn right_move(board: u64) -> u64 {
-        let mut new_board: u64 = 0x0000_0000_0000_0000;
+        let mut new_board: u64 = EMPTY_BOARD;
         for i in 0..4 {
-            let row = i * 16;
-            new_board ^= Self::merge_row_to_the_right(board >> row & ROW_MASK) << row;
+            let row: u8 = i * 16;
+            new_board ^= Self::merge_row_to_the_right((board >> row) & ROW_MASK) << row;
         }
         new_board
     }
 
+    fn left_move(board: u64) -> u64 {
+        let mut new_board: u64 = EMPTY_BOARD;
+        for i in 0..4 {
+            let row: u8 = i * 16;
+            let mut reversed_row = Self::reverse_row(board >> row & ROW_MASK);
+            reversed_row = Self::merge_row_to_the_right(reversed_row);
+            new_board ^= Self::reverse_row(reversed_row) << row;
+        }
+        new_board
+    }
+
+    fn reverse_row(row: u64) -> u64 {
+        (row&0xF000)>>12|(row&0x0F00)>>4|(row&0x00F0)<<4|(row&0x000F)<<12
+    }
+
     fn merge_row_to_the_right(row: u64) -> u64 {
         let mut tmp_row: u64 = row;
-        let mut new_row: u64 = EMPTY_ROW;
+        let mut new_row: u64 = EMPTY_BOARD;
         let mut tile_to_add: u64;
         let mut current_position_on_new_row: u8 = 0;
         let mut first_tile: u64 = 0x000F & tmp_row;
-        let mut second_tile: u64 = EMPTY_ROW;
+        let mut second_tile: u64 = EMPTY_BOARD;
         tmp_row >>= 4;
         
         for _ in 0..3 {
@@ -74,8 +93,8 @@ impl Game {
             } else if second_tile != 0{
                 if first_tile == second_tile {
                     tile_to_add = first_tile + 1;
-                    first_tile = EMPTY_ROW;
-                    second_tile = EMPTY_ROW;
+                    first_tile = EMPTY_BOARD;
+                    second_tile = EMPTY_BOARD;
                 } else {
                     tile_to_add = first_tile;
                     first_tile = second_tile;
