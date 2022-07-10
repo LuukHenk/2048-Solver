@@ -10,11 +10,48 @@ pub static COL_MASK: u64 = 0x000F_000F_000F_000F;
 
 pub struct Game{pub board: u64}
 
+
 impl Game {
     pub fn new() -> Self {
         return Game {board: EMPTY_BOARD};
     }
 
+    pub fn _play_test() {
+        // Scenarios to test :
+
+        let mut board: u64 = 0x0000_0000_0000_2101;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0022);
+
+        let mut board: u64 = 0x0000_0000_0000_0010;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0001);
+
+        let mut board: u64 = 0x0000_0000_0000_1100;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0002);
+
+        let mut board: u64 = 0x0000_0000_0000_1110;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0012);
+
+        let mut board: u64 = 0x0000_0000_0000_1111;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0022);
+
+        let mut board: u64 = 0x0000_0000_0000_0000;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0000);
+
+        let mut board: u64 = 0x0000_0000_0000_1211;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0122);
+
+        let mut board: u64 = 0x0000_0000_0000_1221;
+        board = Self::right_move(board);
+        println!("{}", board == 0x0000_0000_0000_0131);
+    }
+    
     pub fn play() {  
         // init
         let game = Self::new();
@@ -24,22 +61,21 @@ impl Game {
         println!("{:#02X} - new board", board);
 
         // play loop
-        let mut tmp_board = board;
-        tmp_board = Self::right_move(tmp_board);
-        // board = Self::add_number_to_empty_position(board);        
-        println!("{:#02X} - right move", tmp_board);
-        //
-        // tmp_board = Self::left_move(tmp_board);s
-        // board = Self::add_number_to_empty_position(board);
-        // println!("{:#02X} - left move", tmp_board);
-        //
-        // tmp_board = Self::down_move(tmp_board);
-        // board = Self::add_number_to_empty_position(board);
-        // println!("{:#02X} - down move", tmp_board);
-        //
-        // tmp_board = Self::up_move(tmp_board);
-        // board = Self::add_number_to_empty_position(board);
-        // println!("{:#02X} - up move", tmp_board);
+        board = Self::right_move(board);
+        board = Self::add_number_to_empty_position(board);        
+        println!("{:#02X} - right move", board);
+        
+        board = Self::left_move(board);
+        board = Self::add_number_to_empty_position(board);
+        println!("{:#02X} - left move", board);
+        
+        board = Self::down_move(board);
+        board = Self::add_number_to_empty_position(board);
+        println!("{:#02X} - down move", board);
+        
+        board = Self::up_move(board);
+        board = Self::add_number_to_empty_position(board);
+        println!("{:#02X} - up move", board);
     }
 
     fn add_number_to_empty_position(board: u64) -> u64 {
@@ -127,34 +163,29 @@ impl Game {
         let mut tile_to_add: u64;
         let mut current_position_on_new_row: u8 = 0;
         let mut first_tile: u64 = 0x000F & tmp_row;
-        let mut second_tile: u64 = EMPTY_BOARD;
         tmp_row >>= 4;
         
         for _ in 0..3 {
-            second_tile = 0x000F & tmp_row;
+            let second_tile = 0x000F & tmp_row;
             tmp_row >>= 4;
             if first_tile == 0 {
                 first_tile = second_tile;
-            } else if second_tile != 0{
+            } else if second_tile != 0 {
                 if first_tile == second_tile {
                     tile_to_add = first_tile + 1;
                     first_tile = EMPTY_BOARD;
-                    second_tile = EMPTY_BOARD;
-                } else {
+                } else  {
                     tile_to_add = first_tile;
                     first_tile = second_tile;
                 }
                 new_row += tile_to_add << current_position_on_new_row;
-                current_position_on_new_row += 4;
+                current_position_on_new_row += 4;                
             }
     
         }
-        println!("{:#02X} - new_row", second_tile);
-        if second_tile != 0 {
-            new_row += second_tile << current_position_on_new_row;
+        if first_tile != 0 {
+            new_row += first_tile << current_position_on_new_row;
         }
-        
-        // println!("{:#02X} - new_row", new_row);
         new_row
     }
 
