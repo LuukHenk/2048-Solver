@@ -1,0 +1,1 @@
+/home/zoutekaas/Dropbox/Home/2048-Solver/rust/tfe/target/debug/main: /home/zoutekaas/Dropbox/Home/2048-Solver/rust/tfe/src/bin/main.rs /home/zoutekaas/Dropbox/Home/2048-Solver/rust/tfe/src/direction.rs /home/zoutekaas/Dropbox/Home/2048-Solver/rust/tfe/src/game.rs /home/zoutekaas/Dropbox/Home/2048-Solver/rust/tfe/src/lib.rs

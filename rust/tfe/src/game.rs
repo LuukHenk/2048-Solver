@@ -1,10 +1,8 @@
 use rand::Rng;
-
-
-
+use strum::IntoEnumIterator;
+use super::direction::Direction;
 pub static EMPTY_BOARD: u64 = 0x0;
 pub static ROW_MASK: u64 = 0xFFFF;
-pub static COL_MASK: u64 = 0x000F_000F_000F_000F;
 
 pub struct Game{pub board: u64}
 
@@ -14,24 +12,31 @@ impl Game {
         // init
         let game = Self::new();
         let mut board = game.board;
-        println!("{:#02X} - new board", board);
+        // println!("{:#02X} - new board", board);
 
         // play loop
-        board = Self::right_move(board);
-        board = Self::add_number_to_empty_position(board);        
-        println!("{:#02X} - right move", board);
+        board = Self::perform_movement(board, &Direction::Right);
+        // println!("{:#02X} - right move", board);
         
-        board = Self::left_move(board);
-        board = Self::add_number_to_empty_position(board);
-        println!("{:#02X} - left move", board);
+        board = Self::perform_movement(board, &Direction::Left);
+        // println!("{:#02X} - left move", board);
         
-        board = Self::down_move(board);
-        board = Self::add_number_to_empty_position(board);
-        println!("{:#02X} - down move", board);
+        board = Self::perform_movement(board, &Direction::Down);
+        // println!("{:#02X} - down move", board);
         
-        board = Self::up_move(board);
-        board = Self::add_number_to_empty_position(board);
-        println!("{:#02X} - up move", board);
+        board = Self::perform_movement(board, &Direction::Up);
+        // println!("{:#02X} - up move", board);
+
+        board = 0xFFFF_0000_0000_0000;
+        for movement in Self::get_possible_movements(board) {
+            println!("{:#?}", movement);
+        };
+        
+    }
+
+    pub fn perform_movement(mut board: u64, direction: &Direction) -> u64 {
+        board = Self::execute(board, direction);
+        Self::add_number_to_empty_position(board)
     }
 
     fn new() -> Self {
@@ -40,9 +45,29 @@ impl Game {
         new_board = Self::add_number_to_empty_position(new_board);
         return Game {board: new_board};
     }
-    // fn get_possible_movements(board: u64) -> 
 
-    
+    fn get_possible_movements(board: u64) -> Vec<Direction>{
+        let mut possible_movements: Vec<Direction> = Vec::new();
+        for direction in Direction::iter() {
+            let mut tmp_board = board;
+            tmp_board = Self::execute(tmp_board, &direction);
+
+            if tmp_board != board { possible_movements.push(direction) }
+        };
+        possible_movements
+        
+    }
+
+    fn execute(mut board: u64, direction: &Direction) -> u64 {
+        board = match direction {
+            Direction::Right => Self::right_move(board),
+            Direction::Left => Self::left_move(board),
+            Direction::Down => Self::down_move(board),
+            Direction::Up => Self::up_move(board),
+        };
+        board
+    }
+
     fn add_number_to_empty_position(board: u64) -> u64 {
         let empty_tiles = Self::get_empty_tiles(board);
         let random_position = rand::thread_rng().gen_range(0..empty_tiles.len());
