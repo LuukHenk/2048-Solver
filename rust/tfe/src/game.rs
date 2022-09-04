@@ -12,26 +12,20 @@ impl Game {
         // init
         let game = Self::new();
         let mut board = game.board;
-        // println!("{:#02X} - new board", board);
+        println!("{:#02X} - new board", board);
 
         // play loop
         board = Self::perform_movement(board, &Direction::Right);
-        // println!("{:#02X} - right move", board);
+        println!("{:#02X} - right move", board);
         
         board = Self::perform_movement(board, &Direction::Left);
-        // println!("{:#02X} - left move", board);
+        println!("{:#02X} - left move", board);
         
         board = Self::perform_movement(board, &Direction::Down);
-        // println!("{:#02X} - down move", board);
+        println!("{:#02X} - down move", board);
         
         board = Self::perform_movement(board, &Direction::Up);
-        // println!("{:#02X} - up move", board);
-
-        board = 0xFFFF_0000_0000_0000;
-        for movement in Self::get_possible_movements(board) {
-            println!("{:#?}", movement);
-        };
-        
+        println!("{:#02X} - up move", board);
     }
 
     pub fn perform_movement(mut board: u64, direction: &Direction) -> u64 {
