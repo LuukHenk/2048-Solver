@@ -8,13 +8,13 @@ package rust_game as "Rust - game" {
         + move: Direction
         + board: u64
     }
-    class rust_player as "Player(exporter: Optional[GameExporter])" {
+    class rust_game as "Player(exporter: Optional[GameExporter])" {
         + play_games(total: u32, minimum_tile_size: u8)
         + export_games() -> success: bool
         - play_game() -> result: (Vec[MoveResult], highest_tile: u8)
         - game_results: Vec[Vec[MoveResult]]]
     }
-    class rust_game as "Game" {
+    class rust_board as "Board" {
         + perform_movement(direction: Direction) -> MoveResult
         + possible_movements() -> Vec[Direction]
         + highest_tile() -> u8
@@ -26,10 +26,10 @@ package rust_game as "Rust - game" {
 
 }
 
+rust_board --> rust_move_result
+rust_game -> rust_board
 rust_game --> rust_move_result
-rust_player -> rust_game
-rust_player --> rust_move_result
-rust_player --* rust_exporter
+rust_game --* rust_exporter
 
 package rust_python as "Rust - Python interface" {
     enum connectable as "ConnectableClass"
@@ -40,7 +40,7 @@ package rust_python as "Rust - Python interface" {
         - linkages: match[str:struct]
     }
 
-    class rust_player_controller as "PythonPlayerController" {
+    class rust_game_controller as "PythonPlayerController" {
         + play_games(total: int, minimum_tile_required: int, export_path: str)
     }
 }
@@ -50,8 +50,8 @@ note top of rust_python
 endnote
 
 rust_connector -> connectable
-connectable -o rust_player_controller
-rust_player_controller --> rust_player
+connectable -o rust_game_controller
+rust_game_controller --> rust_game
 
 package py_controller as "Python - controller" {
     class 2048 {
