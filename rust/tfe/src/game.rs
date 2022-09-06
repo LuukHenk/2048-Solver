@@ -13,6 +13,7 @@ impl Game {
             games_played += 1;
             println!("{:?}",games_played)     
         }
+        // 100_000 games in 2 min and 30 sec
         // println!("{:?}",highest_tiles) 
     }
 
