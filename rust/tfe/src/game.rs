@@ -39,6 +39,10 @@ impl Game {
         new_board = Self::add_number_to_empty_position(new_board);
         return Game {board: new_board};
     }
+    
+    fn board_full(board: u64) -> bool {
+        Self::get_possible_movements(board).len() == 0
+    }
 
     fn get_possible_movements(board: u64) -> Vec<Direction>{
         let mut possible_movements: Vec<Direction> = Vec::new();
@@ -211,5 +215,33 @@ mod tests {
         let mut board: u64 = 0x0000_0000_0000_1221;
         board = Game::merge_row_to_the_right(board);
         assert_eq!(board, 0x0000_0000_0000_0131);
+    }
+    #[test]
+    fn test_board_full() {
+        
+        // Up
+        let mut board: u64 = 0x0000_1234_5678_1234;
+        let full: bool = Game::board_full(board);
+        assert_eq!(full, false);
+
+        // Down
+        let mut board: u64 = 0x5678_1234_5678_0000;
+        let full: bool = Game::board_full(board);
+        assert_eq!(full, false);
+
+        // Left
+        let mut board: u64 = 0x0234_0567_0234_0567;
+        let full: bool = Game::board_full(board);
+        assert_eq!(full, false);
+
+        // RIght
+        let mut board: u64 = 0x2340_5670_2340_5670;
+        let full: bool = Game::board_full(board);
+        assert_eq!(full, false);
+
+        // Full
+        let mut board: u64 = 0x1234_5678_1234_5678;
+        let full: bool = Game::board_full(board);
+        assert_eq!(full, true);
     }
 }

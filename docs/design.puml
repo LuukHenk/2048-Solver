@@ -18,6 +18,7 @@ package rust_game as "Rust - game" {
         + perform_movement(direction: Direction) -> MoveResult
         + possible_movements() -> Vec[Direction]
         + highest_tile() -> u8
+        + board_full() -> bool
     }
     class rust_exporter as "Exporter" {
         + export_to_file(Vec[Vec[MoveResult]])
