@@ -10,7 +10,7 @@ def main():
 
     args = {
         "use_old_games": False,
-        "total_games": 10,
+        "total_games": 10000,
         "fps": 10,
     }
 

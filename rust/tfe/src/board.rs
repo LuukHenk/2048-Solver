@@ -1,5 +1,6 @@
 use rand::Rng;
 use strum::IntoEnumIterator;
+
 use super::direction::Direction;
 pub static EMPTY_BOARD: u64 = 0x0;
 pub static ROW_MASK: u64 = 0xFFFF;
@@ -43,7 +44,7 @@ impl Board {
         let mut board_copy: u64 = board;
         let mut highest_value: u64 = 0;
         for _i in 0..16 {
-            let tile = board_copy & TILE_MASK;
+            let tile: u64 = board_copy & TILE_MASK;
             if tile != EMPTY_BOARD && tile > highest_value {
                 highest_value = tile;
             }

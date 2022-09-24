@@ -35,6 +35,7 @@ class Player:
             self.__load_played_games()
         remaining_games = games_to_play - len(self.__played_games)
         if remaining_games > 0:
+            print("hi")
             self.__play_remaining_games(remaining_games)
             self.__json_processor.save_dict_as_json(data=self.__played_games)
             print(f"Saved game data to {SAVING_PATH}")
