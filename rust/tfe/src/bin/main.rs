@@ -1,18 +1,19 @@
 use tfe::Game;
 use tfe::Statistics;
 use stopwatch::{Stopwatch};
-// use std::thread;
 
 fn main() {
     // Arrange
     let stopwatch = Stopwatch::start_new();
-    let total_games = 1_000_000;
+    let total_games: u32 = 100;
+    let workers: u32 = 3;
 
     // Play games
-    let highest_tiles: Vec<u64> = Game::play_games(total_games);
+    let highest_tiles: Vec<u64> = Game::play_games(total_games, workers);
     
     // Display result
-    Statistics::print_highest_tiles_statistics(highest_tiles);
-    println!("{:?}", stopwatch.elapsed());
+    println!("Total games: {:?}\nTime: {:?}", highest_tiles.len(), stopwatch.elapsed());
+    println!("------------------------");
 
+    Statistics::print_highest_tiles_statistics(highest_tiles);
 }

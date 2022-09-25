@@ -4,9 +4,11 @@ pub struct Statistics{}
 
 impl Statistics {
     pub fn print_highest_tiles_statistics(highest_tiles: Vec<u64>) {
+        let highest_tile: u64 = Self::get_highest_tile(&highest_tiles);
         println!(
-            "                              \rHighest_tile: {:?}\nAverage: {:?}", 
-            Self::get_highest_tile(&highest_tiles),
+            "Highest_tile: {:?} ({:?})\nAverage: {:?}", 
+            highest_tile,
+            Self::freaking_pow_is_not_possible_with_an_u64(highest_tile),
             Self::get_average(&highest_tiles), 
         );
         Self::pp_summary(&highest_tiles);
@@ -44,4 +46,12 @@ impl Statistics {
         }   
     }
 
+    fn freaking_pow_is_not_possible_with_an_u64(exponent: u64) -> u64 {
+        if exponent < 1 {return 0_u64}
+        let mut real_tile_value: u64 = 2;
+        for _ in 1 .. exponent {
+            real_tile_value *= 2
+        }
+        real_tile_value
+    }
 }
