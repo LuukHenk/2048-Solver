@@ -3,6 +3,8 @@ use strum::IntoEnumIterator;
 use std::collections::HashMap;
 
 use super::direction::Direction;
+use super::utils::Utils;
+
 pub static EMPTY_BOARD: u64 = 0x0;
 pub static ROW_MASK: u64 = 0xFFFF;
 pub static TILE_MASK: u64 = 0xF;
@@ -44,8 +46,8 @@ impl Board {
     pub fn get_highest_tile(board: u64) -> u64 {
         let mut board_copy: u64 = board;
         let mut highest_value: u64 = 0;
-        for _i in 0..16 {
-            let tile: u64 = board_copy & TILE_MASK;
+        for i in 0..16 {
+            let tile: u64 = Self::get_tile(board_copy, i);
             if tile != EMPTY_BOARD && tile > highest_value {
                 highest_value = tile;
             }
@@ -54,6 +56,21 @@ impl Board {
         highest_value
     }
 
+    pub fn get_tile(board: u64, index: u8) -> u64 {
+        board >> index * 4 & 0xF
+    }
+
+    pub fn get_score(board: u64) -> u64 {
+        let mut score: u64 = 0;
+        for i in 0..16 { 
+            let tile: u64 = Self::get_tile(board, i);
+            if  tile >  1 {
+                score += Utils::freaking_pow_is_not_possible_with_an_u64(tile);
+            } 
+        }
+        score
+    }
+    
     fn execute(mut board: u64, direction: &Direction) -> u64 {
         board = match direction {
             Direction::Right => Self::right_move(board),
@@ -78,8 +95,7 @@ impl Board {
     fn get_empty_tiles(board: u64) -> Vec<u8> {
         let mut empty_tiles: Vec<u8> = Vec::new();
         for i in 0u8..16 {
-            let tile = board >> i * 4 & 0xF;
-            if tile == 0 { empty_tiles.push(i); } 
+            if Self::get_tile(board, i) == 0 { empty_tiles.push(i); } 
         }
         empty_tiles
     }
@@ -250,10 +266,10 @@ mod tests {
         let tile_with_value_1: u64 = 0x0000_0000_0000_0001;
         let tile_with_value_2: u64 = 0x0000_0000_0000_0001;
         for _i in 0..16 {
-            if board.board & tile_with_value_1 != EMPTY_BOARD || board.board & tile_with_value_2 != EMPTY_BOARD{
+            if board & tile_with_value_1 != EMPTY_BOARD || board & tile_with_value_2 != EMPTY_BOARD{
                 total_set_values = total_set_values + 1;
             }
-            board.board >>= 4;
+            board >>= 4;
         }
         assert_eq!(total_set_values, 2);
 

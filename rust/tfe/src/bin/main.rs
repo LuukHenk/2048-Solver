@@ -5,8 +5,8 @@ use stopwatch::{Stopwatch};
 fn main() {
     // Arrange
     let stopwatch = Stopwatch::start_new();
-    let total_games: u32 = 100;
-    let workers: u32 = 3;
+    let total_games: u32 = 10000;
+    let workers: u32 = 7;
 
     // Play games
     let highest_tiles: Vec<u64> = Game::play_games(total_games, workers);
