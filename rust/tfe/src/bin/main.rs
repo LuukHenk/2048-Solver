@@ -14,6 +14,5 @@ fn main() {
     // Display result
     println!("Total games: {:?}\nTime: {:?}", highest_tiles.len(), stopwatch.elapsed());
     println!("------------------------");
-
     Statistics::print_highest_tiles_statistics(highest_tiles);
 }

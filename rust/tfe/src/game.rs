@@ -2,10 +2,11 @@ use rand::seq::SliceRandom;
 use std::thread;
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
+use std::collections::HashMap;
 
 use super::direction::Direction;
 use super::board::Board;
-use super::algorithm::Algorithm;
+// use super::algorithm::Algorithm;
 
 pub struct Game{}
 
@@ -50,12 +51,15 @@ impl Game {
     }
 
     fn perform_movement(mut board: u64) -> u64{
-        let mut possible_movements: Vec<Direction> = Board::get_possible_movements(board);
-        possible_movements = Algorithm::determine_best_movements(board, possible_movements);
+        let mut possible_movements: HashMap<Direction, u64> = Board::get_possible_movements(board);
+        
+        // TODO [Luuk] - THISS section should be rewritten
+        // possible_movements = Algorithm::determine_best_movements(board, possible_movements);
+        let directions: Vec<Direction> = possible_movements.into_keys().collect();
+
         let mut rng = rand::thread_rng();
-        let direction: &Direction = possible_movements.choose(&mut rng).unwrap();
+        let direction: &Direction = directions.choose(&mut rng).unwrap();
         board = Board::perform_movement(board, direction);
         board
-           
     }
 }

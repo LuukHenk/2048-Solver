@@ -1,5 +1,6 @@
 use rand::Rng;
 use strum::IntoEnumIterator;
+use std::collections::HashMap;
 
 use super::direction::Direction;
 pub static EMPTY_BOARD: u64 = 0x0;
@@ -28,13 +29,13 @@ impl Board {
 
 
 
-    pub fn get_possible_movements(board: u64) -> Vec<Direction> {
-        let mut possible_movements: Vec<Direction> = Vec::new();
+    pub fn get_possible_movements(board: u64) -> HashMap<Direction, u64> {
+        let mut possible_movements: HashMap<Direction, u64> = HashMap::new();
         for direction in Direction::iter() {
             let mut tmp_board = board;
             tmp_board = Self::execute(tmp_board, &direction);
 
-            if tmp_board != board { possible_movements.push(direction) }
+            if tmp_board != board { possible_movements.insert(direction, tmp_board); }
         };
         possible_movements
         
