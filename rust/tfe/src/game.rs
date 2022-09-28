@@ -52,7 +52,7 @@ impl Game {
 
     fn perform_movement(mut board: u64) -> u64{
         let possible_movements: HashMap<Direction, u64> = Board::get_possible_movements(board);
-        let direction: Direction = Algorithm::determine_best_movements(board, possible_movements);
+        let direction: Direction = Algorithm::get_direction(board, possible_movements, Board::get_highest_tile(board));
         board = Board::perform_movement(board, &direction);
         board
     }
