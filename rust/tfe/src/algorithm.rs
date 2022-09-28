@@ -74,11 +74,16 @@ impl Algorithm {
         board_after_move: u64,
         movement: Direction
     ) -> i128 {
-        
+        if movement == Direction::Up || movement == Direction::Down {
+            let score_board = (Board::get_score(board & TOP_MASK) - Board::get_score(board & BOTTOM_MASK)).abs();
+            let score_top_of_board_after_move = Board::get_score(board & TOP_MASK);
+            let score_bottom_of_board_after_move = Board::get_score(board & BOTTOM_MASK);
+        } else {
+
+        }
 
         return 0_i128
     }
-
 
 
     // pub fn determine_best_movements(board: u64, mut possible_movements: Vec<Direction>) -> Vec<Direction> {
