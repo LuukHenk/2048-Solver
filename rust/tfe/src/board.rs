@@ -57,7 +57,7 @@ impl Board {
     }
 
     pub fn get_tile(board: u64, index: u8) -> u64 {
-        board >> index * 4 & 0xF
+        board >> index * 4 & TILE_MASK
     }
 
     pub fn get_score(board: u64) -> u64 {

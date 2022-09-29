@@ -5,7 +5,7 @@ use stopwatch::{Stopwatch};
 fn main() {
     // Arrange
     let stopwatch = Stopwatch::start_new();
-    let total_games: u32 = 10000;
+    let total_games: u32 = 1_000_000;
     let workers: u32 = 7;
 
     // Play games

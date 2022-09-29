@@ -31,8 +31,9 @@ impl Algorithm {
             // Act 1    - Determine if highest tike is in corner
             weight += Self::set_weight_for_highest_tile_in_corner(highest_tile, current_board, *board_after_move);
             // Act 2    - Determine the difference between sides of the baord
-
+            weight += Self::set_weight_for_rows_on_the_side_of_the_board(current_board, *board_after_move, *direction);
             // Act 3    - Determine score difference
+            weight += Self::set_weight_for_get_score_differences(current_board, *board_after_move);
             // Assert   - Determine highest weight determined by acts and choose best movement
             if weight > highest_weight {
                 highest_weight = weight;
@@ -75,16 +76,36 @@ impl Algorithm {
         movement: Direction
     ) -> i128 {
         if movement == Direction::Up || movement == Direction::Down {
-            let score_board = (Board::get_score(board & TOP_MASK) - Board::get_score(board & BOTTOM_MASK)).abs();
-            let score_top_of_board_after_move = Board::get_score(board & TOP_MASK);
-            let score_bottom_of_board_after_move = Board::get_score(board & BOTTOM_MASK);
+            return Self::calculate_score_differences(
+                Board::get_score(current_board & TOP_MASK).into(),
+                Board::get_score(current_board & BOTTOM_MASK).into(),
+                Board::get_score(board_after_move & TOP_MASK).into(),
+                Board::get_score(board_after_move & BOTTOM_MASK).into()
+            )
         } else {
-
+            return Self::calculate_score_differences(
+                Board::get_score(current_board & LEFT_MASK).into(),
+                Board::get_score(current_board & RIGHT_MASK).into(),
+                Board::get_score(board_after_move & LEFT_MASK).into(),
+                Board::get_score(board_after_move & RIGHT_MASK).into()
+            )
         }
-
-        return 0_i128
     }
 
+    fn calculate_score_differences(
+        board_side_1: i128,
+        board_side_2: i128,
+        board_after_move_side_1: i128, 
+        board_after_move_side_2: i128
+    ) -> i128 {
+        (board_after_move_side_1 - board_after_move_side_2).abs() - (board_side_1 - board_side_2).abs()
+    }
+
+    fn set_weight_for_get_score_differences(board: u64, board_after_move: u64) -> i128 {
+        let score_after_move: i128 = Board::get_score(board_after_move).into();
+        let score_current_board: i128 = Board::get_score(board).into();
+        score_after_move - score_current_board
+    }
 
     // pub fn determine_best_movements(board: u64, mut possible_movements: Vec<Direction>) -> Vec<Direction> {
     //     possible_movements = Self::remove_up_from_movements(possible_movements);
