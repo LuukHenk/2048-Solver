@@ -2,9 +2,7 @@ use rand::Rng;
 
 use super::direction::Direction;
 
-pub struct Algorithm;
-
-impl Algorithm {
+mod Algorithm {
 
     pub fn determine_best_movement(mut possible_movements: Vec<Direction>) -> Direction {
         possible_movements = Self::remove_up_from_movements(possible_movements);
