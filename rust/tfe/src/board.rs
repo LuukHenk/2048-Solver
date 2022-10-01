@@ -1,6 +1,5 @@
 use rand::Rng;
 use strum::IntoEnumIterator;
-use std::collections::HashMap;
 
 use super::direction::Direction;
 use super::utils::Utils;
@@ -25,39 +24,16 @@ impl Board {
         Self::add_number_to_empty_position(board)
     }
 
-    pub fn board_full(board: u64) -> bool {
-        Self::get_possible_movements(board).len() == 0
-    }
-
-
-
-    pub fn get_possible_movements(board: u64) -> HashMap<Direction, u64> {
-        let mut possible_movements: HashMap<Direction, u64> = HashMap::new();
+    pub fn get_possible_movements(board: u64) -> Vec<Direction> {
+        let mut possible_movements: Vec<Direction> = Vec::new();
         for direction in Direction::iter() {
             let mut tmp_board = board;
             tmp_board = Self::execute(tmp_board, &direction);
 
-            if tmp_board != board { possible_movements.insert(direction, tmp_board); }
+            if tmp_board != board { possible_movements.push(direction); }
         };
         possible_movements
         
-    }
-
-    pub fn get_highest_tile(board: u64) -> u64 {
-        let mut board_copy: u64 = board;
-        let mut highest_value: u64 = 0;
-        for i in 0..16 {
-            let tile: u64 = Self::get_tile(board_copy, i);
-            if tile != EMPTY_BOARD && tile > highest_value {
-                highest_value = tile;
-            }
-            board_copy >>= 4;
-        }
-        highest_value
-    }
-
-    pub fn get_tile(board: u64, index: u8) -> u64 {
-        board >> index * 4 & TILE_MASK
     }
 
     pub fn get_score(board: u64) -> u64 {
@@ -90,6 +66,10 @@ impl Board {
 
     fn get_number() -> u64 {
         if rand::thread_rng().gen_range(0..10) == 10 { 2 } else { 1 }
+    }
+
+    fn get_tile(board: u64, index: u8) -> u64 {
+        board >> index * 4 & TILE_MASK
     }
 
     fn get_empty_tiles(board: u64) -> Vec<u8> {

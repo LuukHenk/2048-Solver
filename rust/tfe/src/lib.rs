@@ -7,6 +7,7 @@ mod board;
 mod statistics;
 mod algorithm;
 mod utils;
+mod game_data_model;
 
 pub use direction::Direction;
 pub use game::Game;
@@ -14,3 +15,4 @@ pub use board::Board;
 pub use statistics::Statistics;
 pub use algorithm::Algorithm;
 pub use utils::Utils;
+pub use game_data_model::GameData;

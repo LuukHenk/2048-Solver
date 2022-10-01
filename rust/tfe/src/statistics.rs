@@ -4,6 +4,10 @@ use super::utils::Utils;
 pub struct Statistics{}
 
 impl Statistics {
+    pub fn print_statistics() {
+
+    }
+    
     pub fn print_highest_tiles_statistics(highest_tiles: Vec<u64>) {
         let highest_tile: u64 = Self::get_highest_tile(&highest_tiles);
         println!(
