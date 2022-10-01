@@ -37,6 +37,9 @@ impl Board {
     }
 
     pub fn get_score(board: u64) -> u64 {
+        // Note that this is not the official game score, but used as an indication
+        // For how good the player is. The official score will be calculated during
+        // export
         let mut score: u64 = 0;
         for i in 0..16 { 
             let tile: u64 = Self::get_tile(board, i);

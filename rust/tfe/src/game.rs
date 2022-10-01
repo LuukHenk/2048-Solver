@@ -11,13 +11,13 @@ use super::game_data_model::GameData;
 pub struct Game{}
 
 impl Game {
-    pub fn play_games(total_games: u32, workers: u32) -> Vec<GameData> {
-        let games_per_worker: u32 = total_games / workers;
-        let total_splitable_games: u32 = games_per_worker * workers;
+    pub fn play_games(total_games: u32, threads: u32) -> Vec<GameData> {
+        let games_per_worker: u32 = total_games / threads;
+        let total_splitable_games: u32 = games_per_worker * threads;
         let remaining_games: u32 = total_games - total_splitable_games;
 
         let (sender, receiver): (Sender<GameData>, Receiver<GameData>) = mpsc::channel();
-        for _ in 0 .. workers {
+        for _ in 0 .. threads {
             let sender_clone = sender.clone(); 
             thread::spawn(
                 move || for _ in 0 .. games_per_worker {

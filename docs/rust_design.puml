@@ -6,7 +6,7 @@ class main as "Main()"
 
 package business_layer as "Business layer"{
     class player as "Player()" {
-        + train(games_per_training: u64, minmax_depth: u64, threads: u8) -> None
+        + train(games_per_training: u32, threads: u32, minmax_depth_percentage: u8) -> None
     }
 
     class game as "Game()" {
