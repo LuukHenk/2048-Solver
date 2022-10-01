@@ -1,0 +1,80 @@
+@startuml 2048
+
+title 2048
+
+package rust_game as "Rust - game" {
+
+    class rust_move_result as "MoveResult" {
+        + move: Direction
+        + board: u64
+    }
+    class rust_game as "Game(exporter: Optional[GameExporter])" {
+        + play_games(total: u32, minimum_tile_size: u8)
+        + export_games() -> success: bool
+        - play_game() -> result: (Vec[MoveResult], highest_tile: u8)
+        - game_results: Vec[Vec[MoveResult]]]
+    }
+    class rust_board as "Board" {
+        + perform_movement(direction: Direction) -> MoveResult
+        + possible_movements() -> Vec[Direction]
+        + highest_tile() -> u8
+        + board_full() -> bool
+    }
+    class rust_exporter as "Exporter" {
+        + export_to_file(Vec[Vec[MoveResult]])
+    }
+
+}
+
+rust_board --> rust_move_result
+rust_game -> rust_board
+rust_game --> rust_move_result
+rust_game --* rust_exporter
+
+package rust_python as "Rust - Python interface" {
+    enum connectable as "ConnectableClass"
+
+    class rust_connector as "Connector" {
+        + get_possible_connections() -> List[str]
+        + connect(str) -> class
+        - linkages: match[str:struct]
+    }
+
+    class rust_game_controller as "PythonGameController" {
+        + play_games(total: int, minimum_tile_required: int, export_path: str)
+    }
+}
+
+note top of rust_python
+    Public methods are displayed in python style, private methods are displayed in rust style
+endnote
+
+rust_connector -> connectable
+connectable -o rust_game_controller
+rust_game_controller --> rust_game
+
+package py_controller as "Python - controller" {
+    class 2048 {
+    }
+
+    class py_controller as "Controller" {
+    }
+
+    class py_data_collector as "DataCollector" {
+        - rust_controller_id: str
+        + play_rust_games(total: int, minimum_tile_required: int, export_path: str)
+    }
+}
+
+2048 --> py_controller 
+py_controller -> py_data_collector
+py_data_collector --> rust_connector
+
+package py_displayer as "Python - displayer" {
+    class py_main_window as "MainWindow" {
+    }
+}
+
+py_controller -> py_main_window
+
+@enduml
