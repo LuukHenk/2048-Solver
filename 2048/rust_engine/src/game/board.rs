@@ -9,27 +9,27 @@ pub static TILE_MASK: u64 = 0xF;
 pub static TILES_IN_BOARD: usize = 16;
 pub static ROW_MASK: u64 = 0xFFFF;
 
-pub struct Board{board: u64}
+pub struct Board{board: u64, score: u64}
 
 impl Board {
 
     pub fn new() -> Board {
-        let mut board: Board = Board{board: EMPTY_BOARD};
+        let mut board: Board = Board{board: EMPTY_BOARD, score:0};
         Self::spawn_tile(&mut board);
         Self::spawn_tile(&mut board);
         board
     }
     pub fn perform_movement(&mut self, direction: &Direction) {
-        self.board = Self::execute(self.board, direction);
+        self.board = Self::execute(self, direction, &true);
         Self::spawn_tile(self)
     }
     pub fn _print_board(&self) {println!("{:#02X}", self.board);}
     pub fn get_board(&self) -> u64 {self.board}
-    pub fn get_possible_movements(&self) -> Vec<Direction> {
+    pub fn get_score(&self) -> u64 {self.score}
+    pub fn get_possible_movements(&mut self) -> Vec<Direction> {
         let mut possible_movements: Vec<Direction> = Vec::with_capacity(4);
         for direction in Direction::iter() {
-            let mut tmp_board = self.board;
-            tmp_board = Self::execute(tmp_board, &direction);
+            let tmp_board = Self::execute(self, &direction, &false);
 
             if tmp_board != self.board { possible_movements.push(direction); }
         };
@@ -51,53 +51,60 @@ impl Board {
         empty_tiles
     }
 
-    fn execute(board: u64, direction: &Direction) -> u64 {
+    fn execute(&mut self, direction: &Direction, &update_score: &bool) -> u64 {
         match direction {
-            Direction::Right => Self::right_move(board),
-            Direction::Left => Self::left_move(board),
-            Direction::Down => Self::down_move(board),
-            Direction::Up => Self::up_move(board),
+            Direction::Right => Self::right_move(self, &update_score),
+            Direction::Left => Self::left_move(self, &update_score),
+            Direction::Down => Self::down_move(self, &update_score),
+            Direction::Up => Self::up_move(self, &update_score),
+            Direction::None => self.board
         }
     }
 
-    fn right_move(board: u64) -> u64 {
+    fn right_move(&mut self, &update_score: &bool) -> u64 {
         let mut new_board: u64 = EMPTY_BOARD;
         for i in 0..4 {
             let row: u8 = i * 16;
-            new_board ^= Self::merge_row_to_the_right(&((board >> row) & ROW_MASK)) << row;
+            new_board ^= Self::merge_row_to_the_right(
+                self,
+                 &((self.board >> row) & ROW_MASK),
+                 &update_score
+            ) << row;
         }
         new_board
     }
-    fn left_move(board: u64) -> u64 {
+    fn left_move(&mut self, &update_score: &bool) -> u64 {
         let mut new_board: u64 = EMPTY_BOARD;
         for i in 0..4 {
             let row: u8 = i * 16;
-            let mut reversed_row = Self::reverse_row(board >> row & ROW_MASK);
-            reversed_row = Self::merge_row_to_the_right(&reversed_row);
+            let mut reversed_row = Self::reverse_row(self.board >> row & ROW_MASK);
+            reversed_row = Self::merge_row_to_the_right(self, &reversed_row, &update_score);
             new_board ^= Self::reverse_row(reversed_row) << row;
         }
         new_board
     }
 
-    fn down_move(board: u64) -> u64 {
+    fn down_move(&mut self, &update_score: &bool) -> u64 {
         let mut new_board: u64 = EMPTY_BOARD;
-        let tmp_board: u64 = Self::transpose(&board);
+        let tmp_board: u64 = Self::transpose(&self.board);
         for i in 0..4 {
             let row: u8 = i * 16;
             new_board ^= Self::merge_row_to_the_right(
-                &((tmp_board >> row) & ROW_MASK)
+                self,
+                &((tmp_board >> row) & ROW_MASK),
+                &update_score
             ) << row;
         }
         Self::transpose(&new_board)
     }
 
-    fn up_move(board: u64) -> u64 {
+    fn up_move(&mut self, &update_score: &bool) -> u64 {
         let mut new_board: u64 = EMPTY_BOARD;
-        let tmp_board: u64 = Self::transpose(&board);
+        let tmp_board: u64 = Self::transpose(&self.board);
         for i in 0..4 {
             let row: u8 = i * 16;
             let mut tmp_row = Self::reverse_row(tmp_board >> row & ROW_MASK);
-            tmp_row = Self::merge_row_to_the_right(&tmp_row);
+            tmp_row = Self::merge_row_to_the_right(self, &tmp_row, &update_score);
             new_board ^= Self::reverse_row(tmp_row) << row;
         }
         Self::transpose(&new_board)
@@ -126,7 +133,7 @@ impl Board {
         (row&0xF000)>>12|(row&0x0F00)>>4|(row&0x00F0)<<4|(row&0x000F)<<12
     }
 
-    fn merge_row_to_the_right(&row: &u64) -> u64 {
+    fn merge_row_to_the_right(&mut self, &row: &u64, &update_score: &bool) -> u64 {
         let mut tmp_row: u64 = row;
         let mut new_row: u64 = EMPTY_BOARD;
         let mut tile_to_add: u64;
@@ -142,6 +149,7 @@ impl Board {
             } else if second_tile != 0 {
                 if first_tile == second_tile {
                     tile_to_add = first_tile + 1;
+                    if update_score {self.score += Self::pow_unsafe(tile_to_add);}
                     first_tile = EMPTY_BOARD;
                 } else  {
                     tile_to_add = first_tile;
@@ -157,7 +165,32 @@ impl Board {
         }
         new_row
     }
+
+    pub fn pow_unsafe(exponent: u64) -> u64 {
+        if exponent < 1 {return 0_u64}
+        let mut result: u64 = 2;
+        for _ in 1 .. exponent {
+            result *= 2
+        }
+        result
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #[cfg(test)]
 mod tests {
@@ -176,6 +209,7 @@ mod tests {
             board.board >>= 4;
         }
         assert_eq!(total_set_values, 2);
+        assert_eq!(board.score, 0);
     }
     
     #[test]
@@ -184,6 +218,7 @@ mod tests {
         board.board = 0x1234_5678_9ABC_DEF0;
         board.perform_movement(&Direction::Right);
         assert_eq!(board.get_empty_tiles(), Vec::new());
+        assert_eq!(board.score, 0);
     }
 
     #[test]
@@ -195,6 +230,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_left_not_possible() {
@@ -205,6 +241,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_right_not_possible() {
@@ -215,6 +252,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_up_not_possible() {
@@ -225,6 +263,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_down_not_possible() {
@@ -235,6 +274,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_down_and_left_not_possible() {
@@ -245,6 +285,7 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_down_and_left_not_possible_complex() {
@@ -255,12 +296,14 @@ mod tests {
         for direction in expected_movements.iter() {
             assert_eq!(possible_movements.contains(direction), true);
         }
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_possible_movements_none_possible() {
         let mut board: Board = Board::new();
         board.board = 0x1234_5678_9ABC_DEF1;
         assert_eq!(board.get_possible_movements(), Vec::new());
+        assert_eq!(board.score, 0);
     }
 
     #[test]
@@ -278,7 +321,8 @@ mod tests {
         board.board = 0x1234_5670_9ABC_DEF0;
         assert_eq!(board.get_empty_tiles(), vec![0_usize, 8_usize]); 
         board.board = 0x1234_5678_9ABC_DEF1;
-        assert_eq!(board.get_empty_tiles(), Vec::new()); 
+        assert_eq!(board.get_empty_tiles(), Vec::new());
+        assert_eq!(board.score, 0); 
     }
 
     #[test]
@@ -287,74 +331,123 @@ mod tests {
         board.board = 0x1234_5678_9ABC_DEF0;
         board.spawn_tile();
         assert_eq!(board.get_empty_tiles(), Vec::new());
+        assert_eq!(board.score, 0);
     }
 
     #[test] 
     fn test_execute_right() {
-        assert_eq!(Board::execute(0x1122_1123_3448_0058, &Direction::Right), 0x0023_0223_0358_0058)
+        let mut board: Board = Board::new();
+        board.board = 0x1122_1123_3448_0058;
+        assert_eq!(Board::execute(&mut board, &Direction::Right, &true), 0x0023_0223_0358_0058);
+        assert_eq!(board.score, 48);
     }
 
     #[test] 
     fn test_execute_left() {
-        assert_eq!(Board::execute(0x8500_8443_3211_2211, &Direction::Left), 0x8500_8530_3220_3200)
+        let mut board: Board = Board::new();
+        board.board = 0x8500_8443_3211_2211;
+        assert_eq!(Board::execute(&mut board, &Direction::Left, &true), 0x8500_8530_3220_3200);
+        assert_eq!(board.score, 48);
     }
     #[test] 
     fn test_execute_down() {
-        assert_eq!(Board::execute(0x0311_0411_5422_8832, &Direction::Down), 0x0000_0320_5522_8833)
+        let mut board: Board = Board::new();
+        board.board = 0x0311_0411_5422_8832;
+        assert_eq!(Board::execute(&mut board, &Direction::Down, &true), 0x0000_0320_5522_8833);
+        assert_eq!(board.score, 48);
     }
     #[test] 
     fn test_execute_up() {
-        assert_eq!(Board::execute(0x8832_5422_0411_0311, &Direction::Up), 0x8833_5522_0320_0000)
+        let mut board: Board = Board::new();
+        board.board = 0x8832_5422_0411_0311;
+        assert_eq!(Board::execute(&mut board, &Direction::Up, &true), 0x8833_5522_0320_0000);
+        assert_eq!(board.score, 48);
     }
 
     #[test]
     fn test_right_move_complex() {
-        assert_eq!(Board::right_move(0x1122_1123_3448_0058), 0x0023_0223_0358_0058);
+        let mut board: Board = Board::new();
+        board.board = 0x1122_1123_3448_0058;
+        assert_eq!(Board::right_move(&mut board, &true), 0x0023_0223_0358_0058);
+        assert_eq!(board.score, 48);
     }
     #[test]
     fn test_right_move_no_tiles() {
-        assert_eq!(Board::right_move(EMPTY_BOARD), EMPTY_BOARD);
+        let mut board: Board = Board::new();
+        board.board = EMPTY_BOARD;
+        assert_eq!(Board::right_move(&mut board, &true), EMPTY_BOARD);
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_right_move_simple() {
-        assert_eq!(Board::right_move(0x0011_0000_2200_0330), 0x0002_0000_0003_0004);
+        let mut board: Board = Board::new();
+        board.board = 0x0011_0000_2200_0330;
+        assert_eq!(Board::right_move(&mut board, &true), 0x0002_0000_0003_0004);
+        assert_eq!(board.score, 28);
     }
     #[test]
     fn test_left_move_complex() {
-        assert_eq!(Board::left_move(0x8500_8443_3211_2211), 0x8500_8530_3220_3200);
+        let mut board: Board = Board::new();
+        board.board = 0x8500_8443_3211_2211;
+        assert_eq!(Board::left_move(&mut board, &true), 0x8500_8530_3220_3200);
+        assert_eq!(board.score, 48);
     }
     #[test]
     fn test_left_move_no_tiles() {
-        assert_eq!(Board::left_move(EMPTY_BOARD), EMPTY_BOARD);
+        let mut board: Board = Board::new();
+        board.board = EMPTY_BOARD;
+        assert_eq!(Board::left_move(&mut board, &true), EMPTY_BOARD);
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_left_move_simple() {
-        assert_eq!(Board::left_move(0x1100_0000_0022_0330), 0x2000_0000_3000_4000);
+        let mut board: Board = Board::new();
+        board.board = 0x1100_0000_0022_0330;
+        assert_eq!(Board::left_move(&mut board, &true), 0x2000_0000_3000_4000);
+        assert_eq!(board.score, 28);
     }
     
     #[test]
     fn test_up_move_complex() {
-        assert_eq!(Board::up_move(0x8832_5422_0411_0311), 0x8833_5522_0320_0000);
+        let mut board: Board = Board::new();
+        board.board = 0x8832_5422_0411_0311;
+        assert_eq!(Board::up_move(&mut board, &true), 0x8833_5522_0320_0000);
+        assert_eq!(board.score, 48);
     }
     #[test]
     fn test_up_move_no_tiles() {
-        assert_eq!(Board::up_move(EMPTY_BOARD), EMPTY_BOARD);
+        let mut board: Board = Board::new();
+        board.board = EMPTY_BOARD;
+        assert_eq!(Board::up_move(&mut board, &true), EMPTY_BOARD);
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_up_move_simple() {
-        assert_eq!(Board::up_move(0x1000_1003_0023_0020), 0x2034_0000_0000_0000);
+        let mut board: Board = Board::new();
+        board.board = 0x1000_1003_0023_0020;
+        assert_eq!(Board::up_move(&mut board, &true), 0x2034_0000_0000_0000);
+        assert_eq!(board.score, 28);
     }
     #[test]
     fn test_down_move_complex() {
-        assert_eq!(Board::down_move(0x0311_0411_5422_8832), 0x0000_0320_5522_8833);
+        let mut board: Board = Board::new();
+        board.board = 0x0311_0411_5422_8832;
+        assert_eq!(Board::down_move(&mut board, &true), 0x0000_0320_5522_8833);
+        assert_eq!(board.score, 48);
     }
     #[test]
     fn test_down_move_no_tiles() {
-        assert_eq!(Board::down_move(EMPTY_BOARD), EMPTY_BOARD);
+        let mut board: Board = Board::new();
+        board.board = EMPTY_BOARD;
+        assert_eq!(Board::down_move(&mut board, &true), EMPTY_BOARD);
+        assert_eq!(board.score, 0);
     }
     #[test]
     fn test_down_move_simple() {
-        assert_eq!(Board::down_move(0x1000_1003_0023_0020), 0x0000_0000_0000_2034);
+        let mut board: Board = Board::new();
+        board.board = 0x1000_1003_0023_0020;
+        assert_eq!(Board::down_move(&mut board, &true), 0x0000_0000_0000_2034);
+        assert_eq!(board.score, 28);
     }
     
 
@@ -370,41 +463,62 @@ mod tests {
 
     #[test]
     fn test_merge_row_to_the_right_with_two_equal_values_after_merge() {
-        assert_eq!(Board::merge_row_to_the_right(&0x2101), 0x0022);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x2101, &true), 0x0022);
+        assert_eq!(board.score, 4);
     }
 
     #[test]
     fn test_merge_row_to_the_right_with_single_value() {
-        assert_eq!(Board::merge_row_to_the_right(&0x0010), 0x0001);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x0010, &true), 0x0001);
+        assert_eq!(board.score, 0);
     }
 
     #[test]
     fn test_merge_row_to_the_right_with_two_equal_values_before_merge() {
-        assert_eq!(Board::merge_row_to_the_right(&0x1100), 0x0002);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x1100, &true), 0x0002);
+        assert_eq!(board.score, 4);
     }
 
     #[test]
     fn test_merge_row_to_the_right_with_three_equal_values_before_merge() {
-        assert_eq!(Board::merge_row_to_the_right(&0x1101), 0x0012);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x1101, &true), 0x0012);
+        assert_eq!(board.score, 4);
     }
 
     #[test]
     fn test_merge_row_to_the_right_with_four_equal_values_before_merge() {
-        assert_eq!(Board::merge_row_to_the_right(&0x1111), 0x0022);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x1111, &true), 0x0022);
+        assert_eq!(board.score, 8);
     }
 
     #[test]
     fn test_merge_row_to_the_right_with_no_values() {
-        assert_eq!(Board::merge_row_to_the_right(&0x0000), 0x0000);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x0000, &true), 0x0000);
+        assert_eq!(board.score, 0);
     }
 
     #[test]
     fn test_merge_row_to_the_right_complex() {
-        assert_eq!(Board::merge_row_to_the_right(&0x1211), 0x0122);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x1211, &true), 0x0122);
+        assert_eq!(board.score, 4);
     }
 
     #[test]
     fn test_merge_row_to_the_right_complex_with_higher_values() {
-        assert_eq!(Board::merge_row_to_the_right(&0x1221), 0x0131);
+        let mut board: Board = Board::new();
+        assert_eq!(Board::merge_row_to_the_right(&mut board, &0x1221, &true), 0x0131);
+        assert_eq!(board.score, 8);
+    }
+
+    #[test]
+    fn test_pow_unsafe() {
+        assert_eq!(Board::pow_unsafe(2), 4);
     }
 }
