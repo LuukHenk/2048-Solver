@@ -3,12 +3,12 @@ use super::board::Board;
 use super::direction::Direction;
 use rand::Rng;
 
-pub struct Game{pub boards: Vec<u64>, pub scores: Vec<u64>, pub moves: Vec<Direction>}
+pub struct Game{pub boards: Vec<u64>, pub scores: Vec<u64>}
 
 impl Game {
     pub fn play() -> Game {
         let mut rng = rand::thread_rng();
-        let mut game = Game{boards: Vec::new(), scores: Vec::new(), moves: Vec::new()};
+        let mut game = Game{boards: Vec::new(), scores: Vec::new()};
         let mut board: Board = Board::new();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
         let mut direction: Direction;
