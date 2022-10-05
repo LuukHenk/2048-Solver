@@ -16,7 +16,7 @@ package business_layer as "Business layer"{
         + determine_best_movement(board: u64, possible_movements: Vec<Direction>) -> Direction
     }
     class board as "Board()" {
-        + new() -> u64
+        + new() -> Board
         + perform_movement(board: u64, direction: Direction) -> board: u64
         + get_possible_movements(board: u64) -> Vec<Direction>
         + get_score(board: u64) -> u64
