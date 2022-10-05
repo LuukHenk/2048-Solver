@@ -56,8 +56,7 @@ impl Board {
             Direction::Right => Self::right_move(self, &update_score),
             Direction::Left => Self::left_move(self, &update_score),
             Direction::Down => Self::down_move(self, &update_score),
-            Direction::Up => Self::up_move(self, &update_score),
-            Direction::None => self.board
+            Direction::Up => Self::up_move(self, &update_score)
         }
     }
 

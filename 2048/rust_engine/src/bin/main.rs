@@ -1,9 +1,18 @@
+use stopwatch::{Stopwatch};
+
+use tfe::game_handler;
 use tfe::Game;
 
 fn main() {
-    let game_results: Game = Game::play();
-    for i in 0..game_results.boards.len() {
-        println!("{:#02X}\n{:?}\t{:?}\n", game_results.boards[i], game_results.scores[i], game_results.moves[i]);
-    }
-    
+    // Arrange
+    let total_games: usize = 1_000_000;
+    let threads: usize = 1;
+
+    // Act
+    let stopwatch = Stopwatch::start_new();
+    let played_games: Vec<Game> = game_handler::play_games(total_games, threads);
+
+    // Result
+    println!("Total games: {:?}\nTime: {:?}", played_games.len(), stopwatch.elapsed());    
+    println!("------------------------");
 }
