@@ -1,7 +1,6 @@
-use tfe::Board;
-use tfe::Direction;
+use tfe::Game;
 
 fn main() {
-    let mut board = Board::new();
-    board.perform_movement(&Direction::Right);
+    let game_results: Game = Game::play();
+    println!("{:?}", game_results.boards);
 }

@@ -1,5 +1,3 @@
-mod board;
-mod direction;
+mod game;
 
-pub use board::Board;
-pub use direction::Direction;
+pub use game::game::Game;

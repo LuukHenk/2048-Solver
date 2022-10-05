@@ -1,4 +1,5 @@
 use rand::Rng;
+use strum::IntoEnumIterator;
 
 use super::direction::Direction;
 
@@ -18,17 +19,23 @@ impl Board {
         Self::spawn_tile(&mut board);
         board
     }
-
     pub fn perform_movement(&mut self, direction: &Direction) {
         self.board = Self::execute(self.board, direction);
         Self::spawn_tile(self)
     }
+    pub fn _print_board(&self) {println!("{:#02X}", self.board);}
+    pub fn get_board(&self) -> u64 {self.board}
+    pub fn get_possible_movements(&self) -> Vec<Direction> {
+        let mut possible_movements: Vec<Direction> = Vec::with_capacity(4);
+        for direction in Direction::iter() {
+            let mut tmp_board = self.board;
+            tmp_board = Self::execute(tmp_board, &direction);
 
-    pub fn print_board(&self) {
-        // This function will not be tested
-        println!("{:#02X}", self.board);
+            if tmp_board != self.board { possible_movements.push(direction); }
+        };
+        possible_movements  
     }
-
+    
     fn spawn_tile(&mut self) {
         let empty_tiles = Self::get_empty_tiles(self);
         let random_position = rand::thread_rng().gen_range(0..empty_tiles.len());
@@ -176,8 +183,84 @@ mod tests {
         let mut board: Board = Board::new();
         board.board = 0x1234_5678_9ABC_DEF0;
         board.perform_movement(&Direction::Right);
-        board.print_board();
         assert_eq!(board.get_empty_tiles(), Vec::new());
+    }
+
+    #[test]
+    fn test_possible_movements_all_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0100_0000_0000;
+        let expected_movements = vec![Direction::Up, Direction::Down, Direction::Left, Direction::Right];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_left_not_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_1000_0000_0000;
+        let expected_movements = vec![Direction::Up, Direction::Down, Direction::Right];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_right_not_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0001_0000_0000;
+        let expected_movements = vec![Direction::Up, Direction::Down, Direction::Left];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_up_not_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0010_0000_0000_0000;
+        let expected_movements = vec![Direction::Right, Direction::Down, Direction::Left];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_down_not_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0000_0010;
+        let expected_movements = vec![Direction::Right, Direction::Up, Direction::Left];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_down_and_left_not_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0000_1000;
+        let expected_movements = vec![Direction::Right, Direction::Up];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_down_and_left_not_possible_complex() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_4880_1234;
+        let expected_movements = vec![Direction::Right, Direction::Up];
+        let possible_movements = board.get_possible_movements();
+        for direction in expected_movements.iter() {
+            assert_eq!(possible_movements.contains(direction), true);
+        }
+    }
+    #[test]
+    fn test_possible_movements_none_possible() {
+        let mut board: Board = Board::new();
+        board.board = 0x1234_5678_9ABC_DEF1;
+        assert_eq!(board.get_possible_movements(), Vec::new());
     }
 
     #[test]
