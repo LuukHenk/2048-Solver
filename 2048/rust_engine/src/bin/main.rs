@@ -1,18 +1,11 @@
-use stopwatch::{Stopwatch};
-
-use tfe::game_handler;
-use tfe::Game;
+use tfe::Player;
 
 fn main() {
-    // Arrange
-    let total_games: usize = 1_000_000;
-    let threads: usize = 1;
+    let max_games_in_set = 10_usize;
+    let threads = 1_usize;
+    let selection_size = 20_usize;
 
-    // Act
-    let stopwatch = Stopwatch::start_new();
-    let played_games: Vec<Game> = game_handler::play_games(total_games, threads);
+    let mut player: Player = Player::new(max_games_in_set);
+    player.train(threads, selection_size);
 
-    // Result
-    println!("Total games: {:?}\nTime: {:?}", played_games.len(), stopwatch.elapsed());    
-    println!("------------------------");
 }

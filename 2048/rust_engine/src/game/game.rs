@@ -1,8 +1,9 @@
+use rand::Rng;
 
 use super::board::Board;
 use super::direction::Direction;
-use rand::Rng;
 
+#[derive(Debug, Clone)]
 pub struct Game{pub boards: Vec<u64>, pub scores: Vec<u64>}
 
 impl Game {

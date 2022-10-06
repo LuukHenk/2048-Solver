@@ -10,6 +10,8 @@ stopwatch = "0.0.7"
 rand = "0.8.3"
 strum = "0.24"
 strum_macros = "0.24"
+itertools = "0.10.5"
+multimap = "0.8.3"
 
 [lib]
 name = "tfe"

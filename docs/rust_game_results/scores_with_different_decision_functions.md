@@ -44,3 +44,13 @@ These scores are based on 1_000_000 games
 	5: 121061
 	6: 253842
 	9: 9701
+
+# Score with optimized board, and random movements
+Total games: 1000000                  
+Time: 1199.047514467s
+Memory usage: 1G
+
+# Score with even more optimized board, and random movements
+Total games: 1000000                  
+Time: 1196.578510538s
+------------------------
