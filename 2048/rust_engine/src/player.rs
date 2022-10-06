@@ -3,6 +3,7 @@ use multimap::MultiMap;
 
 use super::game::game_handler;
 use super::game::game::Game;
+use super::json_conversion;
 
 pub struct Player{
     games_per_training: usize,
@@ -25,8 +26,9 @@ impl Player {
             self.games_per_training, threads
         );
         
+        // WOrk in prgress
         let top_games = Player::select_top_games(current_trainings_set, top_selection_size);
-
+        json_conversion::convert_games_data_to_json(top_games);
 
 
 
