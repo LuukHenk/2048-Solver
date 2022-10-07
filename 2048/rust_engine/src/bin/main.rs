@@ -7,5 +7,4 @@ fn main() {
 
     let mut player: Player = Player::new(max_games_in_set);
     player.train(threads, selection_size);
-
 }

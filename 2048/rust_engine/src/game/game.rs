@@ -4,12 +4,20 @@ use super::board::Board;
 use super::direction::Direction;
 
 #[derive(Debug, Clone)]
-pub struct Game{pub boards: Vec<u64>, pub scores: Vec<u64>, pub movements: Vec<Direction>}
+pub struct Game {
+    pub boards: Vec<u64>,
+    pub scores: Vec<u64>,
+    pub movements: Vec<Direction>,
+}
 
 impl Game {
     pub fn play() -> Game {
         let mut rng = rand::thread_rng();
-        let mut game = Game{boards: Vec::new(), scores: Vec::new(), movements: Vec::new()};
+        let mut game = Game {
+            boards: Vec::new(),
+            scores: Vec::new(),
+            movements: Vec::new(),
+        };
         let mut board: Board = Board::new();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
         let mut direction: Direction;
@@ -20,9 +28,9 @@ impl Game {
             direction = possible_movements[selected_direction_index];
             board.perform_movement(&direction);
             game = Game::update_game_data(game, &board, direction);
-            possible_movements = board.get_possible_movements();
+            possible_movements = board.get_possible_movements()
         }
-        
+
         game
     }
 
