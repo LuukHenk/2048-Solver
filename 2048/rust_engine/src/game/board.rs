@@ -2,6 +2,7 @@ use rand::Rng;
 use strum::IntoEnumIterator;
 
 use super::direction::Direction;
+use super::general_utils;
 
 pub static EMPTY_BOARD: u64 = 0x0;
 pub static TILE_MASK: u64 = 0xF;
@@ -166,7 +167,7 @@ impl Board {
                 if first_tile == second_tile {
                     tile_to_add = first_tile + 1;
                     if update_score {
-                        self.score += Self::pow_unsafe(tile_to_add);
+                        self.score += general_utils::pow_unsafe(tile_to_add);
                     }
                     first_tile = EMPTY_BOARD;
                 } else {
@@ -181,17 +182,6 @@ impl Board {
             new_row += first_tile << current_position_on_new_row;
         }
         new_row
-    }
-
-    pub fn pow_unsafe(exponent: u64) -> u64 {
-        if exponent < 1 {
-            return 0_u64;
-        }
-        let mut result: u64 = 2;
-        for _ in 1..exponent {
-            result *= 2
-        }
-        result
     }
 }
 
@@ -563,10 +553,5 @@ mod tests {
             0x0131
         );
         assert_eq!(board.score, 8);
-    }
-
-    #[test]
-    fn test_pow_unsafe() {
-        assert_eq!(Board::pow_unsafe(2), 4);
     }
 }

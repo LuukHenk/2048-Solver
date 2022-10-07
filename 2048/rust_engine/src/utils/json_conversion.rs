@@ -1,3 +1,4 @@
+use super::general_utils;
 use super::Game;
 
 pub fn convert_games_data_to_json(games: Vec<&Game>) -> String {
@@ -43,7 +44,8 @@ fn convert_board_to_json_list_format(board: u64) -> String {
         let row: u64 = board >> i * 16 & 0xFFFF;
         let mut row_dataset: Vec<String> = Vec::with_capacity(4);
         for i in 0..4 {
-            row_dataset.push((row >> i * 4 & 0xF).to_string());
+            let tile_value = row >> i * 4 & 0xF;
+            row_dataset.push(general_utils::pow_unsafe(tile_value).to_string());
         }
         board_dataset.push(convert_dataset_to_json_data_format(
             row_dataset,

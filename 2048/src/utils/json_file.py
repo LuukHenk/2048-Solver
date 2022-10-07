@@ -2,7 +2,7 @@
 from pathlib import Path
 from json import dumps, loads
 
-SAVING_PATH = Path(__file__).parent.absolute() / "../data_layer/results.json"
+SAVING_PATH = Path(__file__).parent.absolute() / "../../../data/results.json"
 
 
 class JsonProcessor:

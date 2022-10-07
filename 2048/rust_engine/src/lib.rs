@@ -6,4 +6,5 @@ pub use game::game::Game;
 pub use game::game_handler;
 pub use player::Player;
 pub use utils::export_to_file;
+pub use utils::general_utils;
 pub use utils::json_conversion;

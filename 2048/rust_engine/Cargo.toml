@@ -17,3 +17,8 @@ enum-display = "0.1.3"
 [lib]
 name = "tfe"
 path = "src/lib.rs"
+
+[[bin]]
+edition = "2021"
+name = "tfe_rust"
+path = "src/bin/main.rs"
