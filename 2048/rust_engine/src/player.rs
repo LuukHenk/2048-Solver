@@ -4,6 +4,7 @@ use multimap::MultiMap;
 use super::game::game_handler;
 use super::game::game::Game;
 use super::json_conversion;
+use super::export_to_file;
 
 pub struct Player{
     games_per_training: usize,
@@ -28,11 +29,11 @@ impl Player {
         
         // WOrk in prgress
         let top_games = Player::select_top_games(current_trainings_set, top_selection_size);
-        json_conversion::convert_games_data_to_json(top_games);
+        let json_game_data = json_conversion::convert_games_data_to_json(top_games);
+        let _saving_result = export_to_file::write(json_game_data);
 
 
-
-        println!("{:?}", top_games);
+        // println!("{:?}", json_game_data);
         println!("Total games: {:?}\nTime: {:?}", self.games_per_training, stopwatch.elapsed());    
         println!("------------------------");
     }
