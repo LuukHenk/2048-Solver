@@ -1,6 +1,6 @@
 use super::Game;
 
-pub fn convert_games_data_to_json(games: Vec<Game>) -> String {
+pub fn convert_games_data_to_json(games: Vec<&Game>) -> String {
     let mut games_data_json: Vec<String> = Vec::with_capacity(games.len());
     for game_index in 0..games.len() {
         let game: &Game = &games[game_index];
@@ -20,35 +20,37 @@ pub fn convert_games_data_to_json(games: Vec<Game>) -> String {
 fn create_desired_game_state_format(game: &Game, game_state_index: usize) -> String {
     let mut dataset: Vec<String> = Vec::with_capacity(3);
     dataset.push(create_json_dictionary_item(
-        "'board'".to_string(),
+        "\"board\"".to_string(),
         convert_board_to_json_list_format(game.boards[game_state_index]),
     ));
+    let mut performed_move_value: String = String::from("\"");
+    performed_move_value.push_str(&game.movements[game_state_index].to_string());
+    performed_move_value.push_str("\"");
     dataset.push(create_json_dictionary_item(
-        "'performed_move'".to_string(),
-        game.movements[game_state_index].to_string(),
+        "\"performed_move\"".to_string(),
+        performed_move_value,
     ));
     dataset.push(create_json_dictionary_item(
-        "'score'".to_string(),
+        "\"score\"".to_string(),
         game.scores[game_state_index].to_string(),
     ));
     convert_dataset_to_json_data_format(dataset, JsonDataFormats::Dict)
 }
 
 fn convert_board_to_json_list_format(board: u64) -> String {
-    let mut dataset: Vec<String> = Vec::with_capacity(4);
+    let mut board_dataset: Vec<String> = Vec::with_capacity(4);
     for i in 0..4 {
         let row: u64 = board >> i * 16 & 0xFFFF;
-        dataset.push(convert_row_to_json_list_format(row));
+        let mut row_dataset: Vec<String> = Vec::with_capacity(4);
+        for i in 0..4 {
+            row_dataset.push((row >> i * 4 & 0xF).to_string());
+        }
+        board_dataset.push(convert_dataset_to_json_data_format(
+            row_dataset,
+            JsonDataFormats::List,
+        ));
     }
-    convert_dataset_to_json_data_format(dataset, JsonDataFormats::List)
-}
-
-fn convert_row_to_json_list_format(row: u64) -> String {
-    let mut dataset: Vec<String> = Vec::with_capacity(4);
-    for i in 0..4 {
-        dataset.push((row >> i * 4 & 0xF).to_string());
-    }
-    convert_dataset_to_json_data_format(dataset, JsonDataFormats::List)
+    convert_dataset_to_json_data_format(board_dataset, JsonDataFormats::List)
 }
 
 fn create_json_dictionary_item(key: String, value: String) -> String {

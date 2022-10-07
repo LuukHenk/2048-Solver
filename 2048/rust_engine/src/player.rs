@@ -1,5 +1,4 @@
 use multimap::MultiMap;
-use stopwatch::Stopwatch;
 
 use super::export_to_file;
 use super::game::game::Game;
@@ -37,11 +36,38 @@ impl Player {
         }
     }
 
+    pub fn export_games(&self, number_of_games_to_export: usize, saving_path: &String) {
+        let game_data_json_format: String = json_conversion::convert_games_data_to_json(
+            self.select_games_for_export(number_of_games_to_export),
+        );
+        export_to_file::write(game_data_json_format, saving_path);
+    }
+
+    fn select_games_for_export(&self, number_of_games_to_export: usize) -> Vec<&Game> {
+        let mut games_to_export: Vec<&Game> = Vec::with_capacity(number_of_games_to_export);
+        let top_scores = self.order_score();
+        for score in top_scores.iter() {
+            println!("{:?}", score);
+            for game in self.top_games.get_vec(score).unwrap().iter() {
+                games_to_export.push(game);
+                if games_to_export.len() == number_of_games_to_export {
+                    return games_to_export;
+                }
+            }
+        }
+
+        panic!(
+            "Expected games to export '{:?}' is higher than the amount of saved games (top_games) '{:?}'",
+            number_of_games_to_export,
+            games_to_export.len()
+        );
+    }
+
     fn redetermine_top_games(
         &mut self,
         trainings_set_size: usize,
         max_top_games: usize,
-        starting_board: u64,
+        _starting_board: u64,
         thread_capacity: usize,
     ) {
         for game_set in game_handler::play_games(trainings_set_size, thread_capacity).iter_all() {
@@ -54,7 +80,6 @@ impl Player {
         for score in other_scores.iter() {
             self.top_games.remove(score);
         }
-
         let mut number_of_games: usize = 0;
         for score in top_scores.iter() {
             if max_top_games >= number_of_games {
@@ -64,7 +89,6 @@ impl Player {
                 self.top_games.remove(score);
             }
         }
-        println!("{:?}", top_scores);
     }
 
     fn order_score(&self) -> Vec<u64> {

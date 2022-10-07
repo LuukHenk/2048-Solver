@@ -21,10 +21,15 @@ pub fn play_games(total_games: usize, threads: usize) -> MultiMap<u64, Game> {
     }
 
     let mut results: MultiMap<u64, Game> = MultiMap::with_capacity(total_games);
-    for _ in 0..total_splitable_games {
+    for i in 0..total_splitable_games {
+        print!(
+            "Playing games... ({:.2}%)\r",
+            i as f32 / total_splitable_games as f32 * 100.0
+        );
         let game = receiver.recv().unwrap();
         results.insert(extract_final_score(&game), game);
     }
+    print!("                                      \r");
 
     for _ in 0..remaining_games {
         let game = Game::play();
