@@ -7,68 +7,69 @@ use super::game::game_handler;
 use super::json_conversion;
 
 pub struct Player {
-    games_per_training: usize,
+    top_games: MultiMap<u64, Game>,
 }
 
 impl Player {
-    pub fn new(games_per_training: usize) -> Player {
-        let player: Player = Player {
-            games_per_training: games_per_training,
+    pub fn new() -> Player {
+        Player {
+            top_games: MultiMap::new(),
+        }
+    }
+
+    pub fn train(
+        &mut self,
+        trainings_set_size: usize,
+        percentage_top_games: f32,
+        thread_capacity: usize,
+        trainings_rounds: usize,
+    ) {
+        if percentage_top_games > 1_f32 {
+            panic!("percentage_top_games should be defined between 0 and 1")
         };
-        player
-    }
-
-    pub fn train(&mut self, threads: usize, selection_percentage: usize) {
-        let stopwatch = Stopwatch::start_new();
-        let mut top_selection_size: usize = self.games_per_training * selection_percentage / 100;
-        if top_selection_size < 1 {
-            top_selection_size = 1;
+        let mut max_top_games: usize = (trainings_set_size as f32 * percentage_top_games) as usize;
+        if max_top_games < 1 {
+            max_top_games = 1;
         }
-        let current_trainings_set = game_handler::play_games(self.games_per_training, threads);
-
-        // WOrk in prgress
-        let top_games = Player::select_top_games(current_trainings_set, top_selection_size);
-        let json_game_data = json_conversion::convert_games_data_to_json(top_games);
-        let _saving_result = export_to_file::write(json_game_data);
-
-        // println!("{:?}", json_game_data);
-        println!(
-            "Total games: {:?}\nTime: {:?}",
-            self.games_per_training,
-            stopwatch.elapsed()
-        );
-        println!("------------------------");
+        self.redetermine_top_games(trainings_set_size, max_top_games, 0x0_u64, thread_capacity);
+        for _ in 0..trainings_rounds {
+            self.redetermine_top_games(trainings_set_size, max_top_games, 0x0_u64, thread_capacity);
+        }
     }
 
-    fn select_top_games(
-        mut trainings_set: MultiMap<u64, Game>,
-        top_selection_size: usize,
-    ) -> Vec<Game> {
-        let scores = Player::order_map_keys(&trainings_set, true);
-        let mut top_games: Vec<Game> = Vec::with_capacity(top_selection_size);
+    fn redetermine_top_games(
+        &mut self,
+        trainings_set_size: usize,
+        max_top_games: usize,
+        starting_board: u64,
+        thread_capacity: usize,
+    ) {
+        for game_set in game_handler::play_games(trainings_set_size, thread_capacity).iter_all() {
+            self.top_games
+                .insert_many_from_slice(*game_set.0, game_set.1);
+        }
 
-        for i in 0..scores.len() {
-            let mut games: Vec<Game> = trainings_set.remove(&scores[i]).unwrap();
-            for j in 0..games.len() {
-                top_games.push(games.swap_remove(j));
-                if top_games.len() == top_selection_size {
-                    break;
-                }
-            }
-            if top_games.len() == top_selection_size {
-                break;
+        let mut top_scores = self.order_score();
+        let other_scores: Vec<u64> = top_scores.drain(max_top_games..).collect();
+        for score in other_scores.iter() {
+            self.top_games.remove(score);
+        }
+
+        let mut number_of_games: usize = 0;
+        for score in top_scores.iter() {
+            if max_top_games >= number_of_games {
+                let games_with_score = self.top_games.get_vec(score).unwrap();
+                number_of_games += games_with_score.len();
+            } else {
+                self.top_games.remove(score);
             }
         }
-        top_games
+        println!("{:?}", top_scores);
     }
 
-    fn order_map_keys(map: &MultiMap<u64, Game>, descending: bool) -> Vec<u64> {
-        let mut map_keys: Vec<u64> = map.keys().cloned().collect();
-        if descending {
-            map_keys.sort_by(|a, b| b.cmp(a))
-        } else {
-            map_keys.sort()
-        }
+    fn order_score(&self) -> Vec<u64> {
+        let mut map_keys: Vec<u64> = self.top_games.keys().cloned().collect();
+        map_keys.sort_by(|a, b| b.cmp(a));
         map_keys
     }
 }

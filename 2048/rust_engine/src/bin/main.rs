@@ -1,10 +1,16 @@
 use tfe::Player;
 
 fn main() {
-    let max_games_in_set = 10_usize;
-    let threads = 1_usize;
-    let selection_size = 20_usize;
+    let trainins_set_size = 10_000_usize;
+    let percentage_used = 0.01_f32;
+    let threads = 7_usize;
+    let trainings_rounds: usize = 10_usize;
 
-    let mut player: Player = Player::new(max_games_in_set);
-    player.train(threads, selection_size);
+    let mut player: Player = Player::new();
+    player.train(
+        trainins_set_size,
+        percentage_used,
+        threads,
+        trainings_rounds,
+    );
 }
