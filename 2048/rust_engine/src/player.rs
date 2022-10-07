@@ -47,7 +47,6 @@ impl Player {
         let mut games_to_export: Vec<&Game> = Vec::with_capacity(number_of_games_to_export);
         let top_scores = self.order_score();
         for score in top_scores.iter() {
-            println!("{:?}", score);
             for game in self.top_games.get_vec(score).unwrap().iter() {
                 games_to_export.push(game);
                 if games_to_export.len() == number_of_games_to_export {
@@ -95,5 +94,15 @@ impl Player {
         let mut map_keys: Vec<u64> = self.top_games.keys().cloned().collect();
         map_keys.sort_by(|a, b| b.cmp(a));
         map_keys
+    }
+
+    fn _get_games(&mut self) -> Vec<Game> {
+        let mut games_out: Vec<Game> = Vec::new();
+        for (_, top_games_values) in self.top_games.iter_all_mut() {
+            for game in top_games_values.iter() {
+                games_out.push(game.clone());
+            }
+        }
+        games_out
     }
 }
