@@ -10,7 +10,7 @@ pub fn play_games(total_games: usize, threads: usize) -> MultiMap<u64, Game> {
     let total_splitable_games: usize = games_per_worker * threads;
     let remaining_games: usize = total_games - total_splitable_games;
 
-    let (sender, receiver): (Sender<Game>, Receiver<Game>) = mpsc::channel();
+    let (sender, receiver): (Sender<(u64, Game)>, Receiver<(u64, Game)>) = mpsc::channel();
     for _ in 0..threads {
         let sender_clone = sender.clone();
         thread::spawn(move || {
@@ -26,19 +26,15 @@ pub fn play_games(total_games: usize, threads: usize) -> MultiMap<u64, Game> {
             "Playing games... ({:.2}%)\r",
             i as f32 / total_splitable_games as f32 * 100.0
         );
-        let game = receiver.recv().unwrap();
-        results.insert(extract_final_score(&game), game);
+        let game_result = receiver.recv().unwrap();
+        results.insert(game_result.0, game_result.1);
     }
     print!("                                      \r");
 
     for _ in 0..remaining_games {
-        let game = Game::play();
-        results.insert(extract_final_score(&game), game);
+        let game_result = Game::play();
+        results.insert(game_result.0, game_result.1);
     }
 
     results
-}
-
-fn extract_final_score(game: &Game) -> u64 {
-    game.scores[game.scores.len() - 1]
 }

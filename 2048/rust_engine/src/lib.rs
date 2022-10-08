@@ -3,7 +3,7 @@ mod player;
 mod utils;
 
 pub use game::game::Game;
-pub use game::game_handler;
+pub use game::game_data_collector;
 pub use player::Player;
 pub use utils::export_to_file;
 pub use utils::general_utils;

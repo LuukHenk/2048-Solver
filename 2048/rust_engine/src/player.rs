@@ -2,7 +2,7 @@ use multimap::MultiMap;
 
 use super::export_to_file;
 use super::game::game::Game;
-use super::game::game_handler;
+use super::game::game_data_collector;
 use super::json_conversion;
 
 pub struct Player {
@@ -37,10 +37,11 @@ impl Player {
     }
 
     pub fn export_games(&self, number_of_games_to_export: usize, saving_path: &String) {
-        let game_data_json_format: String = json_conversion::convert_games_data_to_json(
-            self.select_games_for_export(number_of_games_to_export),
-        );
-        export_to_file::write(game_data_json_format, saving_path);
+        println!("Succes")
+        // let game_data_json_format: String = json_conversion::convert_games_data_to_json(
+        //     self.select_games_for_export(number_of_games_to_export),
+        // );
+        // export_to_file::write(game_data_json_format, saving_path);
     }
 
     fn select_games_for_export(&self, number_of_games_to_export: usize) -> Vec<&Game> {
@@ -69,7 +70,9 @@ impl Player {
         _starting_board: u64,
         thread_capacity: usize,
     ) {
-        for game_set in game_handler::play_games(trainings_set_size, thread_capacity).iter_all() {
+        for game_set in
+            game_data_collector::play_games(trainings_set_size, thread_capacity).iter_all()
+        {
             self.top_games
                 .insert_many_from_slice(*game_set.0, game_set.1);
         }

@@ -11,7 +11,7 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn play() -> Game {
+    pub fn play() -> (u64, Game) {
         let mut rng = rand::thread_rng();
         let mut game = Game {
             boards: Vec::new(),
@@ -31,7 +31,7 @@ impl Game {
             possible_movements = board.get_possible_movements()
         }
 
-        game
+        (Game::extract_final_score(&game), game)
     }
 
     fn update_game_data(mut game: Game, board: &Board, direciton: Direction) -> Game {
@@ -39,5 +39,9 @@ impl Game {
         game.scores.push(board.get_score());
         game.movements.push(direciton);
         game
+    }
+
+    fn extract_final_score(game: &Game) -> u64 {
+        game.scores[game.scores.len() - 1]
     }
 }
