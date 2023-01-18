@@ -30,9 +30,9 @@ impl Player {
         if max_top_games < 1 {
             max_top_games = 1;
         }
-        self.redetermine_top_games(trainings_set_size, max_top_games, 0x0_u64, thread_capacity);
+        self.redetermine_top_games(trainings_set_size, max_top_games, None, thread_capacity);
         for _ in 0..trainings_rounds {
-            self.redetermine_top_games(trainings_set_size, max_top_games, 0x0_u64, thread_capacity);
+            self.redetermine_top_games(trainings_set_size, max_top_games, None, thread_capacity);
         }
     }
 
@@ -67,11 +67,12 @@ impl Player {
         &mut self,
         trainings_set_size: usize,
         max_top_games: usize,
-        _starting_board: u64,
+        existing_game: Option<Game>,
         thread_capacity: usize,
     ) {
         for game_set in
-            game_data_collector::play_games(trainings_set_size, thread_capacity).iter_all()
+            game_data_collector::play_games(trainings_set_size, thread_capacity, existing_game)
+                .iter_all()
         {
             self.top_games
                 .insert_many_from_slice(*game_set.0, game_set.1);
