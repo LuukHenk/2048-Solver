@@ -24,6 +24,13 @@ impl Board {
         Self::spawn_tile(&mut board);
         board
     }
+    pub fn resume(board: u64, score: u64) -> Board {
+        Board {
+            board: board,
+            score: score
+        }
+    }
+
     pub fn perform_movement(&mut self, direction: &Direction) {
         self.board = Self::execute(self, direction, &true);
         Self::spawn_tile(self)
@@ -205,6 +212,15 @@ mod tests {
         }
         assert_eq!(total_set_values, 2);
         assert_eq!(board.score, 0);
+    }
+
+    #[test]
+    fn test_resume_with_board() {
+        let score = 100;
+        let board_to_resume_with = 200;
+        let mut board = Board::resume(board_to_resume_with, score);
+        assert_eq!(board.board, board_to_resume_with);
+        assert_eq!(board.score, score);
     }
 
     #[test]
