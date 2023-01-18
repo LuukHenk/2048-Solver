@@ -1,7 +1,6 @@
 __pycache__
+target
 2048/lib/data_layer/*
-rust/tfe/target/*
-2048/rust_engine/target/*
 .vscode
 data
 

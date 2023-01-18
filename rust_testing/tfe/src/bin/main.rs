@@ -1,3 +1,6 @@
+use tfe::Player;
+
 fn main() {
-    println!("Hello, world!");
+    let player: Player = Player::new();
+    player.train();
 }
