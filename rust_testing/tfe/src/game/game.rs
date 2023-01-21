@@ -59,6 +59,15 @@ impl Game {
         self.boards.drain(index+1..);
         println!("{:#?}", self.boards);
     }
+
+    fn copy(&self) -> Game {
+        let mut boards_copy: Vec<Board> = Vec::with_capacity(self.boards.len()-1); 
+        for board in self.boards.iter() {
+            boards_copy.push(board.copy());
+        }
+
+        Game {boards:boards_copy}
+    }
 }
 
 
@@ -127,4 +136,12 @@ mod tests {
         assert_eq!(final_board.unwrap(), expected_final_board);
     }
 
+    fn test_copy() {
+        let game: Game = Game::play();
+        let game_copy: Game = game.copy();
+        
+        for index in 0 .. game.boards.len() -1 {
+            assert_eq!(game.boards[index], game_copy.boards[index])
+        }
+    }
 }
