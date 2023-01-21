@@ -9,7 +9,7 @@ pub static TILES_IN_BOARD: usize = 16;
 pub static ROW_MASK: u64 = 0xFFFF;
 
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Board {
     pub score: u64, // Fixme: Made the score public for testing purposes in Game
     board: u64,

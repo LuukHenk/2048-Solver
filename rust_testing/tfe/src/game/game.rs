@@ -4,7 +4,7 @@ use rand::rngs::ThreadRng;
 use super::board::Board;
 use super::direction::Direction;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Game {
     boards: Vec<Board>
 }
