@@ -18,5 +18,6 @@ impl Player{
             self.game_handler.play_games(trainings_round_size);
             self.game_handler.drain_games(trainings_round_size);
         }
+        println!("{:#?}", self.game_handler.get_top_scores(10));
     }
 }

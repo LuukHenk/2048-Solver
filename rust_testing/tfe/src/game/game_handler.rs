@@ -47,8 +47,7 @@ impl GameHandler {
             let score: u64 = sorted_game_scores[score_index];
             for game_index in 0..self.games.len() {
                 if self.games[game_index].get_final_score() != score {continue}
-                let game: Game = self.games.remove(game_index);
-                self.games.insert(score_index, game);
+                self.games.swap(game_index, score_index);
             }
         }
     }
