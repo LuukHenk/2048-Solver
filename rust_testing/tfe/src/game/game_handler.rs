@@ -12,11 +12,12 @@ impl GameHandler {
         }
     }
 
-    pub fn play_games(&self, amount: usize) {
-        for i in 0 .. 1 {
-            println!("{}", i);
+    pub fn play_games(&mut self, amount: usize) {
+        for _ in 0 .. amount {
+            self.games.push(Game::play());
         }
     }
+
 }
 
 
@@ -27,7 +28,15 @@ mod tests {
 
     #[test]
     fn test_defining_game_handler() {
-        let game_handler = GameHandler::new();
-        assert_eq!(game_handler.games, Vec::new());
+        let game_handler: GameHandler = GameHandler::new();
+        assert_eq!(game_handler.games.len(), 0);
+    }
+
+    #[test]
+    fn test_playing_games() {
+        let games_to_play = 100;
+        let mut game_handler: GameHandler = GameHandler::new();
+        game_handler.play_games(games_to_play);
+        assert_eq!(game_handler.games.len(), games_to_play);
     }
 }

@@ -1,5 +1,6 @@
-use tfe::Game;
+use tfe::GameHandler;
 
 fn main() {
-    Game::play();
+    let mut game_handler: GameHandler = GameHandler::new();
+    game_handler.play_games(100)
 }
