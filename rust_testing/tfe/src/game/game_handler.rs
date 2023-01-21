@@ -18,6 +18,10 @@ impl GameHandler {
         }
     }
 
+    pub fn drain_games(&mut self, amount: usize) {
+        
+
+    }
 }
 
 
@@ -34,9 +38,29 @@ mod tests {
 
     #[test]
     fn test_playing_games() {
-        let games_to_play = 100;
+        let games_to_play: usize = 100;
         let mut game_handler: GameHandler = GameHandler::new();
         game_handler.play_games(games_to_play);
         assert_eq!(game_handler.games.len(), games_to_play);
+    }
+
+    #[test]
+    fn test_drain_more_games_then_played() {
+        let games_to_play: usize = 100;
+        let games_to_drain: usize = 200;
+        let mut game_handler: GameHandler = GameHandler::new();
+        game_handler.play_games(games_to_play);
+        game_handler.drain_games(games_to_drain);
+        assert_eq!(game_handler.games.len(), 0)
+    }
+
+    #[test]
+    fn test_drain_games() {
+        let games_to_play: usize = 100;
+        let games_to_drain: usize = 50;
+        let mut game_handler: GameHandler = GameHandler::new();
+        game_handler.play_games(games_to_play);
+        game_handler.drain_games(games_to_drain);
+        assert_eq!(game_handler.games.len(), 50)
     }
 }
