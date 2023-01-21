@@ -136,6 +136,7 @@ mod tests {
         assert_eq!(final_board.unwrap(), expected_final_board);
     }
 
+    #[test]
     fn test_copy() {
         let game: Game = Game::play();
         let game_copy: Game = game.copy();
