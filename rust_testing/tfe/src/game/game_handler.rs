@@ -14,8 +14,7 @@ impl GameHandler {
 
     pub fn play_games(&mut self, amount: usize) {
         for game_index in 0 .. amount {
-            print!("                                        \r");
-            print!("{:#?}/{:#?}", game_index+1, amount);
+            __display_status(game_index + 1, amount);
             self.games.push(Game::play());
         }
         self.__sort_games_on_score()
@@ -44,6 +43,7 @@ impl GameHandler {
         let sorted_game_scores: Vec<u64> = self.__sort_game_scores();
         
         for score_index in 0..sorted_game_scores.len(){
+            __display_status(score_index + 1, sorted_game_scores.len());
             let score: u64 = sorted_game_scores[score_index];
             for game_index in 0..self.games.len() {
                 if self.games[game_index].get_final_score() != score {continue}
@@ -70,6 +70,10 @@ impl GameHandler {
 }
 
 
+fn __display_status(current_status: usize, goal: usize) {
+    print!("                                        \r");
+    print!("{:#?}/{:#?}", current_status, goal);
+}
 
 #[cfg(test)]
 mod tests {
