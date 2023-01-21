@@ -1,6 +1,5 @@
-use tfe::Player;
+use tfe::Game;
 
 fn main() {
-    let player: Player = Player::new();
-    player.train();
+    Game::play();
 }

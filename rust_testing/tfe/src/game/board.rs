@@ -1,6 +1,5 @@
 use rand::Rng;
 use strum::IntoEnumIterator;
-
 use super::direction::Direction;
 use super::general_utils;
 
@@ -9,16 +8,19 @@ pub static TILE_MASK: u64 = 0xF;
 pub static TILES_IN_BOARD: usize = 16;
 pub static ROW_MASK: u64 = 0xFFFF;
 
-pub struct Board {
-    board: u64,
-    score: u64,
-}
 
+#[derive(PartialEq, Debug)]
+pub struct Board {
+    pub score: u64, // Fixme: Made the score public for testing purposes in Game
+    board: u64,
+    lastest_movement: Direction,
+}
 impl Board {
     pub fn new() -> Board {
         let mut board: Board = Board {
             board: EMPTY_BOARD,
             score: 0,
+            lastest_movement: Direction::None
         };
         Self::spawn_tile(&mut board);
         Self::spawn_tile(&mut board);
@@ -27,6 +29,7 @@ impl Board {
 
     pub fn perform_movement(&mut self, direction: &Direction) {
         self.board = Self::execute(self, direction, &true);
+        self.lastest_movement = *direction;
         Self::spawn_tile(self)
     }
     pub fn _print_board(&self) {
@@ -38,6 +41,14 @@ impl Board {
     pub fn get_score(&self) -> u64 {
         self.score
     }
+    pub fn get_latest_movement(&self) -> Direction {
+        self.lastest_movement
+    }
+
+    pub fn copy(&self) -> Board {
+        Board { board: self.board, score: self.score, lastest_movement: self.lastest_movement }
+    }
+
     pub fn get_possible_movements(&mut self) -> Vec<Direction> {
         let mut possible_movements: Vec<Direction> = Vec::with_capacity(4);
         for direction in Direction::iter() {
@@ -206,6 +217,7 @@ mod tests {
         }
         assert_eq!(total_set_values, 2);
         assert_eq!(board.score, 0);
+        assert_eq!(board.lastest_movement, Direction::None);
     }
 
     #[test]
@@ -215,6 +227,81 @@ mod tests {
         board.perform_movement(&Direction::Right);
         assert_eq!(board.get_empty_tiles(), Vec::new());
         assert_eq!(board.score, 0);
+    }
+
+    #[test]
+    fn test_perform_movement_left() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0010_0000;
+        board.perform_movement(&Direction::Left);
+        assert_eq!(board.lastest_movement, Direction::Left);
+        assert_eq!(board.score, 0);
+        assert_eq!(board.get_empty_tiles().len(), 14);
+    }
+
+    #[test]
+    fn test_perform_movement_right() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0010_0000;
+        board.perform_movement(&Direction::Right);
+        assert_eq!(board.lastest_movement, Direction::Right);
+        assert_eq!(board.score, 0);
+        assert_eq!(board.get_empty_tiles().len(), 14);
+    }
+
+    #[test]
+    fn test_perform_movement_down() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0010_0000;
+        board.perform_movement(&Direction::Down);
+        assert_eq!(board.lastest_movement, Direction::Down);
+        assert_eq!(board.score, 0);
+        assert_eq!(board.get_empty_tiles().len(), 14);
+    }
+
+    #[test]
+    fn test_perform_movement_up() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_0010_0000;
+        board.perform_movement(&Direction::Up);
+        assert_eq!(board.lastest_movement, Direction::Up);
+        assert_eq!(board.score, 0);
+        assert_eq!(board.get_empty_tiles().len(), 14);
+    }
+
+    #[test]
+    fn test_get_score() {
+        let mut board: Board = Board::new();
+        board.score = 17041998;
+        assert_eq!(board.score, board.get_score());
+    }
+
+    #[test]
+    fn test_get_latest_movement() {
+        let mut board: Board = Board::new();
+        board.lastest_movement = Direction::Down;
+        assert_eq!(board.lastest_movement, board.get_latest_movement());
+    }
+
+    #[test]
+    fn test_get_board() {
+        let mut board: Board = Board::new();
+        board.board = 0x0000_0000_4880_1234;
+        assert_eq!(board.board, board.get_board());
+    }
+
+    #[test]
+    fn test_copy() {
+        let mut board: Board = Board::new();
+        board.board = 0x1234_5678_9ABC_DEF0;
+        board.score = 10;
+        board.lastest_movement = Direction::Down;
+
+        let board_copy = board.copy();
+
+        assert_eq!(board_copy.board, board.board);
+        assert_eq!(board_copy.score, board.score);
+        assert_eq!(board_copy.lastest_movement, board.lastest_movement)
     }
 
     #[test]
