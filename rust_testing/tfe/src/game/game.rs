@@ -6,7 +6,7 @@ use super::direction::Direction;
 
 #[derive(Clone, Debug)]
 pub struct Game {
-    boards: Vec<Board>
+    pub boards: Vec<Board> // Fixme: Made the score public for testing purposes in Game handler
 }
 
 impl Game {
@@ -30,11 +30,11 @@ impl Game {
         game
     }
 
-    fn get_final_score(&self) -> u64 {
+    pub fn get_final_score(&self) -> u64 {
         self.boards[self.boards.len()-1].get_score()
     }
 
-    fn get_index_of_highest_score_increasement(&self) -> usize {
+    pub fn get_index_of_highest_score_increasement(&self) -> usize {
         // Get the latest highest increasement
         let mut previous_board_score: u64 = 0;
         let mut highest_score_increasement: u64 = 0;
@@ -53,14 +53,12 @@ impl Game {
         highest_score_index
     }
 
-    fn rewind(&mut self, index: usize) {
+    pub fn rewind(&mut self, index: usize) {
         // Rewind the game to a specific index
-        println!("{:#?}", self.boards);
         self.boards.drain(index+1..);
-        println!("{:#?}", self.boards);
     }
 
-    fn copy(&self) -> Game {
+    pub fn copy(&self) -> Game {
         let mut boards_copy: Vec<Board> = Vec::with_capacity(self.boards.len()-1); 
         for board in self.boards.iter() {
             boards_copy.push(board.copy());
