@@ -13,9 +13,12 @@ impl GameHandler {
     }
 
     pub fn play_games(&mut self, amount: usize) {
-        for _ in 0 .. amount {
+        for game_index in 0 .. amount {
+            print!("                                        \r");
+            print!("{:#?}/{:#?}", game_index+1, amount);
             self.games.push(Game::play());
         }
+        self.__sort_games_on_score()
     }
 
     pub fn drain_games(&mut self, amount: usize) {
@@ -28,7 +31,16 @@ impl GameHandler {
 
     }
 
-    pub fn sort_games_on_score(&mut self) {
+    pub fn get_top_scores(&self, mut amount: usize) -> Vec<u64> {
+        if amount > self.games.len() {
+            amount = self.games.len()
+        }
+        let mut game_scores: Vec<u64> = self.__sort_game_scores();
+        game_scores.drain(amount..);
+        game_scores
+    }
+
+    fn __sort_games_on_score(&mut self) {
         let sorted_game_scores: Vec<u64> = self.__sort_game_scores();
         
         for score_index in 0..sorted_game_scores.len(){
@@ -38,6 +50,13 @@ impl GameHandler {
                 let game: Game = self.games.remove(game_index);
                 self.games.insert(score_index, game);
             }
+        }
+    }
+
+    pub fn print_final_scores(&mut self) {
+        self.__sort_games_on_score();
+        for game in self.games.iter() {
+            println!("{:#?}", game.get_final_score());
         }
     }
 
@@ -58,6 +77,7 @@ mod tests {
     use crate::game::{board::Board};
 
     use super::*;
+    const TOP_SCORE: u64 = 9999999999;
 
     #[test]
     fn test_defining_game_handler() {
@@ -94,26 +114,45 @@ mod tests {
     }
 
     #[test]
+    fn test_get_more_top_scores_than_games_played() {
+        let games: Vec<Game> = vec![__create_game(10)];       
+        let game_handler: GameHandler = GameHandler {games};
+        assert_eq!(game_handler.get_top_scores(100).len(), 1);
+    }
+
+    #[test]
+    fn test_get_top_scores() {
+        let games: Vec<Game> = __create_games();
+        let game_handler: GameHandler = GameHandler {games};
+        assert_eq!(game_handler.get_top_scores(1), vec![TOP_SCORE]);
+    }
+
+    #[test]
     fn test_sort_scores() {
-        let mut games: Vec<Game> = Vec::new();
-        
-        
-        games.push(__create_game(2));
-        games.push(__create_game(3));
-        games.push(__create_game(2));
-        games.push(__create_game(1));
-        games.push(__create_game(3));
-        games.push(__create_game(1));
+        let games: Vec<Game> = __create_games();
+
         let total_games = games.len();
 
         let mut game_handler: GameHandler = GameHandler {games};
-        game_handler.sort_games_on_score();
+        game_handler.__sort_games_on_score();
         assert_eq!(game_handler.games.len(), total_games);
         let mut latest_score = game_handler.games[0].get_final_score();
         for game in game_handler.games.iter() {
             assert!(latest_score >= game.get_final_score());
             latest_score = game.get_final_score();
         }
+    }
+
+    fn __create_games() -> Vec<Game> {
+        // Creates a simple game set
+        let mut games: Vec<Game> = Vec::new();
+        games.push(__create_game(2));
+        games.push(__create_game(TOP_SCORE));
+        games.push(__create_game(2));
+        games.push(__create_game(1));
+        games.push(__create_game(TOP_SCORE));
+        games.push(__create_game(1));
+        games
     }
 
     fn __create_game(final_score: u64) -> Game {

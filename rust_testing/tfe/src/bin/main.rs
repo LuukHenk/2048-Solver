@@ -1,7 +1,7 @@
-use tfe::GameHandler;
+use tfe::{GameHandler, Player};
 
 fn main() {
-    let mut game_handler: GameHandler = GameHandler::new();
-    game_handler.play_games(100);
-    game_handler.sort_games_on_score();
+    let game_handler: GameHandler = GameHandler::new();
+    let mut player: Player = Player::new(game_handler);
+    player.train(10, 10000);
 }
