@@ -4,6 +4,7 @@ use rand::rngs::ThreadRng;
 use super::board::Board;
 use super::direction::Direction;
 
+#[derive(Clone)]
 pub struct Game {
     boards: Vec<Board>
 }
@@ -50,6 +51,13 @@ impl Game {
         }
 
         highest_score_index
+    }
+
+    fn rewind(&mut self, index: usize) {
+        // Rewind the game to a specific index
+        println!("{:#?}", self.boards);
+        self.boards.drain(index+1..);
+        println!("{:#?}", self.boards);
     }
 }
 
@@ -107,6 +115,16 @@ mod tests {
 
 
         
+    }
+
+    #[test]
+    fn test_rewind() {
+        let mut game: Game = Game::play();
+        let final_index: usize = 2;
+        let expected_final_board: Board = game.boards[final_index].clone();
+        game.rewind(final_index);
+        let final_board: Option<Board> = game.boards.pop();
+        assert_eq!(final_board.unwrap(), expected_final_board);
     }
 
 }
