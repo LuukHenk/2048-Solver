@@ -1,3 +1,3 @@
 pub mod trainer;
 
-pub use super::game::game_handler;
+pub use super::game::player;

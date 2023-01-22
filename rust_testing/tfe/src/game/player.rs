@@ -1,13 +1,13 @@
 use super::game::Game;
 
 #[derive(Debug)]
-pub struct GameHandler {
+pub struct Player {
     games: Vec<Game>
 }
 
-impl GameHandler {
-    pub fn new() -> GameHandler {
-        GameHandler{
+impl Player {
+    pub fn new() -> Player {
+        Player{
             games: Vec::new()
         }
     }
@@ -77,57 +77,57 @@ fn __display_status(current_status: usize, goal: usize) {
 
 #[cfg(test)]
 mod tests {
-    use crate::game::{board::Board};
+    use crate::game::board::Board;
 
     use super::*;
     const TOP_SCORE: u64 = 9999999999;
 
     #[test]
-    fn test_defining_game_handler() {
-        let game_handler: GameHandler = GameHandler::new();
-        assert_eq!(game_handler.games.len(), 0);
+    fn test_defining_player() {
+        let player: Player = Player::new();
+        assert_eq!(player.games.len(), 0);
     }
 
     #[test]
     fn test_playing_games() {
         let games_to_play: usize = 100;
-        let mut game_handler: GameHandler = GameHandler::new();
-        game_handler.play_games(games_to_play);
-        assert_eq!(game_handler.games.len(), games_to_play);
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        assert_eq!(player.games.len(), games_to_play);
     }
 
     #[test]
     fn test_drain_more_games_then_played() {
         let games_to_play: usize = 100;
         let games_to_drain: usize = 200;
-        let mut game_handler: GameHandler = GameHandler::new();
-        game_handler.play_games(games_to_play);
-        game_handler.drain_games(games_to_drain);
-        assert_eq!(game_handler.games.len(), 0)
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        player.drain_games(games_to_drain);
+        assert_eq!(player.games.len(), 0)
     }
 
     #[test]
     fn test_drain_games() {
         let games_to_play: usize = 100;
         let games_to_drain: usize = 50;
-        let mut game_handler: GameHandler = GameHandler::new();
-        game_handler.play_games(games_to_play);
-        game_handler.drain_games(games_to_drain);
-        assert_eq!(game_handler.games.len(), 50)
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        player.drain_games(games_to_drain);
+        assert_eq!(player.games.len(), 50)
     }
 
     #[test]
     fn test_get_more_top_scores_than_games_played() {
         let games: Vec<Game> = vec![__create_game(10)];       
-        let game_handler: GameHandler = GameHandler {games};
-        assert_eq!(game_handler.get_top_scores(100).len(), 1);
+        let player: Player = Player {games};
+        assert_eq!(player.get_top_scores(100).len(), 1);
     }
 
     #[test]
     fn test_get_top_scores() {
         let games: Vec<Game> = __create_games();
-        let game_handler: GameHandler = GameHandler {games};
-        assert_eq!(game_handler.get_top_scores(1), vec![TOP_SCORE]);
+        let player: Player = Player {games};
+        assert_eq!(player.get_top_scores(1), vec![TOP_SCORE]);
     }
 
     #[test]
@@ -136,11 +136,11 @@ mod tests {
 
         let total_games = games.len();
 
-        let mut game_handler: GameHandler = GameHandler {games};
-        game_handler.__sort_games_on_score();
-        assert_eq!(game_handler.games.len(), total_games);
-        let mut latest_score = game_handler.games[0].get_final_score();
-        for game in game_handler.games.iter() {
+        let mut player: Player = Player {games};
+        player.__sort_games_on_score();
+        assert_eq!(player.games.len(), total_games);
+        let mut latest_score = player.games[0].get_final_score();
+        for game in player.games.iter() {
             assert!(latest_score >= game.get_final_score());
             latest_score = game.get_final_score();
         }

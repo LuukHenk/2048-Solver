@@ -1,7 +1,7 @@
-use tfe::{GameHandler, Trainer};
+use tfe::{Player, Trainer};
 
 fn main() {
-    let game_handler: GameHandler = GameHandler::new();
-    let mut trainer: Trainer = Trainer::new(game_handler);
+    let player: Player = Player::new();
+    let mut trainer: Trainer = Trainer::new(player);
     trainer.train(10, 5000);
 }
