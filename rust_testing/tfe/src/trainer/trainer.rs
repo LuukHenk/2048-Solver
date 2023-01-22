@@ -1,13 +1,13 @@
 
 use super::game_handler::GameHandler;
 
-pub struct Player{
+pub struct Trainer{
     game_handler: GameHandler
 }
 
-impl Player{
-    pub fn new(game_handler: GameHandler) -> Player {
-        Player {game_handler}
+impl Trainer{
+    pub fn new(game_handler: GameHandler) -> Trainer {
+        Trainer {game_handler}
     }
 
     pub fn train(&mut self, trainings_rounds: usize, trainings_round_size: usize) {
