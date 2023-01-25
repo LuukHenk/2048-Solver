@@ -1,7 +1,7 @@
 use rand::Rng;
 use strum::IntoEnumIterator;
 use super::direction::Direction;
-use super::general_utils;
+use super::pow_unsafe;
 
 pub static EMPTY_BOARD: u64 = 0x0;
 pub static TILE_MASK: u64 = 0xF;
@@ -173,7 +173,7 @@ impl Board {
                 if first_tile == second_tile {
                     tile_to_add = first_tile + 1;
                     if update_score {
-                        self.score += general_utils::pow_unsafe(tile_to_add);
+                        self.score += pow_unsafe::pow_unsafe(tile_to_add);
                     }
                     first_tile = EMPTY_BOARD;
                 } else {

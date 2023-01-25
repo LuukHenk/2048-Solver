@@ -4,4 +4,4 @@ mod utils;
 
 pub use game::player::Player;
 pub use trainer::trainer::Trainer;
-pub use utils::general_utils;
+pub use utils::pow_unsafe;

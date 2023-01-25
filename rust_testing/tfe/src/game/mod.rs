@@ -3,4 +3,4 @@ mod game;
 pub mod player;
 pub mod direction;
 
-pub use super::utils::general_utils;
+pub use super::utils::pow_unsafe;
