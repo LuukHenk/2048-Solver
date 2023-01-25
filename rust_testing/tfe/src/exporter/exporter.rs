@@ -1,8 +1,8 @@
 use std::collections::VecDeque;
 
-use crate::game::direction::Direction;
-
 use super::pow_unsafe;
+use super::direction::Direction;
+use super::board::Board;
 use super::game::Game;
 use super::player::Player;
 
