@@ -13,14 +13,25 @@ impl Game {
     pub fn new() -> Game {
         let mut game: Game = Game{boards: Vec::new()};
         game.boards.push(Board::new());
-        game.__game_loop();
+        game.resume();
         game
     }
+    
+    pub fn resume(&mut self) {
+        let mut rng:ThreadRng = rand::thread_rng();
+        
+        let mut board = self.boards[self.boards.len()-1].copy();
+        let mut possible_movements: Vec<Direction> = board.get_possible_movements();
 
-    // pub fn resume_game(&mut self) {
-    //     let latest_board = self.boards.drain(self.boards.len()..).collect();
-    //     self.__game_loop(latest_board);
-    // }
+        let mut direction: Direction;
+        while possible_movements.len() > 0 {
+            let selected_direction_index: usize = rng.gen_range(0..possible_movements.len());
+            direction = possible_movements[selected_direction_index];
+            board.perform_movement(&direction);
+            self.boards.push(board.copy());
+            possible_movements = board.get_possible_movements();
+        }
+    }
 
     pub fn get_final_score(&self) -> u64 {
         self.boards[self.boards.len()-1].get_score()
@@ -57,22 +68,6 @@ impl Game {
         }
 
         Game {boards:boards_copy}
-    }
-
-    fn __game_loop(&mut self) {
-        let mut rng:ThreadRng = rand::thread_rng();
-        
-        let mut board = self.boards[self.boards.len()-1].copy();
-        let mut possible_movements: Vec<Direction> = board.get_possible_movements();
-
-        let mut direction: Direction;
-        while possible_movements.len() > 0 {
-            let selected_direction_index: usize = rng.gen_range(0..possible_movements.len());
-            direction = possible_movements[selected_direction_index];
-            board.perform_movement(&direction);
-            self.boards.push(board.copy());
-            possible_movements = board.get_possible_movements();
-        }
     }
 }
 
