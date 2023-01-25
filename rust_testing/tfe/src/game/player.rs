@@ -15,7 +15,7 @@ impl Player {
     pub fn play_games(&mut self, amount: usize) {
         for game_index in 0 .. amount {
             __display_status(game_index + 1, amount);
-            self.games.push(Game::play());
+            self.games.push(Game::new());
         }
         self.__sort_games_on_score()
     }
@@ -161,7 +161,7 @@ mod tests {
     fn __create_game(final_score: u64) -> Game {
         let mut board: Board = Board::new();
         board.score = final_score; 
-        let mut game: Game = Game::play();
+        let mut game: Game = Game::new();
         game.boards = vec![board];
         game
     }

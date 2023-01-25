@@ -10,11 +10,17 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn play() -> Game {
+    pub fn new() -> Game {
         let mut game: Game = Game{boards: Vec::new()};
-        game.__game_loop(Board::new());
+        game.boards.push(Board::new());
+        game.__game_loop();
         game
     }
+
+    // pub fn resume_game(&mut self) {
+    //     let latest_board = self.boards.drain(self.boards.len()..).collect();
+    //     self.__game_loop(latest_board);
+    // }
 
     pub fn get_final_score(&self) -> u64 {
         self.boards[self.boards.len()-1].get_score()
@@ -53,12 +59,13 @@ impl Game {
         Game {boards:boards_copy}
     }
 
-    fn __game_loop(&mut self, mut board: Board) {
+    fn __game_loop(&mut self) {
         let mut rng:ThreadRng = rand::thread_rng();
+        
+        let mut board = self.boards[self.boards.len()-1].copy();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
-        let mut direction: Direction;
 
-        self.boards.push(board.copy());
+        let mut direction: Direction;
         while possible_movements.len() > 0 {
             let selected_direction_index: usize = rng.gen_range(0..possible_movements.len());
             direction = possible_movements[selected_direction_index];
@@ -76,14 +83,14 @@ mod tests {
 
     #[test]
     fn test_if_game_is_over_after_play() {
-        let mut game: Game = Game::play();
+        let mut game: Game = Game::new();
         let final_board: Option<Board> = game.boards.pop();
         assert_eq!(final_board.unwrap().get_possible_movements(), Vec::new());
     }
 
     #[test]
     fn test_get_final_score() {
-        let mut game: Game = Game::play();
+        let mut game: Game = Game::new();
         let final_score: u64 = game.get_final_score();
         let final_board: Option<Board> =game.boards.pop(); 
         assert_eq!(
@@ -110,7 +117,7 @@ mod tests {
         board_4.score = board_3.score + high_score_increasement;
         board_5.score = board_4.score + low_score_increasement;
         
-        let mut game: Game = Game::play();
+        let mut game: Game = Game::new();
         game.boards = Vec::with_capacity(5);
         game.boards.push(start_board);
         game.boards.push(board_1);
@@ -127,7 +134,7 @@ mod tests {
 
     #[test]
     fn test_rewind() {
-        let mut game: Game = Game::play();
+        let mut game: Game = Game::new();
         let final_index: usize = 2;
         let expected_final_board: Board = game.boards[final_index].clone();
         game.rewind(final_index);
@@ -137,7 +144,7 @@ mod tests {
 
     #[test]
     fn test_copy() {
-        let game: Game = Game::play();
+        let game: Game = Game::new();
         let game_copy: Game = game.copy();
         
         for index in 0 .. game.boards.len() -1 {
