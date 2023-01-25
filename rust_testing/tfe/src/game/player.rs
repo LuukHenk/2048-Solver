@@ -1,7 +1,9 @@
+use multimap::MultiMap;
+use itertools::Itertools; 
+
 use super::game::Game;
 
 static PLAYING_MESSAGE: &'static str = "Playing games: ";
-static SORTING_MESSAGE: &'static str = "Sorting games: ";
 
 #[derive(Debug)]
 pub struct Player {
@@ -43,28 +45,6 @@ impl Player {
         self.games.drain(maximum_games..);
     }
 
-    pub fn get_top_scores(&self, mut amount: usize) -> Vec<u64> {
-        if amount > self.games.len() {
-            amount = self.games.len()
-        }
-        let mut game_scores: Vec<u64> = self.__sort_game_scores();
-        game_scores.drain(amount..);
-        game_scores
-    }
-
-    pub fn sort_games_on_score(&mut self) {
-        let sorted_game_scores: Vec<u64> = self.__sort_game_scores();
-        
-        for score_index in 0..sorted_game_scores.len(){
-            __display_status(SORTING_MESSAGE, score_index + 1, sorted_game_scores.len());
-            let score: u64 = sorted_game_scores[score_index];
-            for game_index in 0..self.games.len() {
-                if self.games[game_index].get_final_score() != score {continue}
-                self.games.swap(game_index, score_index);
-            }
-        }
-    }
-
     pub fn print_final_scores(&mut self) {
         self.sort_games_on_score();
         for game in self.games.iter() {
@@ -72,12 +52,25 @@ impl Player {
         }
     }
 
-    fn __sort_game_scores(&self) -> Vec<u64> {
-        let mut game_scores: Vec<u64> = self.games.iter().map(
-            |game| game.get_final_score()
-        ).collect();
-        game_scores.sort_by(|a, b| b.cmp(a));
-        game_scores
+    pub fn sort_games_on_score(&mut self) {
+        let mut game_multimap: MultiMap<u64, Game> = self.__move_games_to_multimap(); 
+        let sorted_scores: Vec<u64> = game_multimap.keys().sorted().cloned().collect();
+        for score in sorted_scores {
+            let games: &mut Vec<Game> = game_multimap.get_vec_mut(&score).unwrap();
+            for _game_index in 0..games.len() {
+                let game: Game = games.pop().unwrap();
+                self.games.insert(0, game);
+            }
+        }
+    }
+
+    fn __move_games_to_multimap(&mut self) -> MultiMap<u64, Game> {
+        let mut game_multimap: MultiMap<u64, Game> = MultiMap::new();
+        for _game_index in 0..self.games.len() {
+            let game: Game = self.games.pop().unwrap();
+            game_multimap.insert(game.get_final_score(), game);
+        }
+        game_multimap
     }
 
 }
@@ -161,20 +154,6 @@ mod tests {
         player.resize_total_games(maximum_size);
 
         assert_eq!(player.games.len(), maximum_size)
-    }
-
-    #[test]
-    fn test_get_more_top_scores_than_games_played() {
-        let games: Vec<Game> = vec![__create_game(10)];       
-        let player: Player = Player {games};
-        assert_eq!(player.get_top_scores(100).len(), 1);
-    }
-
-    #[test]
-    fn test_get_top_scores() {
-        let games: Vec<Game> = __create_games();
-        let player: Player = Player {games};
-        assert_eq!(player.get_top_scores(1), vec![TOP_SCORE]);
     }
 
     #[test]
