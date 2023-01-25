@@ -4,7 +4,7 @@ use rand::rngs::ThreadRng;
 use super::board::Board;
 use super::direction::Direction;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Game {
     pub boards: Vec<Board> // Fixme: Made the score public for testing purposes in Game handler
 }
