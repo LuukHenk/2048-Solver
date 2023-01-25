@@ -20,6 +20,15 @@ impl Player {
         self.__sort_games_on_score()
     }
 
+    pub fn resize_total_games(&mut self, maximum_games: usize) {
+        let total_games: usize = self.games.len();
+        println!("{} {}", maximum_games, total_games);
+        if maximum_games >= total_games {
+            return
+        }
+        self.games.drain(maximum_games..);
+    }
+
     pub fn drain_games(&mut self, amount: usize) {
         let total_games: usize = self.games.len();
         if amount > total_games {
@@ -94,6 +103,39 @@ mod tests {
         let mut player: Player = Player::new();
         player.play_games(games_to_play);
         assert_eq!(player.games.len(), games_to_play);
+    }
+
+    #[test]
+    fn test_resize_total_games_with_maximum_size_higher_than_games_played() {
+        let games_to_play: usize = 50;
+        let maximum_size: usize = 100;
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        player.resize_total_games(maximum_size);
+
+        assert_eq!(player.games.len(), games_to_play)
+    }
+
+    #[test]
+    fn test_resize_total_games_with_maximum_size_equal_to_games_played() {
+        let games_to_play: usize = 50;
+        let maximum_size: usize = 50;
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        player.resize_total_games(maximum_size);
+
+        assert_eq!(player.games.len(), games_to_play)
+    }
+
+    #[test]
+    fn test_resize_total_games_with_maximum_size_lower_than_games_played() {
+        let games_to_play: usize = 100;
+        let maximum_size: usize = 50;
+        let mut player: Player = Player::new();
+        player.play_games(games_to_play);
+        player.resize_total_games(maximum_size);
+
+        assert_eq!(player.games.len(), maximum_size)
     }
 
     #[test]
