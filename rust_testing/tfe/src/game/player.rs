@@ -1,11 +1,15 @@
 use super::game::Game;
 
+static PLAYING_MESSAGE: &'static str = "Playing games: ";
+static SORTING_MESSAGE: &'static str = "Sorting games: ";
+
 #[derive(Debug)]
 pub struct Player {
     games: Vec<Game>
 }
 
 impl Player {
+
     pub fn new() -> Player {
         Player{
             games: Vec::new()
@@ -14,17 +18,17 @@ impl Player {
 
     pub fn play_games(&mut self, amount: usize) {
         for game_index in 0 .. amount {
-            __display_status(game_index + 1, amount);
+            __display_status(PLAYING_MESSAGE, game_index + 1, amount);
             self.games.push(Game::new());
         }
-        self.__sort_games_on_score()
     }
 
     pub fn retry_game(&mut self, index: usize, times: usize) {
         let mut game_to_retry = self.games[index].copy();
         game_to_retry.rewind(game_to_retry.get_index_of_highest_score_increasement());
 
-        for _ in 0 .. times {
+        for game_index in 0 .. times {
+            __display_status(PLAYING_MESSAGE, game_index + 1, times);
             let mut game = game_to_retry.copy();
             game.resume();
             self.games.push(game);
@@ -33,7 +37,6 @@ impl Player {
 
     pub fn resize_total_games(&mut self, maximum_games: usize) {
         let total_games: usize = self.games.len();
-        println!("{} {}", maximum_games, total_games);
         if maximum_games >= total_games {
             return
         }
@@ -49,11 +52,11 @@ impl Player {
         game_scores
     }
 
-    fn __sort_games_on_score(&mut self) {
+    pub fn sort_games_on_score(&mut self) {
         let sorted_game_scores: Vec<u64> = self.__sort_game_scores();
         
         for score_index in 0..sorted_game_scores.len(){
-            __display_status(score_index + 1, sorted_game_scores.len());
+            __display_status(SORTING_MESSAGE, score_index + 1, sorted_game_scores.len());
             let score: u64 = sorted_game_scores[score_index];
             for game_index in 0..self.games.len() {
                 if self.games[game_index].get_final_score() != score {continue}
@@ -63,7 +66,7 @@ impl Player {
     }
 
     pub fn print_final_scores(&mut self) {
-        self.__sort_games_on_score();
+        self.sort_games_on_score();
         for game in self.games.iter() {
             println!("{:#?}", game.get_final_score());
         }
@@ -80,9 +83,9 @@ impl Player {
 }
 
 
-fn __display_status(current_status: usize, goal: usize) {
+fn __display_status(message: &str, current_status: usize, goal: usize) {
     print!("                                        \r");
-    print!("{:#?}/{:#?}", current_status, goal);
+    print!("{}{:#?}/{:#?}", message, current_status, goal);
 }
 
 #[cfg(test)]
@@ -181,7 +184,7 @@ mod tests {
         let total_games = games.len();
 
         let mut player: Player = Player {games};
-        player.__sort_games_on_score();
+        player.sort_games_on_score();
         assert_eq!(player.games.len(), total_games);
         let mut latest_score = player.games[0].get_final_score();
         for game in player.games.iter() {
