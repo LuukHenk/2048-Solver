@@ -46,9 +46,21 @@ impl Exporter{
 //         dict.push_str(&value);
 //         dict
 //     }
-    // fn __construct_board_object(board: Board) {
+    fn __construct_board_object(board: Board) -> String{
+        let mut board_sub_objects: Vec<String> = Vec::with_capacity(3);
+        board_sub_objects.push(
+            Self::__format_board_dict_object(board.get_board())
+        );
+        board_sub_objects.push(
+            Self::__format_performed_move_dict_object(board.get_latest_movement())
+        );
+        board_sub_objects.push(
+            Self::__format_score_dict_object(board.get_score())
+        );
+        Self::__construct_json_dict(board_sub_objects)
 
-    // }
+        // FIXME add a test for this funcion
+    }
 
     fn __format_score_dict_object(score: u64) -> String {
         Self::__construct_json_dict_pair(
