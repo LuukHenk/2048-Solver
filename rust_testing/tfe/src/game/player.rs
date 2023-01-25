@@ -29,16 +29,6 @@ impl Player {
         self.games.drain(maximum_games..);
     }
 
-    pub fn drain_games(&mut self, amount: usize) {
-        let total_games: usize = self.games.len();
-        if amount > total_games {
-            self.games.clear();
-            return
-        }
-        self.games.drain(total_games - amount..);
-
-    }
-
     pub fn get_top_scores(&self, mut amount: usize) -> Vec<u64> {
         if amount > self.games.len() {
             amount = self.games.len()
@@ -136,26 +126,6 @@ mod tests {
         player.resize_total_games(maximum_size);
 
         assert_eq!(player.games.len(), maximum_size)
-    }
-
-    #[test]
-    fn test_drain_more_games_then_played() {
-        let games_to_play: usize = 100;
-        let games_to_drain: usize = 200;
-        let mut player: Player = Player::new();
-        player.play_games(games_to_play);
-        player.drain_games(games_to_drain);
-        assert_eq!(player.games.len(), 0)
-    }
-
-    #[test]
-    fn test_drain_games() {
-        let games_to_play: usize = 100;
-        let games_to_drain: usize = 50;
-        let mut player: Player = Player::new();
-        player.play_games(games_to_play);
-        player.drain_games(games_to_drain);
-        assert_eq!(player.games.len(), 50)
     }
 
     #[test]
