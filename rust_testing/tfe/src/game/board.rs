@@ -35,14 +35,8 @@ impl Board {
     pub fn _print_board(&self) {
         println!("{:#02X}", self.board);
     }
-    pub fn get_board(&self) -> u64 {
-        self.board
-    }
     pub fn get_score(&self) -> u64 {
         self.score
-    }
-    pub fn get_latest_movement(&self) -> Direction {
-        self.lastest_movement
     }
 
     pub fn copy(&self) -> Board {
@@ -274,20 +268,6 @@ mod tests {
         let mut board: Board = Board::new();
         board.score = 17041998;
         assert_eq!(board.score, board.get_score());
-    }
-
-    #[test]
-    fn test_get_latest_movement() {
-        let mut board: Board = Board::new();
-        board.lastest_movement = Direction::Down;
-        assert_eq!(board.lastest_movement, board.get_latest_movement());
-    }
-
-    #[test]
-    fn test_get_board() {
-        let mut board: Board = Board::new();
-        board.board = 0x0000_0000_4880_1234;
-        assert_eq!(board.board, board.get_board());
     }
 
     #[test]
