@@ -16,11 +16,11 @@ impl Game {
         game.resume();
         game
     }
-    
+
     pub fn resume(&mut self) {
         let mut rng:ThreadRng = rand::thread_rng();
         
-        let mut board = self.boards[self.boards.len()-1].copy();
+        let mut board = self.boards[self.__latest_board_index()].copy();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
 
         let mut direction: Direction;
@@ -34,7 +34,7 @@ impl Game {
     }
 
     pub fn get_final_score(&self) -> u64 {
-        self.boards[self.boards.len()-1].get_score()
+        self.boards[self.__latest_board_index()].get_score()
     }
 
     pub fn get_index_of_highest_score_increasement(&self) -> usize {
@@ -43,7 +43,7 @@ impl Game {
         let mut highest_score_increasement: u64 = 0;
         let mut highest_score_index: usize = 0;
 
-        for board_index in 0 ..self.boards.len()-1 {
+        for board_index in 0 .. self.__latest_board_index() {
             let board_score: u64 = self.boards[board_index].get_score();
             let score_increasement: u64 = board_score - previous_board_score;
             if score_increasement >= highest_score_increasement {
@@ -62,12 +62,16 @@ impl Game {
     }
 
     pub fn copy(&self) -> Game {
-        let mut boards_copy: Vec<Board> = Vec::with_capacity(self.boards.len()-1); 
+        let mut boards_copy: Vec<Board> = Vec::with_capacity(self.__latest_board_index()); 
         for board in self.boards.iter() {
             boards_copy.push(board.copy());
         }
 
         Game {boards:boards_copy}
+    }
+
+    fn __latest_board_index(&self) -> usize {
+        self.boards.len()-1
     }
 }
 
@@ -81,6 +85,32 @@ mod tests {
         let mut game: Game = Game::new();
         let final_board: Option<Board> = game.boards.pop();
         assert_eq!(final_board.unwrap().get_possible_movements(), Vec::new());
+    }
+
+    #[test]
+    fn test_resume_game_when_there_are_no_possible_movements() {
+        let mut game: Game = Game::new();
+        let latest_move = game.boards[game.__latest_board_index()].copy();
+        game.resume();
+        assert_eq!(latest_move, game.boards[game.__latest_board_index()]);
+    }
+
+    #[test]
+    #[should_panic(expected="attempt to subtract with overflow")]
+    fn test_resume_game_when_there_are_no_boards() {
+        let mut game: Game = Game::new();
+        game.boards = Vec::new();
+        game.resume();
+    }
+
+    #[test]
+    fn test_resume_game_when_there_are_movements_possible() {
+        let mut game: Game = Game::new();
+        let latest_move =Board::new(); 
+        game.boards.push(latest_move.copy());
+        game.resume();
+        
+        assert_ne!(game.boards[game.__latest_board_index()], latest_move);
     }
 
     #[test]
