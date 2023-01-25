@@ -7,7 +7,7 @@ static PLAYING_MESSAGE: &'static str = "Playing games: ";
 
 #[derive(Debug)]
 pub struct Player {
-    games: Vec<Game>
+    pub games: Vec<Game>
 }
 
 impl Player {
@@ -35,6 +35,14 @@ impl Player {
             game.resume();
             self.games.push(game);
         }
+    }
+
+    pub fn copy_games(&self) -> Vec<Game> {
+        let mut games_copy: Vec<Game> = Vec::with_capacity(self.games.len());
+        for game in self.games.iter() {
+            games_copy.push(game.copy());
+        }
+        games_copy
     }
 
     pub fn resize_total_games(&mut self, maximum_games: usize) {
@@ -121,6 +129,15 @@ mod tests {
 
         assert_eq!(player.games[games_to_play-1], latest_played_game_before_retry);
         assert_eq!(player.games.len(), games_to_play + retries);
+    }
+
+    #[test]
+    fn test_copy_games() {
+        let mut player: Player = Player::new();
+        let played_game: Game = Game::new();
+        player.games.push(played_game.copy());
+
+        assert_eq!(player.copy_games()[0], played_game);
     }
 
     #[test]

@@ -1,5 +1,5 @@
 mod board;
-mod game;
+pub mod game;
 pub mod player;
 pub mod direction;
 
