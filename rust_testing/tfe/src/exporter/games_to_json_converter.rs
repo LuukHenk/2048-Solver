@@ -5,7 +5,6 @@ use super::pow_unsafe;
 use super::direction::Direction;
 use super::board::Board;
 use super::game::Game;
-use super::player::Player;
 
 static SCORE_OBJECT_KEY: &'static str = "\"score\"";
 static PERFORMED_MOVE_OBJECT_KEY: &'static str = "\"performed move\"";
@@ -13,9 +12,8 @@ static BOARD_OBJECT_KEY: &'static str = "\"board\"";
 static JSON_DATA_SEPERATOR: &'static str = ", ";
 static JSON_DICT_PAIR_SEPERATOR: &'static str = ": ";
 
-pub fn construct_json_player_object(player: Player) -> String {
+pub fn construct_json_games_object(games: Vec<Game>) -> String {
     // FIXME add a test for this funcion when whe know how to make mock objects
-    let games: Vec<Game> = player.copy_games();
     let mut json_game_objects: Vec<String> = Vec::with_capacity(games.len());
     for game in games {
         json_game_objects.push(__construct_json_game_object(game));
