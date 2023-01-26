@@ -30,7 +30,7 @@ impl Game {
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
 
         while possible_movements.len() > 0 {
-            let direction: Direction = algorithm.determine_next_movement(possible_movements);
+            let direction: Direction = algorithm.determine_next_movement(board.copy());
             board.perform_movement(&direction);
             self.boards.push(board.copy());
             possible_movements = board.get_possible_movements();
