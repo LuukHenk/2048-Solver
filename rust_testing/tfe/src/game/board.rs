@@ -12,8 +12,8 @@ pub static ROW_MASK: u64 = 0xFFFF;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Board {
     pub score: u64, // Fixme: Made the score public for testing purposes in Game
-    board: u64,
-    lastest_movement: Direction,
+    pub board: u64, // Fixme: Made the score public for testing purposes in Game
+    pub lastest_movement: Direction, // Fixme: Made the score public for testing purposes in Game
 }
 impl Board {
     pub fn new() -> Board {

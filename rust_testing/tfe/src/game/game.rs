@@ -17,6 +17,14 @@ impl Game {
         game
     }
 
+    pub fn copy_boards(&self) -> Vec<Board> {
+        let mut boards_copy: Vec<Board> = Vec::with_capacity(self.boards.len());
+        for board in self.boards.iter() {
+            boards_copy.push(board.copy());
+        }
+        boards_copy
+    }
+
     pub fn resume(&mut self) {
         let mut rng:ThreadRng = rand::thread_rng();
         
@@ -85,6 +93,11 @@ mod tests {
         let mut game: Game = Game::new();
         let final_board: Option<Board> = game.boards.pop();
         assert_eq!(final_board.unwrap().get_possible_movements(), Vec::new());
+    }
+    #[test]
+    fn test_get_boards(){
+        let game: Game = Game::new();
+        assert_eq!(game.boards, game.copy_boards());
     }
 
     #[test]
