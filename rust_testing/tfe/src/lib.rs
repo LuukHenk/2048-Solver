@@ -10,3 +10,4 @@ pub use game::player::Player;
 pub use trainer::trainer::Trainer;
 pub use exporter::exporter::export_games_to_json_file;
 pub use utils::pow_unsafe::pow_unsafe;
+pub use utils::status_printer::print_status;

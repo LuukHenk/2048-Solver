@@ -19,10 +19,12 @@ impl Trainer{
 
         println!("Playing initial games");
         self.__play_initial_games(games_per_trainings_round);
+        self.player.print_final_scores();
 
         for trainings_round_index in 0.. total_trainings_rounds {
-            println!("Trainings round {}", trainings_round_index+1);
-            self.__trainings_round(games_per_trainings_round)
+            println!("\nTrainings round {}", trainings_round_index+1);
+            self.__trainings_round(games_per_trainings_round);
+            self.player.print_final_scores();
         }
     }
     
@@ -45,11 +47,8 @@ impl Trainer{
     }
 
     fn __cleanup(&mut self) {
-        println!("");
         self.player.sort_games_on_score();
-        println!("");
         self.player.resize_total_games(self.top_games);
-        self.player.print_final_scores();
     }
 
 

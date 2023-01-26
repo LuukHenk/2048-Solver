@@ -3,7 +3,6 @@ use itertools::Itertools;
 
 use super::game::Game;
 
-static PLAYING_MESSAGE: &'static str = "Playing games: ";
 
 #[derive(Debug)]
 pub struct Player {
@@ -19,8 +18,7 @@ impl Player {
     }
 
     pub fn play_games(&mut self, amount: usize) {
-        for game_index in 0 .. amount {
-            __display_status(PLAYING_MESSAGE, game_index + 1, amount);
+        for _game_index in 0 .. amount {
             self.games.push(Game::new());
         }
     }
@@ -29,8 +27,7 @@ impl Player {
         let mut game_to_retry = self.games[index].copy();
         game_to_retry.rewind(game_to_retry.get_index_of_highest_score_increasement());
 
-        for game_index in 0 .. times {
-            __display_status(PLAYING_MESSAGE, game_index + 1, times);
+        for _game_index in 0 .. times {
             let mut game = game_to_retry.copy();
             game.resume();
             self.games.push(game);
@@ -56,7 +53,7 @@ impl Player {
     pub fn print_final_scores(&mut self) {
         self.sort_games_on_score();
         for game in self.games.iter() {
-            println!("{:#?}", game.get_final_score());
+            println!("Final score: {:#?}", game.get_final_score());
         }
     }
 
@@ -84,10 +81,7 @@ impl Player {
 }
 
 
-fn __display_status(message: &str, current_status: usize, goal: usize) {
-    print!("                                        \r");
-    print!("{}{:#?}/{:#?}", message, current_status, goal);
-}
+
 
 #[cfg(test)]
 mod tests {
