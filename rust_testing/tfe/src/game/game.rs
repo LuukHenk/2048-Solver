@@ -42,7 +42,6 @@ impl Game {
     }
 
     pub fn get_index_of_highest_score_increasement(&self) -> usize {
-        // Get the latest highest increasement
         let mut previous_board_score: u64 = 0;
         let mut highest_score_increasement: u64 = 0;
         let mut highest_score_index: usize = 0;
@@ -61,7 +60,6 @@ impl Game {
     }
 
     pub fn rewind(&mut self, index: usize) {
-        // Rewind the game to a specific index
         self.boards.drain(index+1..);
     }
 
