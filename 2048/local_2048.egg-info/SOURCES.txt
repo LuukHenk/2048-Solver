@@ -1,0 +1,7 @@
+setup.cfg
+setup.py
+local_2048.egg-info/PKG-INFO
+local_2048.egg-info/SOURCES.txt
+local_2048.egg-info/dependency_links.txt
+local_2048.egg-info/entry_points.txt
+local_2048.egg-info/top_level.txt

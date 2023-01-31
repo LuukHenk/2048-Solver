@@ -1,0 +1,3 @@
+[console_scripts]
+displayer = game_displayer:display_game_widget
+
