@@ -1,8 +1,17 @@
+### Version 0.4.0 - 1 Februari 2023
+- Rewrote the game engine in rust
+	- Use of bitshifting to make playing games go a lot faster
+- Added trainingsrounds to the game engine
+	- After each trainings round, the top games are selected and the engine will try to improve these games
+- UI changes
+	- Added possibility to walk over moves in a game
+	- Cleanup of code
+
 ### Version 0.3.0 - 11 Juni 2022
 - Write a new design for the game
 - Refactored the Python game engine
-- Improve the HMI
-	- Started using Qt widgets for the HMI
+- Improve the gui rendering
+	- Started using Qt widgets for the gui rendering
 
 ### Version 0.2.0 - 4 Februari 2021
 - Added gui for automatic mode (lib/gui_rendering)
@@ -14,22 +23,17 @@
 - Reorganized input arguments in general
 
 ### Version 0.1.0 - 4 March 2020
-- Rename of lib/network.py to lib/algorithm.py
-    - Reorganisation of lib/algorithm.py, with focus on the movement determination function
-		- Added the possibility to print weights in the determine_best_movement function
-- Fixed "game over" and "game won" code
-- Moved rendering of the game to lib/rendering.py
+- Reworked the algorithm
+- Added the possibility to print weights in the determine_best_movement function
 - Added input arguments
 - Reorganised and updated README
 
 ### Version 0.0.2 - 7 March 2020
-Made a automated gameplay using a algorithm that uses the score and highest value on the board to determine the best movement
-
-- Rebuild and simplification of the function "possible_directions" in lib/game.py
-- Connected 2048 algorithm
-    - Predicts score of the possible movements and adds weight to the movement with the highest score
-    - Finds the the highest value on the board, determines if it is in a corner, and determines with which movement it gets in/out of the corner
-
+- Added 'automation' game mode that uses an algorithm to solve the game
+	- Algorithm uses weights to determine the best movements
+		- Score increasement affects the weight
+		- Position of values affects the weight
+		- Empty tiles affects weights
 - Bug fixes:
     - Bugfix in the lib/game.py comparing funcion
     - Bug fixed where the script crashes in manual gamemode if a non-supported key was pressed
@@ -40,11 +44,7 @@ Made a automated gameplay using a algorithm that uses the score and highest valu
 ### Version 0.0.1 - 28 Februari 2020
 Made a playable 2048 game
 
-- Remade the main file
-- Reorganised the game class
-- Removed some small bugs in the game class
-- Finished the manual game, which is playable in the terminal
-- Added comments to all code
-- Made a new README.md
+- Run the game in the terminal using a main file
+- Added a README.md
 
 
