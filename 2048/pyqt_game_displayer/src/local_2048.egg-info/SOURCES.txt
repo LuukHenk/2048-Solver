@@ -3,6 +3,7 @@ setup.py
 src/game_displayer/__init__.py
 src/game_displayer/game_displayer_widget.py
 src/game_displayer/main_window.py
+src/game_displayer/worker.py
 src/game_displayer/board/__init__.py
 src/game_displayer/board/board_widget.py
 src/game_displayer/board/tile_colors.py
