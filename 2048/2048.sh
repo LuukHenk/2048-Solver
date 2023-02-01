@@ -1,10 +1,5 @@
-cd tfe_engine/tfe
-cargo run -- ../../data/results.json
-cd ../../
 
 MY_PATH="`dirname \"$0\"`"
-DATA_PATH="$MY_PATH/data/results.json"
 
-pip install $MY_PATH/pyqt_game_displayer/ && python3 $MY_PATH/pyqt_game_displayer/displayer.py --path $DATA_PATH
-
-
+cargo run --manifest-path=$MY_PATH/tfe_engine/tfe/Cargo.toml -- $MY_PATH/data/results.json
+sh $MY_PATH/display_latest_results.sh

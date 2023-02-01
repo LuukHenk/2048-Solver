@@ -12,6 +12,7 @@ src/game_displayer/data_handler/__init__.py
 src/game_displayer/data_handler/load_game_from_json.py
 src/game_displayer/game/__init__.py
 src/game_displayer/game/game_controls_widget.py
+src/game_displayer/game/game_info_bar_widget.py
 src/game_displayer/game/game_widget.py
 src/local_2048.egg-info/PKG-INFO
 src/local_2048.egg-info/SOURCES.txt

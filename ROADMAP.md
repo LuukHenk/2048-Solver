@@ -3,7 +3,6 @@ Current 2048 version: 0.3.0
 
 ## Todo
 ### High priority for next version (0.4.0)
-- Make the gitignore to ignore everything except the things we are using
 - Update the docs file and the readme
 
 ### Low priority for next version

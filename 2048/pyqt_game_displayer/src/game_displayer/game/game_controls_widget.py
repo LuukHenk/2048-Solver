@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QPushButton,
 )
-from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtCore import Qt, Signal
 
 
 class GameControlsWidget(QWidget):

@@ -6,8 +6,11 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let saving_path: &str = &args[1];
-    let games_per_trainings_round: usize = 10000;
-    let total_trainings_rounds: usize = 2;
+    // let games_per_trainings_round: usize = 10000;
+    // let total_trainings_rounds: usize = 20;
+    // let top_games: usize = 10;
+    let games_per_trainings_round: usize = 10;
+    let total_trainings_rounds: usize = 1;
     let top_games: usize = 10;
     let mut trainer: Trainer = Trainer::new(top_games);
 
