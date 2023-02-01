@@ -1,12 +1,16 @@
 setup.cfg
 setup.py
 src/game_displayer/__init__.py
-src/game_displayer/display_game_widget.py
+src/game_displayer/game_displayer_widget.py
+src/game_displayer/main_window.py
 src/game_displayer/board/__init__.py
 src/game_displayer/board/board_widget.py
 src/game_displayer/board/tile_colors.py
 src/game_displayer/board/tile_value_color_mapping.py
 src/game_displayer/board/tile_widget.py
+src/game_displayer/game/__init__.py
+src/game_displayer/game/game_controls_widget.py
+src/game_displayer/game/game_widget.py
 src/local_2048.egg-info/PKG-INFO
 src/local_2048.egg-info/SOURCES.txt
 src/local_2048.egg-info/dependency_links.txt

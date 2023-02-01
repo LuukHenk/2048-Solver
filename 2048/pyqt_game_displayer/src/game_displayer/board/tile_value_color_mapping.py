@@ -1,4 +1,4 @@
-TILE_VALUE_TO_COLOR_MAPPING = {
+TILE_TEXT_TO_COLOR_MAPPING = {
     "0": "#d0d0d0",
     "2": "#ffe7e0",
     "4": "#80554a",
