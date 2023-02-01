@@ -51,7 +51,7 @@ fn __construct_json_board_object(board: Board) -> String{
 fn __format_score_dict_object(score: u64) -> String {
     __construct_json_dict_pair(
         SCORE_OBJECT_KEY.to_string(),
-        score.to_string()    
+        vec![String::from("\""), score.to_string(),String::from("\"")].join("")
     )
 }
 
@@ -109,7 +109,7 @@ mod tests {
     fn test_construct_json_board_object() {
         let board_str: String = "\"board\": [[\"2\", \"4\", \"8\", \"16\"], [\"32\", \"64\", \"128\", \"256\"], [\"16\", \"8\", \"4\", \"2\"], [\"256\", \"128\", \"64\", \"32\"]]".to_string();
         let latest_movement_str: String = "\"performed move\": \"Down\"".to_string();
-        let score_str: String = "\"score\": 15".to_string();
+        let score_str: String = "\"score\": \"15\"".to_string();
         let expected_result: String = __construct_json_dict(vec![board_str, latest_movement_str, score_str]);
         let score: u64 = 15;
         let latest_movement: Direction = Direction::Down;
@@ -128,7 +128,7 @@ mod tests {
     fn test_format_score_dict_object() {
         let score: u64 = 10;
         let expected_result: String = String::from(
-            "\"score\": 10"
+            "\"score\": \"10\""
         );
         assert_eq!(__format_score_dict_object(score), expected_result);
     }    

@@ -7,9 +7,9 @@ from game_displayer.data_handler.load_game_from_json import load_json_to_dict
 class GameDisplayerWidget(QMainWindow):
     """The main window of the 2048 game"""
 
-    def __init__(self):
+    def __init__(self, game_data_path: Path):
         super().__init__()
-        games = load_json_to_dict("/home/zoutekaas/Dropbox/Active/2048-Solver/2048/data/results.json")
+        games = load_json_to_dict(game_data_path)
         game_boards = []
         for move in games[0]:
             game_boards.append(move["board"])
