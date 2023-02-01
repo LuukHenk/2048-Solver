@@ -1,7 +1,6 @@
 __pycache__
 target
 .vscode
-data
 build
 Cargo.lock
 

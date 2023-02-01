@@ -2,6 +2,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 
 pub fn write(data: String, path: &String) {
+    println!("{:?}", path);
     let mut file_to_write = OpenOptions::new()
         .write(true)
         .truncate(true)
