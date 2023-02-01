@@ -1,6 +1,9 @@
-from PySide6.QtCore import QRunnable, Slot
+from time import sleep
 
-class Worker(QRunnable):
+from PySide6.QtCore import QRunnable, Slot
+from game_displayer.game.game_widget_worker_signals import GameWidgetWorkerSignals
+
+class GameWidgetWorker(QRunnable):
     '''
     Worker thread
 
@@ -14,15 +17,16 @@ class Worker(QRunnable):
 
     '''
 
-    def __init__(self, fn, *args, **kwargs):
-        super(Worker, self).__init__()
-        self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
+    def __init__(self, boards):
+        super(GameWidgetWorker, self).__init__()
+        self.__boards = boards
+        self.signal = GameWidgetWorkerSignals()
 
     @Slot()
     def run(self):
         '''
         Initialise the runner function with passed args, kwargs.
         '''
-        self.fn(*self.args, **self.kwargs)
+        for board in self.__boards:
+            self.signal.emit(board)
+            sleep(0.5)

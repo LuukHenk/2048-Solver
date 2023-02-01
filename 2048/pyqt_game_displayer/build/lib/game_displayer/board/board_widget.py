@@ -15,15 +15,16 @@ BoardType = List[List[str]]
 
 class BoardWidget(QWidget):
     """The board widget"""
-    boardUpdate = Signal(BoardType)
+    
+    boardUpdated = Signal(object)
     
     def __init__(self, board_size: int) -> None:
         super().__init__()
         self.__tiles: List[TileWidget] = self.__create_tiles(board_size)
-        self.boardUpdate.connect(self.on_update_board)
-
+        self.boardUpdated.connect(self.__on_update_board, type=Qt.QueuedConnection)
+        
     @Slot(object)
-    def on_update_board(self, board: BoardType) -> None:
+    def __on_update_board(self, board: BoardType) -> None:
         tile_id = 0
         for row in board:
             for column in row:
