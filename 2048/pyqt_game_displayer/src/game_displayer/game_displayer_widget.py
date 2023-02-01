@@ -10,9 +10,7 @@ class GameDisplayerWidget(QMainWindow):
     def __init__(self, game_data_path: Path):
         super().__init__()
         games = load_json_to_dict(game_data_path)
-        game_boards = []
-        for move in games[0]:
-            game_boards.append(move["board"])
+        game = games[0]
 
-        self.setCentralWidget(GameWidget(game_boards))
+        self.setCentralWidget(GameWidget(game))
         

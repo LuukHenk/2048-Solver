@@ -3,4 +3,5 @@ target
 .vscode
 data
 build
+Cargo.lock
 
