@@ -48,6 +48,8 @@ class GameWidget(QWidget):
         game_controls.startButtonClicked.connect(self.__on_start_clicked)
         game_controls.previousMoveButtonClicked.connect(self.__on_previous_button_clicked)
         game_controls.nextMoveButtonClicked.connect(self.__on_next_button_clicked)
+        game_controls.goToStartButtonClicked.connect(self.__on_go_to_start_button_clicked)
+        game_controls.goToEndButtonClicked.connect(self.__on_go_to_end_button_clicked)
         game_controls.on_game_start()
         return game_controls
     
@@ -80,6 +82,15 @@ class GameWidget(QWidget):
             self.__game_controls.on_game_end()
             return
         self.__game_controls.enable_all_controls()
-        
+    
+    @Slot()
+    def __on_go_to_start_button_clicked(self) -> None:
+        self.__current_board_index = 0
+        self.__update_displayed_board()
+        self.__game_controls.on_game_start()
 
-        
+    @Slot()
+    def __on_go_to_end_button_clicked(self) -> None:
+        self.__current_board_index = len(self.__boards) -1
+        self.__update_displayed_board()
+        self.__game_controls.on_game_end()
