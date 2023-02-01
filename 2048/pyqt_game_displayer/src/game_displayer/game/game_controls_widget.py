@@ -38,14 +38,14 @@ class GameControlsWidget(QWidget):
         self.__go_to_start_button.setEnabled(True)
         self.__go_to_end_button.setEnabled(True)
         
-    def on_game_start(self) -> None:
+    def set_controls_for_new_game(self) -> None:
         self.__start_button.setEnabled(True)
         self.__previous_move_button.setDisabled(True)
         self.__next_move_button.setEnabled(True)
         self.__go_to_start_button.setDisabled(True)
         self.__go_to_end_button.setEnabled(True)        
     
-    def on_game_end(self) -> None:
+    def set_controls_for_game_end(self) -> None:
         self.__start_button.setDisabled(True)
         self.__previous_move_button.setEnabled(True)
         self.__next_move_button.setDisabled(True)

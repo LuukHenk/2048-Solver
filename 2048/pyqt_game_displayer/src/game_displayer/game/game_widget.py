@@ -34,7 +34,7 @@ class GameWidget(QWidget):
             self.__update_displayed_board()
             sleep(0.2)
         self.__game_controls.setEnabled(True) 
-        self.__game_controls.on_game_end()
+        self.__game_controls.set_controls_for_game_end()
             
     def __setup_game_layout(self):
         layout = QVBoxLayout(self)
@@ -50,7 +50,7 @@ class GameWidget(QWidget):
         game_controls.nextMoveButtonClicked.connect(self.__on_next_button_clicked)
         game_controls.goToStartButtonClicked.connect(self.__on_go_to_start_button_clicked)
         game_controls.goToEndButtonClicked.connect(self.__on_go_to_end_button_clicked)
-        game_controls.on_game_start()
+        game_controls.set_controls_for_new_game()
         return game_controls
     
     def __update_displayed_board(self) -> None:
@@ -68,7 +68,7 @@ class GameWidget(QWidget):
         self.__update_displayed_board()
         
         if self.__current_board_index == 0:
-            self.__game_controls.on_game_start()
+            self.__game_controls.set_controls_for_new_game()
             return
         self.__game_controls.enable_all_controls()
             
@@ -79,7 +79,7 @@ class GameWidget(QWidget):
         self.__update_displayed_board()
         
         if self.__current_board_index == len(self.__boards) - 1:
-            self.__game_controls.on_game_end()
+            self.__game_controls.set_controls_for_game_end()
             return
         self.__game_controls.enable_all_controls()
     
@@ -87,10 +87,10 @@ class GameWidget(QWidget):
     def __on_go_to_start_button_clicked(self) -> None:
         self.__current_board_index = 0
         self.__update_displayed_board()
-        self.__game_controls.on_game_start()
+        self.__game_controls.set_controls_for_new_game()
 
     @Slot()
     def __on_go_to_end_button_clicked(self) -> None:
         self.__current_board_index = len(self.__boards) -1
         self.__update_displayed_board()
-        self.__game_controls.on_game_end()
+        self.__game_controls.set_controls_for_game_end()

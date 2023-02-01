@@ -58,7 +58,7 @@ fn __format_score_dict_object(score: u64) -> String {
 fn __format_performed_move_dict_object(performed_move: Direction) -> String {
     __construct_json_dict_pair(
         PERFORMED_MOVE_OBJECT_KEY.to_string(),
-        performed_move.to_string()    
+        vec![String::from("\""), performed_move.to_string(),String::from("\"")].join("")    
     )
 }
 
@@ -75,14 +75,15 @@ fn __board_u64_to_json(board: u64) -> String {
         let row_value: u64 = board >> row_index * 16 & 0xFFFF;
         rows.insert(0, __row_to_json(row_value));
     }
-    rows.join(JSON_DATA_SEPERATOR)
+    __construct_json_list(rows)
 }
 
 fn __row_to_json(row: u64) -> String {
     let mut tiles: Vec<String> = Vec::with_capacity(4);
     for tile_index in 0..4 {
         let tile_value: u64 = row >> tile_index * 4 & 0xF;
-        tiles.insert(0, pow_unsafe(tile_value).to_string());
+        let tile_json: String = vec!["\"".to_string(),pow_unsafe(tile_value).to_string(),  "\"".to_string()].join("");
+        tiles.insert(0, tile_json);
     }
     __construct_json_list(tiles)
 }
@@ -106,8 +107,8 @@ mod tests {
 
     #[test]
     fn test_construct_json_board_object() {
-        let board_str: String = "\"board\": [2, 4, 8, 16], [32, 64, 128, 256], [16, 8, 4, 2], [256, 128, 64, 32]".to_string();
-        let latest_movement_str: String = "\"performed move\": Down".to_string();
+        let board_str: String = "\"board\": [[\"2\", \"4\", \"8\", \"16\"], [\"32\", \"64\", \"128\", \"256\"], [\"16\", \"8\", \"4\", \"2\"], [\"256\", \"128\", \"64\", \"32\"]]".to_string();
+        let latest_movement_str: String = "\"performed move\": \"Down\"".to_string();
         let score_str: String = "\"score\": 15".to_string();
         let expected_result: String = __construct_json_dict(vec![board_str, latest_movement_str, score_str]);
         let score: u64 = 15;
@@ -136,7 +137,7 @@ mod tests {
     fn test_format_performed_move_dict_object() {
         let performed_move: Direction = Direction::Left;
         let expected_result: String = String::from(
-            "\"performed move\": Left"
+            "\"performed move\": \"Left\""
         );
         assert_eq!(__format_performed_move_dict_object(performed_move), expected_result);
     }    
@@ -145,7 +146,7 @@ mod tests {
     fn test_format_board_dict_object() {
         let board: u64 = 0x1234_5678_4321_8765;
         let expected_result: String = String::from(
-            "\"board\": [2, 4, 8, 16], [32, 64, 128, 256], [16, 8, 4, 2], [256, 128, 64, 32]"
+            "\"board\": [[\"2\", \"4\", \"8\", \"16\"], [\"32\", \"64\", \"128\", \"256\"], [\"16\", \"8\", \"4\", \"2\"], [\"256\", \"128\", \"64\", \"32\"]]"
         );
         assert_eq!(__format_board_dict_object(board), expected_result);
     }    
@@ -153,14 +154,14 @@ mod tests {
     fn test_board_to_json() {
         let board: u64 = 0x1234_5678_4321_8765;
         let expected_result: String = String::from(
-            "[2, 4, 8, 16], [32, 64, 128, 256], [16, 8, 4, 2], [256, 128, 64, 32]"
+            "[[\"2\", \"4\", \"8\", \"16\"], [\"32\", \"64\", \"128\", \"256\"], [\"16\", \"8\", \"4\", \"2\"], [\"256\", \"128\", \"64\", \"32\"]]"
         );
         assert_eq!(__board_u64_to_json(board), expected_result);
     }
     #[test]
     fn test_row_to_json() {
         let board_row: u64 = 0x1234;
-        let expected_result: String = String::from("[2, 4, 8, 16]");
+        let expected_result: String = String::from("[\"2\", \"4\", \"8\", \"16\"]");
         assert_eq!(__row_to_json(board_row), expected_result);
     }
 
