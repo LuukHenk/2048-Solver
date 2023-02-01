@@ -1,6 +1,6 @@
 __pycache__
 target
-data/*
+2048/data/results.json
 .vscode
 build
 Cargo.lock
