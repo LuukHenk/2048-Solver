@@ -3,13 +3,14 @@ Current 2048 version: 0.3.0
 
 ## Todo
 ### High priority for next version (0.4.0)
-- Create a proper linkage between the played rust games and game displayer
 - Make the gitignore to ignore everything except the things we are using
 - Update the docs file and the readme
 
 ### Low priority for next version
 - Update the UI
 	- Add more game info labels
+		- Score
+		- Latest movement
 		- Highscore / average score
 		- Current game ID
 		- Winrate
@@ -17,6 +18,7 @@ Current 2048 version: 0.3.0
 		- Editable FPS
 - Add multithreading per played game
 - Add test coverage checker for rust and for python
+- Use a neural network during the game
 
 ## In progress
 

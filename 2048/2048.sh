@@ -1,3 +1,7 @@
+cd tfe_engine/tfe
+cargo run -- ../../data/results.json
+cd ../../
+
 MY_PATH="`dirname \"$0\"`"
 DATA_PATH="$MY_PATH/data/results.json"
 
