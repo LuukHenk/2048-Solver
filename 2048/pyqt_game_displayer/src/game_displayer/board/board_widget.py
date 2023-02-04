@@ -6,23 +6,24 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from PySide6.QtCore import Qt, Signal, Slot
-from game_displayer.board.tile_widget import (
-    TileWidget, 
+from src.game_displayer.board.tile_widget import (
+    TileWidget,
     TILE_SIZE,
 )
 
 BoardType = List[List[str]]
 
+
 class BoardWidget(QWidget):
     """The board widget"""
-    
+
     boardUpdated = Signal(object)
-    
+
     def __init__(self, board_size: int) -> None:
         super().__init__()
         self.__tiles: List[TileWidget] = self.__create_tiles(board_size)
         self.boardUpdated.connect(self.__on_update_board, type=Qt.QueuedConnection)
-        
+
     @Slot(object)
     def __on_update_board(self, board: BoardType) -> None:
         tile_id = 0
@@ -30,8 +31,7 @@ class BoardWidget(QWidget):
             for column in row:
                 self.__tiles[tile_id].style_tile_based_on_text(column)
                 tile_id += 1
-                
-        
+
     def __create_tiles(self, board_size: int) -> List[TileWidget]:
         tiles: List[TileWidget] = []
         layout = QGridLayout(self)

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """The executable script"""
 
-from game_displayer.main_window import run_main_window
+from src.game_displayer.main_window import run_main_window
 from argparse import ArgumentParser
+
 
 def main():
     """Main script of the program"""

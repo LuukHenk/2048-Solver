@@ -7,7 +7,7 @@ fn main() {
 
     let saving_path: &str = &args[1];
     let games_per_trainings_round: usize = 10000;
-    let total_trainings_rounds: usize = 20;
+    let total_trainings_rounds: usize = 10;
     let top_games: usize = 10;
     let mut trainer: Trainer = Trainer::new(top_games);
 
