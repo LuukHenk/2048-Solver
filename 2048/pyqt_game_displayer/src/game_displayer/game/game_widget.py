@@ -6,9 +6,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import QThreadPool, Qt, Slot
 
-from src.game_displayer.board.board_widget import BoardWidget
-from src.game_displayer.game.game_controls_widget import GameControlsWidget
-from src.game_displayer.game.game_info_bar_widget import GameInfoBarWidget
+from game_displayer.board.board_widget import BoardWidget
+from game_displayer.game.game_controls_widget import GameControlsWidget
+from game_displayer.game.game_info_bar_widget import GameInfoBarWidget
 
 
 class GameWidget(QWidget):

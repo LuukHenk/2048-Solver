@@ -1,7 +1,7 @@
 from pathlib import Path
 from PySide6.QtWidgets import QMainWindow
-from src.game_displayer.game.game_widget import GameWidget
-from src.game_displayer.data_handler.load_game_from_json import load_json_to_dict
+from game_displayer.game.game_widget import GameWidget
+from game_displayer.data_handler.load_game_from_json import load_json_to_dict
 
 
 class GameDisplayerWidget(QMainWindow):

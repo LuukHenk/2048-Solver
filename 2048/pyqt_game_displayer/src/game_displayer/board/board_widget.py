@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from PySide6.QtCore import Qt, Signal, Slot
-from src.game_displayer.board.tile_widget import (
+from game_displayer.board.tile_widget import (
     TileWidget,
     TILE_SIZE,
 )

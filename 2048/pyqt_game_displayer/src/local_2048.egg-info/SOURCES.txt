@@ -17,5 +17,4 @@ src/game_displayer/game/game_widget.py
 src/local_2048.egg-info/PKG-INFO
 src/local_2048.egg-info/SOURCES.txt
 src/local_2048.egg-info/dependency_links.txt
-src/local_2048.egg-info/entry_points.txt
 src/local_2048.egg-info/top_level.txt

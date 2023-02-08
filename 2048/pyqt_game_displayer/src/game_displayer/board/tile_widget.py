@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QLabel,
 )
 from PySide6.QtCore import Qt
-from src.game_displayer.board.tile_value_color_mapping import TILE_TEXT_TO_COLOR_MAPPING
+from game_displayer.board.tile_value_color_mapping import TILE_TEXT_TO_COLOR_MAPPING
 
 TILE_SIZE: Final[int] = 120
 

@@ -6,7 +6,7 @@ from sys import (
 )
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
-from src.game_displayer.game_displayer_widget import GameDisplayerWidget
+from game_displayer.game_displayer_widget import GameDisplayerWidget
 
 
 def run_main_window(game_data_path: Path):
