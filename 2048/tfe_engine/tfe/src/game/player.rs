@@ -74,6 +74,27 @@ impl Player {
         }
     }
 
+    pub fn improve_games(&mut self, retries_per_game: usize) {
+        let games_before_retrying: usize = self.games.len();
+        for game_index in 0 .. self.games.len() -1 {
+            self.__improve_game(game_index, retries_per_game);
+        }
+        self.sort_games_on_score();
+        self.resize_total_games(games_before_retrying);
+    }
+
+
+    fn __improve_game(&mut self, index: usize, times: usize) {
+        let mut game_to_retry = self.games[index].copy();
+        game_to_retry.rewind(game_to_retry.get_index_of_highest_score_increasement());
+
+        for _game_index in 0 .. times {
+            let mut game = game_to_retry.copy();
+            game.resume(self.algorithm.copy());
+            self.games.push(game);
+        }
+    }
+
     fn __move_games_to_multimap(&mut self) -> MultiMap<u64, Game> {
         let mut game_multimap: MultiMap<u64, Game> = MultiMap::new();
         for _game_index in 0..self.games.len() {

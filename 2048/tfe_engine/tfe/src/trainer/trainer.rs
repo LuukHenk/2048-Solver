@@ -1,6 +1,7 @@
 
 
 use super::player::Player;
+use super::game::Game;
 
 pub struct Trainer{
     players: Vec<Player>,
@@ -19,13 +20,15 @@ impl Trainer{
         }
     }
 
-    pub fn train(&mut self) {
-        self.__player_selection()
-        // Use the best player to select the best game (previous method, you know)
+    pub fn train(&mut self) -> Vec<Game> {
+        self.__player_selection();
+        let retries_per_game: usize = self.games_per_trainings_round / self.top_games;
+        self.players[0].improve_games(retries_per_game);
+        let best_games_after_training: Vec<Game> = self.players[0].copy_games();
+        best_games_after_training
     }
 
     fn __player_selection(&mut self) {
-        // Select the best player FIXME
         self.__play_games();
         let player_id_filter: usize = self.__get_player_id_of_player_with_best_average_score();
         self.__filter_players(player_id_filter);
@@ -75,6 +78,8 @@ impl Trainer{
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // Fixme: test more when we have a mocker
 
     #[test]
     fn test_creating_a_new_trainer() {
