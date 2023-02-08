@@ -16,6 +16,7 @@ Current 2048 version: 0.4.0
 	- Add inputs
 		- Editable FPS
 - Add multithreading per played game
+- Make coverage report tool
 
 ## In progress
 
