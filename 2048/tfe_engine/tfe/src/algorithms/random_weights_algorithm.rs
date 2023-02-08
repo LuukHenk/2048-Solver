@@ -54,7 +54,7 @@ impl RandomWeightsAlgorithm {
 
     pub fn display_weights(&self) {
         for (direction, weight) in self.weights.iter() {
-            println!("{:#?}\t{:#?}", direction, weight);
+            println!("Weight {:#?}:\t{:#?}/255", direction, weight);
         }
     }
 }
