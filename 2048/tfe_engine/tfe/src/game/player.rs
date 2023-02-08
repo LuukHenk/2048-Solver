@@ -24,11 +24,12 @@ impl Player {
     }
 
     pub fn retry_game(&mut self, index: usize, times: usize) {
-        let mut game_to_retry = self.games[index].copy();
-        game_to_retry.rewind(game_to_retry.get_index_of_highest_score_increasement());
+        let mut game_to_retry: Game = self.games[index].copy();
+        let index: usize = game_to_retry.get_index_of_highest_score_increasement();
+        game_to_retry.rewind(index);
 
         for _game_index in 0 .. times {
-            let mut game = game_to_retry.copy();
+            let mut game: Game = game_to_retry.copy();
             game.resume();
             self.games.push(game);
         }
@@ -55,6 +56,18 @@ impl Player {
         for game in self.games.iter() {
             println!("Final score: {:#?}", game.get_final_score());
         }
+    }
+
+    pub fn get_average_score(&self) -> u64{
+        let mut average_score: u64 = 0;
+        if self.games.len() < 1 {
+            return average_score;
+        } 
+        for game in self.games.iter(){
+            average_score += game.get_final_score();
+        }
+        let total_games: u64 = self.games.len().try_into().unwrap();
+        average_score / total_games
     }
 
     pub fn sort_games_on_score(&mut self) {
@@ -134,6 +147,24 @@ mod tests {
         assert_eq!(player.copy_games()[0], played_game);
     }
 
+    #[test]
+    fn test_get_average_score_with_no_games() {
+        let player: Player = Player::new();
+        let average_score: u64 = player.get_average_score();
+        assert_eq!(average_score, 0);
+    }
+    #[test]
+    fn test_get_average_score() {
+        let mut games: Vec<Game> = Vec::new();
+        games.push(__create_game(10));
+        games.push(__create_game(20));
+        games.push(__create_game(30));
+        let mut player: Player = Player::new();
+        player.games = games;
+        let average_score: u64 = player.get_average_score();
+        assert_eq!(average_score, 20);
+    }
+    
     #[test]
     fn test_resize_total_games_with_maximum_size_higher_than_games_played() {
         let games_to_play: usize = 50;

@@ -1,55 +1,54 @@
 
-use crate::Game;
 
 use super::player::Player;
 
 pub struct Trainer{
-    player: Player,
-    top_games: usize
+    players: Vec<Player>,
+    top_games: usize,
+    games_per_trainings_round: usize,
+    trainings_rounds: usize
 }
 
 impl Trainer{
-    pub fn new(top_games: usize) -> Trainer {
-        let player: Player = Player::new();
-        Trainer {player, top_games}
-    }
-
-
-    pub fn train(&mut self, games_per_trainings_round: usize, total_trainings_rounds: usize) {
-
-        println!("Playing initial games");
-        self.__play_initial_games(games_per_trainings_round);
-        self.player.print_final_scores();
-
-        for trainings_round_index in 0.. total_trainings_rounds {
-            println!("\nTrainings round {}", trainings_round_index+1);
-            self.__trainings_round(games_per_trainings_round);
-            self.player.print_final_scores();
+    pub fn new() -> Trainer {
+        let total_players: usize = 10;
+        let players = Trainer::__create_players(total_players);
+        Trainer {
+            players, 
+            top_games: 100,
+            games_per_trainings_round: 10000,
+            trainings_rounds: 10
         }
     }
-    
-    pub fn copy_top_games(&mut self) -> Vec<Game> {
-        self.__cleanup();
-        self.player.copy_games()
-    }
 
-    fn __play_initial_games(&mut self, initial_games: usize) {
-        self.player.play_games(initial_games);
-        self.__cleanup();
-    }
-
-    fn __trainings_round(&mut self, games_per_trainings_round: usize) {
-        let retries: usize = games_per_trainings_round/self.top_games;
-        for game_index in 0 .. self.top_games {
-            self.player.retry_game(game_index, retries);
+    pub fn train(&mut self) {
+        for player in self.players.iter_mut() {
+            player.play_games(self.games_per_trainings_round);
+            println!("{:#?}", player.get_average_score());
         }
-        self.__cleanup();
     }
 
-    fn __cleanup(&mut self) {
-        self.player.sort_games_on_score();
-        self.player.resize_total_games(self.top_games);
+    fn __create_players(total_players: usize) -> Vec<Player>{
+        let mut players: Vec<Player> = Vec::with_capacity(total_players);
+        for _ in 0 .. total_players {
+            players.push(Player::new());
+        }
+        players
     }
 
 
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_creating_a_new_trainer() {
+        let trainer: Trainer = Trainer::new();
+        assert!(trainer.games_per_trainings_round > 0);
+        assert!(trainer.top_games <= trainer.games_per_trainings_round);
+        assert!(trainer.trainings_rounds > 0);
+        assert!(trainer.players.len() > 0);
+    }
 }
