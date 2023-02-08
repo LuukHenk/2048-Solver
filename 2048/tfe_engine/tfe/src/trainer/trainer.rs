@@ -22,8 +22,6 @@ impl Trainer{
 
     pub fn train(&mut self) -> Vec<Game> {
         self.__player_selection();
-        let retries_per_game: usize = self.games_per_trainings_round / self.top_games;
-        self.players[0].improve_games(retries_per_game);
         let best_games_after_training: Vec<Game> = self.players[0].copy_games();
         best_games_after_training
     }
@@ -36,10 +34,12 @@ impl Trainer{
     }
 
     fn __play_games(&mut self) {
+        let retries_per_game: usize = self.games_per_trainings_round / self.top_games;
         for player in self.players.iter_mut() {
             player.play_games(self.games_per_trainings_round);
             player.sort_games_on_score();
             player.resize_total_games(self.top_games);
+            player.improve_games(retries_per_game);
             println!("Average score:\t{:#?}\n=========\n", player.get_average_score());
         }
     }
