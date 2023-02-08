@@ -4,4 +4,8 @@ target
 .vscode
 build
 Cargo.lock
+*.profdat
+*.profdata
+*.profraw
+2048/tfe_engine/tfe/coverage_report.txt
 
