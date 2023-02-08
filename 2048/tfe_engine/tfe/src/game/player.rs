@@ -43,11 +43,9 @@ impl Player {
         self.games.drain(maximum_games..);
     }
 
-    pub fn print_final_scores(&mut self) {
+    pub fn get_top_score(&mut self) -> u64 {
         self.sort_games_on_score();
-        for game in self.games.iter() {
-            println!("Final score: {:#?}", game.get_final_score());
-        }
+        self.games[0].get_final_score()
     }
 
     pub fn get_average_score(&self) -> u64{

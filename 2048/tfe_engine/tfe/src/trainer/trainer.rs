@@ -11,7 +11,7 @@ pub struct Trainer{
 
 impl Trainer{
     pub fn new() -> Trainer {
-        let total_players: usize = 10;
+        let total_players: usize = 100;
         let players: Vec<Player> = Trainer::__create_players(total_players);
         Trainer {
             players, 
@@ -35,12 +35,15 @@ impl Trainer{
 
     fn __play_games(&mut self) {
         let retries_per_game: usize = self.games_per_trainings_round / self.top_games;
-        for player in self.players.iter_mut() {
+        for player_id in 0..self.players.len() - 1 {
+            println!("Player {}", player_id+1);
+            let player: &mut Player = &mut self.players[player_id]; 
             player.play_games(self.games_per_trainings_round);
             player.sort_games_on_score();
             player.resize_total_games(self.top_games);
             player.improve_games(retries_per_game);
-            println!("Average score:\t{:#?}\n=========\n", player.get_average_score());
+            println!("Average score:\t{:#?}", player.get_average_score());
+            println!("Top score:\t{:#?}\n=========\n", player.get_top_score());
         }
     }
 
