@@ -26,12 +26,39 @@ impl Trainer{
 
     fn __player_selection(&mut self) {
         // Select the best player FIXME
+        self.__play_games();
+        let player_id_filter: usize = self.__get_player_id_of_player_with_best_average_score();
+        self.__filter_players(player_id_filter);
+
+    }
+
+    fn __play_games(&mut self) {
         for player in self.players.iter_mut() {
             player.play_games(self.games_per_trainings_round);
             player.sort_games_on_score();
             player.resize_total_games(self.top_games);
             println!("Average score:\t{:#?}\n=========\n", player.get_average_score());
         }
+    }
+
+    fn __filter_players(&mut self, player_id_filter: usize) {
+        self.players.drain(player_id_filter+1..);
+        self.players.drain(..player_id_filter);
+    }
+
+    fn __get_player_id_of_player_with_best_average_score(&self) -> usize {
+        let mut player_id_with_best_average_score: usize = 0;
+        let mut best_average_player_score: u64 = 0;
+        
+        for player_id in 0 .. self.players.len() - 1 {
+            let player: &Player = &self.players[player_id];
+            let average_score: u64 = player.get_average_score();
+            if average_score > best_average_player_score {
+                best_average_player_score = average_score;
+                player_id_with_best_average_score = player_id;
+            }
+        }
+        player_id_with_best_average_score    
     }
 
     fn __create_players(total_players: usize) -> Vec<Player>{
@@ -54,6 +81,64 @@ mod tests {
         let trainer: Trainer = Trainer::new();
         assert!(trainer.games_per_trainings_round > 0);
         assert!(trainer.top_games <= trainer.games_per_trainings_round);
-        assert!(trainer.players.len() > 0);
+        assert_eq!(trainer.players.len(), 10);
+    }
+    #[test] 
+    fn test_player_selection() {
+        // Fixme: test more when we have a mocker
+        let mut trainer: Trainer = Trainer::new();
+        trainer.games_per_trainings_round = 1;
+        trainer.top_games = 1;
+        trainer.__player_selection();
+        assert!(trainer.players.len() == 1);
+    }
+    #[test]
+    fn test_playing_games() {
+        // Fixme: test game sorting when we have a mocker
+
+        let mut trainer: Trainer = Trainer::new();
+        trainer.games_per_trainings_round = 1;
+        trainer.top_games = 1;
+        trainer.__play_games();
+
+        for player in trainer.players.iter() {
+            assert!(player.get_average_score() > 0);
+            assert!(player.games.len() == trainer.top_games )
+        }
+
+    }
+
+    #[test]
+    fn test_filter_on_player_id() {
+        let player_id_filter: usize = 4;
+        let mut trainer: Trainer = Trainer::new();
+        trainer.games_per_trainings_round = 1;
+        trainer.top_games = 1;
+        trainer.__play_games();
+        let score_of_filtered_player: u64 = trainer.players[player_id_filter].get_average_score(); 
+
+        trainer.__filter_players(player_id_filter);
+
+        assert_eq!(trainer.players.len(), 1);
+        assert_eq!(trainer.players[0].get_average_score(), score_of_filtered_player)
+    }
+
+    #[test]
+    fn test_get_player_id_of_player_with_best_average_score() {
+        // Fixme: test when we can mock player.get_average_score()
+    }   
+
+    #[test]
+    fn test_get_player_id_of_player_with_best_average_score_when_players_have_no_score() {
+        let trainer: Trainer = Trainer::new();
+        let player_id: usize = trainer.__get_player_id_of_player_with_best_average_score();
+        assert_eq!(player_id, 0)
+    }   
+
+    #[test]
+    fn test_create_players() {
+        let total_players: usize = 10;
+        let players: Vec<Player> = Trainer::__create_players(total_players);
+        assert_eq!(players.len(), total_players);
     }
 }
