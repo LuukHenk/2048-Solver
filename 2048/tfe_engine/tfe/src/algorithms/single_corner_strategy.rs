@@ -6,7 +6,7 @@ use rand::rngs::ThreadRng;
 use super::Board;
 use super::Direction;
 
-
+#[derive(Debug)]
 pub struct SingleCornerStrategy {
     pub thread_rng: ThreadRng
 }

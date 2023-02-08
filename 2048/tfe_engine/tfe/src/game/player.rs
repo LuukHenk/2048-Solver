@@ -2,18 +2,21 @@ use multimap::MultiMap;
 use itertools::Itertools; 
 
 use super::game::Game;
+use super::single_corner_strategy::SingleCornerStrategy;
 
 
 #[derive(Debug)]
 pub struct Player {
-    pub games: Vec<Game>
+    pub games: Vec<Game>,
+    algorithm: SingleCornerStrategy
 }
 
 impl Player {
 
     pub fn new() -> Player {
         Player{
-            games: Vec::new()
+            games: Vec::new(),
+            algorithm: SingleCornerStrategy::new()
         }
     }
 
