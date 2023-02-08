@@ -8,10 +8,10 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new() -> Game {
+    pub fn new(algorithm: SingleCornerStrategy) -> Game {
         let mut game: Game = Game{boards: Vec::new()};
         game.boards.push(Board::new());
-        game.resume();
+        game.resume(algorithm);
         game
     }
 
@@ -23,9 +23,7 @@ impl Game {
         boards_copy
     }
 
-    pub fn resume(&mut self) {
-        let mut algorithm: SingleCornerStrategy = SingleCornerStrategy::new();
-        
+    pub fn resume(&mut self, mut algorithm: SingleCornerStrategy) {
         let mut board: Board = self.boards[self.__latest_board_index()].copy();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();
 
@@ -84,45 +82,45 @@ mod tests {
 
     #[test]
     fn test_if_game_is_over_after_play() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         let final_board: Option<Board> = game.boards.pop();
         assert_eq!(final_board.unwrap().get_possible_movements(), Vec::new());
     }
     #[test]
     fn test_get_boards(){
-        let game: Game = Game::new();
+        let game: Game = Game::new(SingleCornerStrategy::new());
         assert_eq!(game.boards, game.copy_boards());
     }
 
     #[test]
     fn test_resume_game_when_there_are_no_possible_movements() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         let latest_move = game.boards[game.__latest_board_index()].copy();
-        game.resume();
+        game.resume(SingleCornerStrategy::new());
         assert_eq!(latest_move, game.boards[game.__latest_board_index()]);
     }
 
     #[test]
     #[should_panic(expected="attempt to subtract with overflow")]
     fn test_resume_game_when_there_are_no_boards() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         game.boards = Vec::new();
-        game.resume();
+        game.resume(SingleCornerStrategy::new());
     }
 
     #[test]
     fn test_resume_game_when_there_are_movements_possible() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         let latest_move =Board::new(); 
         game.boards.push(latest_move.copy());
-        game.resume();
+        game.resume(SingleCornerStrategy::new());
         
         assert_ne!(game.boards[game.__latest_board_index()], latest_move);
     }
 
     #[test]
     fn test_get_final_score() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         let final_score: u64 = game.get_final_score();
         let final_board: Option<Board> =game.boards.pop(); 
         assert_eq!(
@@ -149,7 +147,7 @@ mod tests {
         board_4.score = board_3.score + high_score_increasement;
         board_5.score = board_4.score + low_score_increasement;
         
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         game.boards = Vec::with_capacity(5);
         game.boards.push(start_board);
         game.boards.push(board_1);
@@ -166,7 +164,7 @@ mod tests {
 
     #[test]
     fn test_rewind() {
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         let final_index: usize = 2;
         let expected_final_board: Board = game.boards[final_index].clone();
         game.rewind(final_index);
@@ -176,7 +174,7 @@ mod tests {
 
     #[test]
     fn test_copy() {
-        let game: Game = Game::new();
+        let game: Game = Game::new(SingleCornerStrategy::new());
         let game_copy: Game = game.copy();
         
         for index in 0 .. game.boards.len() -1 {

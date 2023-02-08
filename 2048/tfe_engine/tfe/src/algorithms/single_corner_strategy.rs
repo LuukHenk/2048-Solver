@@ -32,4 +32,8 @@ impl SingleCornerStrategy {
         let selected_direction_index: usize = self.thread_rng.gen_range(0..possible_movements.len());
         possible_movements[selected_direction_index]
     }
+
+    pub fn copy(&self) -> SingleCornerStrategy{
+        SingleCornerStrategy::new()
+    }
 }

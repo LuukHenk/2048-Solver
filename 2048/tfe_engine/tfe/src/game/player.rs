@@ -22,19 +22,7 @@ impl Player {
 
     pub fn play_games(&mut self, amount: usize) {
         for _game_index in 0 .. amount {
-            self.games.push(Game::new());
-        }
-    }
-
-    pub fn retry_game(&mut self, index: usize, times: usize) {
-        let mut game_to_retry: Game = self.games[index].copy();
-        let index: usize = game_to_retry.get_index_of_highest_score_increasement();
-        game_to_retry.rewind(index);
-
-        for _game_index in 0 .. times {
-            let mut game: Game = game_to_retry.copy();
-            game.resume();
-            self.games.push(game);
+            self.games.push(Game::new(self.algorithm.copy()));
         }
     }
 
@@ -121,30 +109,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected="index out of bounds: the len is 0 but the index is 1")]
-    fn test_retry_game_index_out_of_bound() {
-        let mut player: Player = Player::new();
-        player.retry_game(1, 1);
-    }
-
-    #[test]
-    fn test_retry_game() {
-        let games_to_play: usize = 1;
-        let retries: usize = 20;
-        let mut player: Player = Player::new();
-        player.play_games(games_to_play);
-        let latest_played_game_before_retry = player.games[games_to_play-1].copy();
-
-        player.retry_game(games_to_play-1, retries);
-
-        assert_eq!(player.games[games_to_play-1], latest_played_game_before_retry);
-        assert_eq!(player.games.len(), games_to_play + retries);
-    }
-
-    #[test]
     fn test_copy_games() {
         let mut player: Player = Player::new();
-        let played_game: Game = Game::new();
+        let played_game: Game = Game::new(SingleCornerStrategy::new());
         player.games.push(played_game.copy());
 
         assert_eq!(player.copy_games()[0], played_game);
@@ -207,7 +174,8 @@ mod tests {
 
         let total_games = games.len();
 
-        let mut player: Player = Player {games};
+        let mut player: Player = Player::new();
+        player.games = games;
         player.sort_games_on_score();
         assert_eq!(player.games.len(), total_games);
         let mut latest_score = player.games[0].get_final_score();
@@ -232,7 +200,7 @@ mod tests {
     fn __create_game(final_score: u64) -> Game {
         let mut board: Board = Board::new();
         board.score = final_score; 
-        let mut game: Game = Game::new();
+        let mut game: Game = Game::new(SingleCornerStrategy::new());
         game.boards = vec![board];
         game
     }
