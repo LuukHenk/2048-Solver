@@ -1,4 +1,4 @@
-use super::algorithm::Algorithm;
+use super::single_corner_strategy::SingleCornerStrategy;
 use super::board::Board;
 use super::direction::Direction;
 
@@ -24,7 +24,7 @@ impl Game {
     }
 
     pub fn resume(&mut self) {
-        let mut algorithm: Algorithm = Algorithm::new();
+        let mut algorithm: SingleCornerStrategy = SingleCornerStrategy::new();
         
         let mut board: Board = self.boards[self.__latest_board_index()].copy();
         let mut possible_movements: Vec<Direction> = board.get_possible_movements();

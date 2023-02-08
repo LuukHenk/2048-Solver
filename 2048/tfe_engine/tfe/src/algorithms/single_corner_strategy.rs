@@ -1,21 +1,20 @@
-
+// Tries to keep pushing blocks into a single corner
 
 use rand::Rng;
 use rand::rngs::ThreadRng;
 
-use crate::Board;
+use super::Board;
+use super::Direction;
 
-use super::direction::Direction;
 
-
-pub struct Algorithm {
+pub struct SingleCornerStrategy {
     pub thread_rng: ThreadRng
 }
 
-impl Algorithm {
-    pub fn new() -> Algorithm {
+impl SingleCornerStrategy {
+    pub fn new() -> SingleCornerStrategy {
         let thread_rng: ThreadRng = rand::thread_rng();
-        Algorithm{thread_rng}
+        SingleCornerStrategy{thread_rng}
     }
     pub fn determine_next_movement(&mut self, mut board: Board) -> Direction {
         //FIXME write tests
