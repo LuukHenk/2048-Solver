@@ -1,7 +1,7 @@
 use enum_display::EnumDisplay;
 use strum_macros::EnumIter;
 
-#[derive(Debug, PartialEq, EnumIter, Copy, Clone, EnumDisplay)]
+#[derive(Debug, PartialEq, EnumIter, Copy, Clone, EnumDisplay, Hash, Eq)]
 pub enum Direction {
     Left,
     Right,

@@ -2,13 +2,13 @@ use multimap::MultiMap;
 use itertools::Itertools; 
 
 use super::game::Game;
-use super::single_corner_strategy::SingleCornerStrategy;
+use super::random_weights_algorithm::RandomWeightsAlgorithm;
 
 
 #[derive(Debug)]
 pub struct Player {
     pub games: Vec<Game>,
-    algorithm: SingleCornerStrategy
+    algorithm: RandomWeightsAlgorithm
 }
 
 impl Player {
@@ -16,11 +16,12 @@ impl Player {
     pub fn new() -> Player {
         Player{
             games: Vec::new(),
-            algorithm: SingleCornerStrategy::new()
+            algorithm: RandomWeightsAlgorithm::new()
         }
     }
 
     pub fn play_games(&mut self, amount: usize) {
+        self.algorithm.display_weights();
         for _game_index in 0 .. amount {
             self.games.push(Game::new(self.algorithm.copy()));
         }
@@ -111,7 +112,7 @@ mod tests {
     #[test]
     fn test_copy_games() {
         let mut player: Player = Player::new();
-        let played_game: Game = Game::new(SingleCornerStrategy::new());
+        let played_game: Game = Game::new(RandomWeightsAlgorithm::new());
         player.games.push(played_game.copy());
 
         assert_eq!(player.copy_games()[0], played_game);
@@ -200,7 +201,7 @@ mod tests {
     fn __create_game(final_score: u64) -> Game {
         let mut board: Board = Board::new();
         board.score = final_score; 
-        let mut game: Game = Game::new(SingleCornerStrategy::new());
+        let mut game: Game = Game::new(RandomWeightsAlgorithm::new());
         game.boards = vec![board];
         game
     }

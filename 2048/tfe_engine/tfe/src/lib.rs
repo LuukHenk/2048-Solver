@@ -4,7 +4,7 @@ mod exporter;
 mod utils;
 mod algorithms;
 
-pub use algorithms::single_corner_strategy::SingleCornerStrategy;
+pub use algorithms::random_weights_algorithm::RandomWeightsAlgorithm;
 pub use game::direction::Direction;
 pub use game::board::Board;
 pub use game::game::Game;
