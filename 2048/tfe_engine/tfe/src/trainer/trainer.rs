@@ -11,7 +11,7 @@ pub struct Trainer{
 
 impl Trainer{
     pub fn new() -> Trainer {
-        let total_players: usize = 100;
+        let total_players: usize = 5;
         let players: Vec<Player> = Trainer::__create_players(total_players);
         Trainer {
             players, 

@@ -17,12 +17,12 @@ static EXPECTED_TOTAL_DIRECTIONS: &'static usize = &4;
 
 impl RandomWeightsAlgorithm {
     pub fn new() -> RandomWeightsAlgorithm {
-        let mut thread_rng: ThreadRng = rand::thread_rng();
+        let thread_rng: ThreadRng = rand::thread_rng();
         let mut weights: HashMap<Direction, u8> = HashMap::with_capacity(*EXPECTED_TOTAL_DIRECTIONS);
-        weights.insert(Direction::Left, thread_rng.gen());
-        weights.insert(Direction::Right, thread_rng.gen());
-        weights.insert(Direction::Down, thread_rng.gen());
-        weights.insert(Direction::Up, thread_rng.gen());
+        weights.insert(Direction::Left, 180);
+        weights.insert(Direction::Right, 1);
+        weights.insert(Direction::Down, 255);
+        weights.insert(Direction::Up, 0);
         RandomWeightsAlgorithm{thread_rng, weights}
     }
 
@@ -31,8 +31,10 @@ impl RandomWeightsAlgorithm {
         let mut best_score: u32 = 0;
         let mut best_movement: Direction = Direction::None;
         for direction in possible_directions {
-            let random_input_u8: u8 = self.thread_rng.gen();
-            let random_input_u32: u32 = random_input_u8.into();
+            // let random_input_u8: u8 = self.thread_rng.gen();
+            // let random_input_u32: u32 = random_input_u8.into();
+            let random_input_u32: u32 = self.thread_rng.gen_range(0..10);
+
             let weight_u8: u8 = *self.weights.get(&direction).unwrap();
             let weight_u32: u32 = weight_u8.into();
             let score: u32 = random_input_u32 * weight_u32;
