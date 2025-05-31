@@ -5,12 +5,12 @@
 This is an updated version of my very first programming project with [Sidney Liebrand](https://github.com/SidOfc).
 
 ## Requirements
-- Python3 (> 3.9)
-- pip
-- [PySide6](https://doc.qt.io/qtforpython/quickstart.html)
+- npm
 - cargo
 - rustc
 
 ## Usage
 - `git clone https://github.com/LuukHenk/2048-Solver.git`
 - `sh 2048-Solver/2048/2048.sh`
+
+After the data has already been generated; The data can again be visualized via `sh 2048-Solver/2048/next_display_latest_results.sh`

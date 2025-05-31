@@ -19,12 +19,13 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     const [intervalID, setIntervalID] = useState<undefined | NodeJS.Timeout>(undefined)
     function autoPlay() {
         if (LAST_MOVE) { stopAutoPlay() }
-        console.debug("Perfoming next move")
         onNextMove();
     }
     function startAutoPlay() {
         console.debug("Starting autoplay")
-        const interval = setInterval(autoPlay, 500)
+        const interval = setInterval(autoPlay, 200
+
+        )
         setIntervalID(interval)
     }
     function stopAutoPlay() {
@@ -46,11 +47,13 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     function onPreviousGame() {
         if (FIRST_GAME) { console.debug("Already at first game"); return }
         setICurrentGame(iCurrentGame => iCurrentGame - 1)
+        setICurrentMove(0)
         console.debug(`current game lowered: ${iCurrentGame}`)
     }
     function onNextGame() {
         if (LAST_GAME) { console.debug("Already at last game"); return }
         setICurrentGame(iCurrentGame => iCurrentGame + 1)
+        setICurrentMove(0)
         console.debug(`current game upped: ${iCurrentGame}`)
     }
     return (
