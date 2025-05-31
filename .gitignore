@@ -4,4 +4,5 @@ target
 .vscode
 build
 Cargo.lock
-
+2048/next_frontend/node_modules
+2048/next_frontend/.next
