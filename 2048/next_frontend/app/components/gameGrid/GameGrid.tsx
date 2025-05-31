@@ -2,7 +2,8 @@
 
 import Grid from '@mui/material/Grid';
 import GameTile from './GameTile';
-import { BASE_TILE_COLOR, Board } from './constants';
+import { BASE_TILE_COLOR } from './constants';
+import { Board } from '../types';
 
 
 export default function GameGrid({ board }: { board: Board }) {
