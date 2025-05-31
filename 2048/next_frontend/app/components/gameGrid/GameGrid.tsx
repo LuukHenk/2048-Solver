@@ -2,36 +2,36 @@
 
 import Grid from '@mui/material/Grid';
 import GameTile from './GameTile';
-import { BASE_TILE_COLOR } from './constants';
+import { BASE_TILE_COLOR, Board } from './constants';
 
 
-export default function GameGrid() {
+export default function GameGrid({ board }: { board: Board }) {
     return (
 
-        <Grid container sx={{ width: "auto", height: {xs: "50%", md: "80%"}, aspectRatio: "1/1", backgroundColor: BASE_TILE_COLOR, padding: 1}}>
+        <Grid container sx={{ width: "auto", height: { xs: "50%", md: "80%" }, aspectRatio: "1/1", backgroundColor: BASE_TILE_COLOR, padding: 1 }}>
             <Grid size={3}>
-                <GameTile value={2} />
-                <GameTile value={4} />
-                <GameTile value={8} />
-                <GameTile value={16} />
+                <GameTile value={board[0][0]} />
+                <GameTile value={board[1][0]} />
+                <GameTile value={board[2][0]} />
+                <GameTile value={board[3][0]} />
             </Grid>
             <Grid size={3}>
-                <GameTile value={32} />
-                <GameTile value={64} />
-                <GameTile value={128} />
-                <GameTile value={256} />
+                <GameTile value={board[0][1]} />
+                <GameTile value={board[1][1]} />
+                <GameTile value={board[2][1]} />
+                <GameTile value={board[3][1]} />
             </Grid>
             <Grid size={3}>
-                <GameTile value={512} />
-                <GameTile value={1024} />
-                <GameTile value={2048} />
-                <GameTile value={4096} />
+                <GameTile value={board[0][2]} />
+                <GameTile value={board[1][2]} />
+                <GameTile value={board[2][2]} />
+                <GameTile value={board[3][2]} />
             </Grid>
             <Grid size={3}>
-                <GameTile value={8192} />
-                <GameTile value={16384} />
-                <GameTile value={32768} />
-                <GameTile value={65536} />
+                <GameTile value={board[0][3]} />
+                <GameTile value={board[1][3]} />
+                <GameTile value={board[2][3]} />
+                <GameTile value={board[3][3]} />
             </Grid>
         </Grid>
     );

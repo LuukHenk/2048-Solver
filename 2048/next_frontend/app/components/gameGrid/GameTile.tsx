@@ -5,7 +5,7 @@ import { BASE_TILE_COLOR } from "./constants";
 
 const TILE_COLOR_MAPPING: { [value: number]: string } = {
     // https://martin-ueding.de/posts/matplotlib-colors-scales-as-hex-codes/#tab20c
-    0: BASE_TILE_COLOR,
+    0: "#e9e9e9",
     2: "#3182bd",
     4: "#6baed6",
     8: "#9ecae1",
@@ -51,10 +51,11 @@ function getContrastingTextColor(hex_str: string) {
     return "#fff"
 }
 
-export default function GameTile({ value }: { value: number }) {
+export default function GameTile({ value }: { value: string }) {
 
-    const TILE_COLOR = getTileColor(value)
+    const TILE_COLOR = getTileColor(+value)
     const TEXT_COLOR = getContrastingTextColor(TILE_COLOR.substring(1))
+    if (+value === 0) {value = ""}
     return (
         <Box sx={{ textAlign: "center", alignContent: "center", backgroundColor: TILE_COLOR, height: "25%", border: `4px solid ${BASE_TILE_COLOR}`, borderRadius: 2 }}>
             <Typography sx={{ color: TEXT_COLOR, fontSize: { xs: 20, md: 26 } }}>{value}</Typography>
