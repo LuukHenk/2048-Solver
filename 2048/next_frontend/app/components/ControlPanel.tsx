@@ -23,9 +23,7 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     }
     function startAutoPlay() {
         console.debug("Starting autoplay")
-        const interval = setInterval(autoPlay, 200
-
-        )
+        const interval = setInterval(autoPlay, 200)
         setIntervalID(interval)
     }
     function stopAutoPlay() {
