@@ -14,7 +14,7 @@ pub struct Algorithm {
 
 impl Algorithm {
     pub fn new() -> Algorithm {
-        let thread_rng: ThreadRng = rand::thread_rng();
+        let thread_rng: ThreadRng = rand::rng();
         Algorithm{thread_rng}
     }
     pub fn determine_next_movement(&mut self, mut board: Board) -> Direction {
@@ -30,7 +30,7 @@ impl Algorithm {
             possible_movements.remove(position_of_up);
         }
 
-        let selected_direction_index: usize = self.thread_rng.gen_range(0..possible_movements.len());
+        let selected_direction_index: usize = self.thread_rng.random_range(0..possible_movements.len());
         possible_movements[selected_direction_index]
     }
 }

@@ -1,3 +1,8 @@
+### Version 0.5.0 - 1 June 2025
+- Replaced the Python frontend with a NextJS frontend
+- Renamed 'performed move' to 'performedMove', to work with typescript
+- Updated rust dependencies
+
 ### Version 0.4.0 - 1 Februari 2023
 - Rewrote the game engine in rust
 	- Use of bitshifting to make playing games go a lot faster

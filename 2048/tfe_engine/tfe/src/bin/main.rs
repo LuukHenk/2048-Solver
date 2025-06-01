@@ -1,11 +1,15 @@
 use std::env;
 
-use tfe::{Trainer, export_games_to_json_file};
+use tfe::{export_games_to_json_file, Trainer};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+    let saving_path: &str = if args.len() > 1 {
+        &args[1]
+    } else {
+        "results.json"
+    };
 
-    let saving_path: &str = &args[1];
     let games_per_trainings_round: usize = 10000;
     let total_trainings_rounds: usize = 10;
     let top_games: usize = 10;

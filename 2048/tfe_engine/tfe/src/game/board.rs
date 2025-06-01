@@ -63,7 +63,7 @@ impl Board {
 
     fn spawn_tile(&mut self) {
         let empty_tiles = Self::get_empty_tiles(self);
-        let random_position = rand::thread_rng().gen_range(0..empty_tiles.len());
+        let random_position = rand::rng().random_range(0..empty_tiles.len());
         let selected_empty_tile: usize = empty_tiles[random_position];
         self.board = self.board | Self::generate_new_tile() << selected_empty_tile * 4;
     }
@@ -140,7 +140,7 @@ impl Board {
     }
 
     fn generate_new_tile() -> u64 {
-        if rand::thread_rng().gen_range(0..10) == 10 {
+        if rand::rng().random_range(0..10) == 10 {
             2
         } else {
             1
