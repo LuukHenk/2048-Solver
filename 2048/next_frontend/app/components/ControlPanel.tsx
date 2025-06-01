@@ -62,13 +62,13 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     return (
         <Stack direction="column" sx={{ marginTop: 2, height: 50 }}>
             <ButtonGroup variant="outlined">
-                <Button sx={{width:"25%"}} aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || autoPlayActive}><SkipPrevious /></Button>
-                <Button sx={{width:"25%"}} aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || autoPlayActive}><ChevronLeft /></Button>
+                <Button sx={{ width: "25%" }} aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || autoPlayActive} startIcon={<SkipPrevious />}>Previous Game</Button>
+                <Button sx={{ width: "25%" }} aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || autoPlayActive} startIcon={<ChevronLeft />}>Previous Move</Button>
 
-                <Button sx={{width:"25%"}} aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || autoPlayActive}><ChevronRight /></Button>
-                <Button sx={{width:"25%"}} aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || autoPlayActive}><SkipNext /></Button>
+                <Button sx={{ width: "25%" }} aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || autoPlayActive} endIcon={<ChevronRight />}>Next Move</Button>
+                <Button sx={{ width: "25%" }} aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || autoPlayActive} endIcon={<SkipNext />}>Next Game</Button>
             </ButtonGroup>
-            {!autoPlayActive && <Button sx={{width:"stretch"}} variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay} disabled={LAST_MOVE}>AutoPlay</Button>}
+            {!autoPlayActive && <Button sx={{ width: "stretch" }} variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay} disabled={LAST_MOVE}>AutoPlay</Button>}
 
             {autoPlayActive && <Button variant="outlined" aria-label="StopAutoplay" endIcon={<Pause />} onClick={stopAutoPlay}>Stop autoplay</Button>}
         </Stack>

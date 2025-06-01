@@ -7,7 +7,7 @@ export type Board = [
 
 export interface CurrentMove {
     board: Board
-    latestMove: string
+    performedMove: string
     score: string
 }
 
