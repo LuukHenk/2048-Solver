@@ -57,7 +57,7 @@ export default function GameTile({ value }: { value: string }) {
     const TEXT_COLOR = getContrastingTextColor(TILE_COLOR.substring(1))
     if (+value === 0) {value = ""}
     return (
-        <Box sx={{ textAlign: "center", alignContent: "center", backgroundColor: TILE_COLOR, height: "25%", border: `4px solid ${BASE_TILE_COLOR}`, borderRadius: 2 }}>
+        <Box sx={{ textAlign: "center", alignContent: "center", backgroundColor: TILE_COLOR, height: "25%", border: `0.7vh solid ${BASE_TILE_COLOR}`, borderRadius: 2 }}>
             <Typography sx={{ color: TEXT_COLOR, fontSize: { xs: 20, md: 26 } }}>{value}</Typography>
         </Box>
     )

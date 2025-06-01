@@ -9,7 +9,7 @@ import { Board } from '../types';
 export default function GameGrid({ board }: { board: Board }) {
     return (
 
-        <Grid container sx={{ width: "auto", height: { xs: "50%", md: "80%" }, aspectRatio: "1/1", backgroundColor: BASE_TILE_COLOR, padding: 1 }}>
+        <Grid container sx={{aspectRatio: "1/1", backgroundColor: BASE_TILE_COLOR, padding: "0.8vh"}}>
             <Grid size={3}>
                 <GameTile value={board[0][0]} />
                 <GameTile value={board[1][0]} />

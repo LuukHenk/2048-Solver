@@ -62,13 +62,13 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     return (
         <Stack direction="column" sx={{ marginTop: 2, height: 50 }}>
             <ButtonGroup variant="outlined">
-                <Button aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || autoPlayActive}><SkipPrevious /></Button>
-                <Button aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || autoPlayActive}><ChevronLeft /></Button>
+                <Button sx={{width:"25%"}} aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || autoPlayActive}><SkipPrevious /></Button>
+                <Button sx={{width:"25%"}} aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || autoPlayActive}><ChevronLeft /></Button>
 
-                <Button aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || autoPlayActive}><ChevronRight /></Button>
-                <Button aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || autoPlayActive}><SkipNext /></Button>
+                <Button sx={{width:"25%"}} aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || autoPlayActive}><ChevronRight /></Button>
+                <Button sx={{width:"25%"}} aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || autoPlayActive}><SkipNext /></Button>
             </ButtonGroup>
-            {!autoPlayActive && <Button variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay} disabled={LAST_MOVE}>AutoPlay</Button>}
+            {!autoPlayActive && <Button sx={{width:"stretch"}} variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay} disabled={LAST_MOVE}>AutoPlay</Button>}
 
             {autoPlayActive && <Button variant="outlined" aria-label="StopAutoplay" endIcon={<Pause />} onClick={stopAutoPlay}>Stop autoplay</Button>}
         </Stack>
