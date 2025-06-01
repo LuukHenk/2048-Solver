@@ -24,9 +24,9 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
             } else if (autoPlayActive && !LAST_MOVE) {
                 onNextMove();
             }
-        }, 1)
+        }, 100)
         return () => clearInterval(interval);
-    }, [autoPlayActive, LAST_MOVE, iCurrentMove]);
+    }, [autoPlayActive, LAST_MOVE, iCurrentMove, onNextMove]);
 
     function startAutoPlay() {
         console.debug("Starting autoplay")

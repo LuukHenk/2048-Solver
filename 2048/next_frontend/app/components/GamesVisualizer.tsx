@@ -8,7 +8,7 @@ import ControlPanel from "./ControlPanel"
 import Box from "@mui/material/Box"
 import theme from "../theme"
 import useMediaQuery from "@mui/material/useMediaQuery"
-import { Button, ButtonGroup, Chip, Typography } from "@mui/material"
+import { Button, ButtonGroup } from "@mui/material"
 
 export default function GamesVisualzer({ games }: { games: [CurrentMove[]] }) {
     const [iCurrentGame, setICurrentGame] = useState(0)
