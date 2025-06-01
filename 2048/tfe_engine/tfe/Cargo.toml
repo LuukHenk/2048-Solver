@@ -7,13 +7,13 @@ edition = "2021"
 
 [dependencies]
 stopwatch = "0.0.7"
-rand = "0.8.3"
-strum = "0.24"
-strum_macros = "0.24"
-itertools = "0.10.5"
-multimap = "0.8.3"
+rand = "0.9.1"
+strum = "0.27.1"
+strum_macros = "0.27.1"
+itertools = "0.14.0"
+multimap = "0.10.1"
 enum-display = "0.1.3"
-mockall = "0.11.3"
+mockall = "0.13.1"
 
 [lib]
 name = "tfe"

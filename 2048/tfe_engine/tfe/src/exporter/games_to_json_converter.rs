@@ -7,7 +7,7 @@ use super::board::Board;
 use super::game::Game;
 
 static SCORE_OBJECT_KEY: &'static str = "\"score\"";
-static PERFORMED_MOVE_OBJECT_KEY: &'static str = "\"performed move\"";
+static PERFORMED_MOVE_OBJECT_KEY: &'static str = "\"performedMove\"";
 static BOARD_OBJECT_KEY: &'static str = "\"board\"";
 static JSON_DATA_SEPERATOR: &'static str = ", ";
 static JSON_DICT_PAIR_SEPERATOR: &'static str = ": ";
@@ -58,7 +58,7 @@ fn __format_score_dict_object(score: u64) -> String {
 fn __format_performed_move_dict_object(performed_move: Direction) -> String {
     __construct_json_dict_pair(
         PERFORMED_MOVE_OBJECT_KEY.to_string(),
-        vec![String::from("\""), performed_move.to_string(),String::from("\"")].join("")    
+        vec![String::from("\""), performed_move.to_string(),String::from("\"")].join("")
     )
 }
 
@@ -131,7 +131,7 @@ mod tests {
             "\"score\": \"10\""
         );
         assert_eq!(__format_score_dict_object(score), expected_result);
-    }    
+    }
 
     #[test]
     fn test_format_performed_move_dict_object() {
@@ -140,7 +140,7 @@ mod tests {
             "\"performed move\": \"Left\""
         );
         assert_eq!(__format_performed_move_dict_object(performed_move), expected_result);
-    }    
+    }
 
     #[test]
     fn test_format_board_dict_object() {
@@ -149,7 +149,7 @@ mod tests {
             "\"board\": [[\"2\", \"4\", \"8\", \"16\"], [\"32\", \"64\", \"128\", \"256\"], [\"16\", \"8\", \"4\", \"2\"], [\"256\", \"128\", \"64\", \"32\"]]"
         );
         assert_eq!(__format_board_dict_object(board), expected_result);
-    }    
+    }
     #[test]
     fn test_board_to_json() {
         let board: u64 = 0x1234_5678_4321_8765;
