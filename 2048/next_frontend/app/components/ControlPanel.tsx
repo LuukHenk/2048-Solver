@@ -7,7 +7,7 @@ import SkipPrevious from "@mui/icons-material/SkipPrevious";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Stack from "@mui/material/Stack";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 
 export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGame, setICurrentGame, gameCount, gameMoveCount }: { iCurrentMove: number, setICurrentMove: Dispatch<SetStateAction<number>>, iCurrentGame: number, setICurrentGame: Dispatch<SetStateAction<number>>, gameCount: number, gameMoveCount: number }) {
@@ -15,57 +15,62 @@ export default function ControlPanel({ iCurrentMove, setICurrentMove, iCurrentGa
     const LAST_MOVE = iCurrentMove === gameMoveCount
     const FIRST_GAME = iCurrentGame === 0
     const LAST_GAME = iCurrentGame === gameCount
+    const [autoPlayActive, setAutoPlayActive] = useState(false)
 
-    const [intervalID, setIntervalID] = useState<undefined | NodeJS.Timeout>(undefined)
-    function autoPlay() {
-        if (LAST_MOVE) { stopAutoPlay() }
-        onNextMove();
-    }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (LAST_MOVE) {
+                setAutoPlayActive(false);
+            } else if (autoPlayActive && !LAST_MOVE) {
+                onNextMove();
+            }
+        }, 1)
+        return () => clearInterval(interval);
+    }, [autoPlayActive, LAST_MOVE, iCurrentMove]);
+
     function startAutoPlay() {
         console.debug("Starting autoplay")
-        const interval = setInterval(autoPlay, 200)
-        setIntervalID(interval)
+        setAutoPlayActive(true)
     }
     function stopAutoPlay() {
         console.debug("Stopping autoplay")
-        clearInterval(intervalID)
-        setIntervalID(undefined)
+        setAutoPlayActive(false)
     }
 
     function onPreviousMove() {
         if (FIRST_MOVE) { console.debug("Already at first move"); return }
-        setICurrentMove(iCurrentMove => iCurrentMove - 1)
+        setICurrentMove(iCurrentMove - 1)
         console.debug(`current move lowered: ${iCurrentMove}`)
     }
     function onNextMove() {
         if (LAST_MOVE) { console.debug("Already at last move"); return }
-        setICurrentMove(iCurrentMove => iCurrentMove + 1)
+        setICurrentMove(iCurrentMove + 1)
         console.debug(`current move upped: ${iCurrentMove}`)
     }
     function onPreviousGame() {
         if (FIRST_GAME) { console.debug("Already at first game"); return }
-        setICurrentGame(iCurrentGame => iCurrentGame - 1)
+        setICurrentGame(iCurrentGame - 1)
         setICurrentMove(0)
         console.debug(`current game lowered: ${iCurrentGame}`)
     }
     function onNextGame() {
         if (LAST_GAME) { console.debug("Already at last game"); return }
-        setICurrentGame(iCurrentGame => iCurrentGame + 1)
+        setICurrentGame(iCurrentGame + 1)
         setICurrentMove(0)
         console.debug(`current game upped: ${iCurrentGame}`)
     }
     return (
         <Stack direction="column" sx={{ marginTop: 2, height: 50 }}>
             <ButtonGroup variant="outlined">
-                <Button aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || intervalID !== undefined}><SkipPrevious /></Button>
-                <Button aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || intervalID !== undefined}><ChevronLeft /></Button>
+                <Button aria-label="Previous game" onClick={onPreviousGame} disabled={FIRST_GAME || autoPlayActive}><SkipPrevious /></Button>
+                <Button aria-label="Previous move" onClick={onPreviousMove} disabled={FIRST_MOVE || autoPlayActive}><ChevronLeft /></Button>
 
-                <Button aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || intervalID !== undefined}><ChevronRight /></Button>
-                <Button aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || intervalID !== undefined}><SkipNext /></Button>
+                <Button aria-label="Next move" onClick={onNextMove} disabled={LAST_MOVE || autoPlayActive}><ChevronRight /></Button>
+                <Button aria-label="Next game" onClick={onNextGame} disabled={LAST_GAME || autoPlayActive}><SkipNext /></Button>
             </ButtonGroup>
-            {intervalID === undefined && <Button variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay}>AutoPlay</Button>}
+            {!autoPlayActive && <Button variant="outlined" aria-label="Autoplay" endIcon={<PlayArrow />} onClick={startAutoPlay} disabled={LAST_MOVE}>AutoPlay</Button>}
 
-            {intervalID !== undefined && <Button variant="outlined" aria-label="StopAutoplay" endIcon={<Pause />} onClick={stopAutoPlay}>Stop autoplay</Button>}
+            {autoPlayActive && <Button variant="outlined" aria-label="StopAutoplay" endIcon={<Pause />} onClick={stopAutoPlay}>Stop autoplay</Button>}
         </Stack>
     )
 }
